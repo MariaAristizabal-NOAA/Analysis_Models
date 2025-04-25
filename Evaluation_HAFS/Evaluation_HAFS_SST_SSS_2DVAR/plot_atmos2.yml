@@ -1,0 +1,15 @@
+# yaml configure file
+stormModel: HFSA
+stormName: ERNESTO
+stormID: 05L
+stormBasin: AL
+stormDomain: storm
+#stormDomain: parent
+ymdh: '2024081200'
+fhhh: f000
+trackon: 'yes'
+COMhafs: ['/work/noaa/hwrf/scrub/maristiz/hafsv2_develop_July9_CTL_RTOFS_v2.5.test01_hfsa_dev/com/2024081200/05L/','/work/noaa/hwrf/scrub/maristiz/hafsv2_develop_July9_SST_SSS_2DVAR_RTOFS_v2.5.test01_hfsa_dev/com/2024081200/05L/']
+cartopyDataDir: /work/noaa/hwrf/local/share/cartopy
+exp_labels: ['Original','Modified']
+exp_colors: ['dodgerblue','orange']
+

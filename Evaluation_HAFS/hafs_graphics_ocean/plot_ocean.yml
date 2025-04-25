@@ -1,0 +1,10 @@
+# yaml configure file
+stormModel: HFSA
+stormName: EWINIAR
+stormID: 01W
+stormBasin: WP
+ymdh: '2024053000'
+fhhh: f066
+trackon: 'yes'
+COMhafs: /lfs/h1/ops/para/com/hafs/v2.0/hfsa.20240530/00
+cartopyDataDir: /lfs/h2/emc/hur/noscrub/local/share/cartopy

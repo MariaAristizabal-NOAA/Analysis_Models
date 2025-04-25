@@ -1,0 +1,18 @@
+# yaml configure file
+stormModel: HFSA
+stormName: LEE
+stormID: 13L
+stormBasin: AL
+stormDomain: storm
+#stormDomain: parent
+ymdh: '2023090706'
+COMhafs: ['/work/noaa/hwrf/scrub/maristiz/hafs_20250210_HA30_Kd_output_MOM6_ePBL_CONSTANT_v2p1a_ha30/com/2023090706/13L','/work/noaa/hwrf/scrub/maristiz/hafs_20250210_HA30_Kd_output_MOM6_ePBL_OM4_v2p1a_ha30/com/2023090706/13L']
+exp_labels: ['CONSTANT','OM4']
+exp_colors: ['deeppink','springgreen']
+
+
+  #COMhafs: ['/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2a_baseline_MOM6_epbl/OM4/2023090706/13l','/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2a_baseline_MOM6_epbl/OM4_LT/2023090706/13l','/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2a_baseline_MOM6_epbl/RH18/2023090706/13l','/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2a_baseline_MOM6_epbl/RH18_LT/2023090706/13l']
+  #exp_labels: ['OM4','OM4_LT','RH18','RH18_LT']
+  #exp_colors: ['lightcoral','deeppink','springgreen','forestgreen']
+
+

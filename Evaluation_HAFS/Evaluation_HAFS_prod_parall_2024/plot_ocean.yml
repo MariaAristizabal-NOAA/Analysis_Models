@@ -1,0 +1,35 @@
+# yaml configure file
+stormModel: HFSB
+stormName: MILTON
+stormID: 14L
+stormBasin: AL
+ymdh: '2024100800'
+fhhh: f042
+trackon: 'yes'
+#stormModel: HFSB
+#stormName: HELENE
+#stormID: 09L
+#stormBasin: AL
+#ymdh: '2024092500'
+#fhhh: f042
+#trackon: 'yes'
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSB_oper/2024100800/14l
+#COMhafs: /scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20241220_v2p1b_baseline/2024100800/14l
+COMhafs: /scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20250306_v2p1b_hb43/2024100800/14l
+cartopyDataDir: /scratch1/NCEPDEV/hwrf/local/share/cartopy
+folder_best_track: /scratch1/NCEPDEV/hwrf/noscrub/input/abdeck/btk
+
+#stormModel: HFSA
+#stormName: MILTON
+#stormID: 14L
+#stormBasin: AL
+#ymdh: '2024100800'
+#fhhh: f042
+#trackon: 'yes'
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/2024100800/14l
+#COMhafs: /scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20241220_v2p1a_baseline/2024100800/14l
+#COMhafs: /scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20250210_v2p1a_ha30/2024100800/14l
+#cartopyDataDir: /scratch1/NCEPDEV/hwrf/local/share/cartopy
+#folder_best_track: /scratch1/NCEPDEV/hwrf/noscrub/input/abdeck/btk
+#
+

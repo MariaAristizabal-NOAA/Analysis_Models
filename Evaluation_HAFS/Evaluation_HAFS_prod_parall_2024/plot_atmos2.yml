@@ -1,0 +1,30 @@
+# yaml configure file
+stormModel: HFSB
+stormName: MILTON
+stormID: 14L
+stormBasin: AL
+stormDomain: parent
+ymdh: '2024100800'
+#stormModel: HFSB
+#stormName: HELENE
+#stormID: 09L
+#stormBasin: AL
+#stormDomain: parent
+#ymdh: '2024092500'
+COMhafs: ['/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSB_oper/2024100800/14l/','/scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20241220_v2p1b_baseline/2024100800/14l/','/scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20250306_v2p1b_hb43/2024100800/14l/']
+#COMhafs: ['/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSB_oper/2024092500/09l/','/scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20241220_v2p1b_baseline/2024092500/09l/','/scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20250306_v2p1b_hb43/2024092500/09l/']
+exp_labels: ['HFSB_oper','HAFSv2.1B baseline','HAFSv2.1B final']
+exp_colors: ['lime','olive','darkorange']
+#exp_colors: ['purple','dodgerblue','#00c8c8']
+
+#stormModel: HFSA
+#stormName: MILTON
+#stormID: 14L
+#stormBasin: AL
+#stormDomain: parent
+#ymdh: '2024100800'
+#COMhafs: ['/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/2024100800/14l/','/scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20241220_v2p1a_baseline/2024100800/14l/','/scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20250210_v2p1a_ha30/2024100800/14l/']
+#exp_labels: ['HFSA_oper','HAFSv2.1A baseline','HAFSv2.1A final']
+#exp_colors: ['purple','dodgerblue','#00c8c8']
+
+

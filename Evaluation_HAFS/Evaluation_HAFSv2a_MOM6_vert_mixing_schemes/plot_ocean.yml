@@ -1,0 +1,34 @@
+# yaml configure file
+stormModel: HFSA
+#stormModel: HFSB
+stormName: LEE
+stormID: 13L
+stormBasin: AL
+ymdh: '2023090706'
+fhhh: f096
+trackon: 'yes'
+#COMhafs: /work/noaa/hwrf/scrub/maristiz/hafs_20250210_HA30_Kd_output_MOM6_ePBL_CONSTANT_v2p1a_ha30/com/2023090706/13L
+COMhafs: /work/noaa/hwrf/scrub/maristiz/hafs_20250210_HA30_Kd_output_MOM6_ePBL_OM4_v2p1a_ha30/com/2023090706/13L
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2a_baseline_MOM6_epbl/RH18_LT/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2a_baseline_MOM6_epbl/RH18/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2a_baseline_MOM6_epbl/OM4_LT/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2a_baseline_MOM6_epbl/OM4/2023090706/13l
+cartopyDataDir: /work/noaa/hwrf/noscrub/local/share/cartopy
+
+
+#stormModel: HFSA
+#stormModel: HFSB
+#stormName: BERYL
+#stormID: 02L
+#stormBasin: AL
+#ymdh: '2024062818'
+#fhhh: f126
+#trackon: 'yes'
+#COMhafs: /scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20250131_v2p1b_hpb5_kappa_shear_Ric_025_EPBL_IS_ADDITIVE_True/2024062818/02l
+#COMhafs: /scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20250131_v2p1b_hpb5_kappa_shear_Ric_02_EPBL_IS_ADDITIVE_True/2024062818/02l
+#COMhafs: /scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20250131_v2p1b_hpb5_kappa_shear_Ric_01_EPBL_IS_ADDITIVE_True/2024062818/02l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20250131_v2p1b_hpb5_kappa_shear_Ric_01/2024062818/02l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20250131_v2p1b_hpb5_kappa_shear_Ric_02/2024062818/02l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20250131_v2p1b_hpb5_kappa_shear_Ric_025/2024062818/02l
+#cartopyDataDir: /scratch1/NCEPDEV/hwrf/noscrub/local/share/cartopy
+

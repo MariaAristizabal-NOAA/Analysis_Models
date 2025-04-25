@@ -1,0 +1,12 @@
+# yaml configure file
+#stormModel: HFSA
+#stormName: LEE
+#stormID: 13L
+#stormBasin: AL
+#ymdh: '2023090706'
+#fhhh: f000
+#trackon: 'yes'
+#COMhafs: /scratch1/NCEPDEV/hwrf/scrub/Maria.Aristizabal/hafsv1_merge_mom6_hfsa_mom6/com/2020082512/13L
+File_hafs1: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/2022092306_fcst_floatInvalid/Orig_ocean_tidal_amplitude/oic_2022_09_23_06.nc
+File_hafs2: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/2022092306_fcst_floatInvalid/New_ocean_tidal_amplitude/oic_2022_09_23_06.nc
+cartopyDataDir: /scratch1/NCEPDEV/hwrf/noscrub/local/share/cartopy

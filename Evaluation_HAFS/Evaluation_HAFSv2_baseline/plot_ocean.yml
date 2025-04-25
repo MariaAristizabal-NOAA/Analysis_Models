@@ -1,0 +1,32 @@
+# yaml configure file
+stormModel: HFSA
+#stormModel: HFSB
+stormName: LEE
+stormID: 13L
+stormBasin: AL
+#ymdh: '2023090706'
+ymdh: '2023090600'
+fhhh: f003
+trackon: 'yes'
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv1p1_MOM6_epbl/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv1p1_MOM6_kpp/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSBv1p1_HYCOM/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2a_baseline/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2b_baseline/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2b_baseline_latest/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2a_baseline_latest/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSB_oper/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HAFSv2_h3a0_rtofsv2/2023090600/13l
+COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HAFSv2_h3a0/2023090600/13l
+cartopyDataDir: /scratch1/NCEPDEV/hwrf/noscrub/local/share/cartopy
+
+# yaml configure file
+#stormModel: HFSA
+#stormName: LAURA
+#stormID: 13L
+#stormBasin: AL
+#ymdh: '2020082512'
+#fhhh: f006
+#trackon: yes
+#COMhafs: /scratch1/NCEPDEV/hwrf/scrub/Maria.Aristizabal/hafsv1_merge_mom6_hfsa_mom6/com/2020082512/13L
+#cartopyDataDir: /scratch1/NCEPDEV/hwrf/noscrub/local/share/cartopy

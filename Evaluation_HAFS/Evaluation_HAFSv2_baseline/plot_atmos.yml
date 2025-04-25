@@ -1,0 +1,56 @@
+# yaml configure file
+stormModel: HFSA
+#stormModel: HFSB
+stormName: LEE
+stormID: 13L
+stormBasin: AL
+stormDomain: storm
+#stormDomain: parent
+#ymdh: '2023090706'
+ymdh: '2023090600'
+fhhh: f054
+standardLayer: 850
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2a_baseline_MOM6_epbl/OM4_LT_orig/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSBv1p1_HYCOM/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2a_baseline/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2b_baseline/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2b_baseline_latest/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSAv2b_baseline_latest/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSB_oper/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HAFSv2_h3a0_rtofsv2/2023090600/13l
+COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HAFSv2_h3a0/2023090600/13l
+cartopyDataDir: /scratch1/NCEPDEV/hwrf/noscrub/local/share/cartopy
+
+#
+#
+#stormModel: HFSB
+#stormName: EARL
+#stormID: 18L
+#stormBasin: AL
+#stormDomain: parent
+#ymdh: '2021092800'
+#fhhh: f048
+#standardLayer: 850
+#COMhafs: /scratch1/NCEPDEV/hwrf/save/Maria.Aristizabal/hafs_graphics_production_hafs.v1/ush/python/atmos
+#cartopyDataDir: /scratch1/NCEPDEV/hwrf/noscrub/local/share/cartopy
+
+
+#stormModel: HFSA
+#stormModel: HFSB
+##stormName: EARL
+#stormName: SAM
+##stormID: 06L
+#stormID: 18L
+#stormBasin: AL
+#stormDomain: parent
+##stormDomain: storm
+##ymdh: '2022090500'
+#ymdh: '2021092800'
+#fhhh: f126
+##fhhh: f048
+#standardLayer: 850
+##COMhafs: /work/noaa/hwrf/save/maristiz/hafs_graphics/ush/python/atmos
+#COMhafs: /scratch1/NCEPDEV/hwrf/save/Maria.Aristizabal/hafs_graphics_old/ush/python/atmos
+##cartopyDataDir: /work/noaa/hwrf/local/share/cartopy
+#cartopyDataDir: /scratch1/NCEPDEV/hwrf/noscrub/local/share/cartopy

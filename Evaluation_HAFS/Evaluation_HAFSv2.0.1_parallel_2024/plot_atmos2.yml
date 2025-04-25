@@ -1,0 +1,15 @@
+# yaml configure file
+stormModel: HFSA
+stormName: HELENE
+stormID: 09L
+stormBasin: AL
+stormDomain: storm
+#stormDomain: parent
+ymdh: '2024092512'
+fhhh: f000
+trackon: 'yes'
+COMhafs: ['/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HAFSv2p0p1a_2024rt/2024092512/09l/','/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HAFSv2p0p1a_2024rt_BBL_EFFIC/2024092512/09l/']
+cartopyDataDir: /work/noaa/hwrf/local/share/cartopy
+exp_labels: ['BBL_EFFIC_0.2','BBL_EFFIC_0.2']
+exp_colors: ['cadetblue','lightcoral']
+

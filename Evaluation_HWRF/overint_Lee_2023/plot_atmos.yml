@@ -1,0 +1,46 @@
+# yaml configure file
+stormModel: hwrfprs.synoptic.0p125
+stormName: LEE
+stormID: 13L
+stormBasin: AL
+stormDomain: storm
+#stormDomain: parent
+ymdh: '2023090706'
+fhhh: f120
+standardLayer: 850
+COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HWRF_2023/2023090706/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HWRF_HYCOM/2023090706/13l
+cartopyDataDir: /scratch1/NCEPDEV/hwrf/noscrub/local/share/cartopy
+
+#
+#
+#stormModel: HFSB
+#stormName: EARL
+#stormID: 18L
+#stormBasin: AL
+#stormDomain: parent
+#ymdh: '2021092800'
+#fhhh: f048
+#standardLayer: 850
+#COMhafs: /scratch1/NCEPDEV/hwrf/save/Maria.Aristizabal/hafs_graphics_production_hafs.v1/ush/python/atmos
+#cartopyDataDir: /scratch1/NCEPDEV/hwrf/noscrub/local/share/cartopy
+
+
+#stormModel: HFSA
+#stormModel: HFSB
+##stormName: EARL
+#stormName: SAM
+##stormID: 06L
+#stormID: 18L
+#stormBasin: AL
+#stormDomain: parent
+##stormDomain: storm
+##ymdh: '2022090500'
+#ymdh: '2021092800'
+#fhhh: f126
+##fhhh: f048
+#standardLayer: 850
+##COMhafs: /work/noaa/hwrf/save/maristiz/hafs_graphics/ush/python/atmos
+#COMhafs: /scratch1/NCEPDEV/hwrf/save/Maria.Aristizabal/hafs_graphics_old/ush/python/atmos
+##cartopyDataDir: /work/noaa/hwrf/local/share/cartopy
+#cartopyDataDir: /scratch1/NCEPDEV/hwrf/noscrub/local/share/cartopy

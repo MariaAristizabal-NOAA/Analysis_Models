@@ -1,0 +1,21 @@
+# yaml configure file
+#stormModel: HFSA
+stormModel: HFSB
+stormName: MILTON
+stormID: 14L
+stormBasin: AL
+ymdh: '2024100606'
+fhhh: f000
+trackon: 'yes'
+#COMhafs1: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/2024100606/14l
+#COMhafs2: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/2024100606/14l
+COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSB_oper/2024100606/14l
+COMhafs1: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSB_oper/2024100606/14l
+COMhafs2: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSB_oper/2024100606/14l
+exp1_name: 'HFSB'
+exp2_name: 'HFSB'
+cartopyDataDir: /scratch1/NCEPDEV/hwrf/noscrub/local/share/cartopy
+xmin: -100
+xmax: -60
+ymin: 5
+ymax: 40

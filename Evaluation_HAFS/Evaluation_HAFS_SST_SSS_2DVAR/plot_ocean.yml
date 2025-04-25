@@ -1,0 +1,22 @@
+# yaml configure file
+stormModel: HFSA
+stormName: FRANCINE
+stormID: 06L
+stormBasin: AL
+ymdh: '2024091112'
+fhhh: f000
+trackon: 'yes'
+#COMhafs: /work/noaa/hwrf/scrub/maristiz/hafsv2_develop_July9_CTL_RTOFS_v2.4_hfsa_dev/com/2024091112/06L/
+COMhafs: /work/noaa/hwrf/scrub/maristiz/hafsv2_develop_July9_SST_SSS_2DVAR_RTOFS_v2.4_hfsa_dev/com/2024091112/06L/
+cartopyDataDir: /work/noaa/hwrf/local/share/cartopy
+
+# yaml configure file
+#stormModel: HFSA
+#stormName: LAURA
+#stormID: 13L
+#stormBasin: AL
+#ymdh: '2020082512'
+#fhhh: f006
+#trackon: yes
+#COMhafs: /scratch1/NCEPDEV/hwrf/scrub/Maria.Aristizabal/hafsv1_merge_mom6_hfsa_mom6/com/2020082512/13L
+#cartopyDataDir: /scratch1/NCEPDEV/hwrf/noscrub/local/share/cartopy

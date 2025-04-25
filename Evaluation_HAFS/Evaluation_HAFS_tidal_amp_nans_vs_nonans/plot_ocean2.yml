@@ -1,0 +1,11 @@
+# yaml configure file
+stormModel: HFSA
+stormName: Kirk
+stormID: 12L
+stormBasin: AL
+ymdh: '2024100118'
+fhhh: f048
+trackon: 'no'
+COMhafs1: /work/noaa/hwrf/scrub/maristiz/hafs_20241220_tideamp_nans_v2p1a_baseline/com/2024100118/12L
+COMhafs2: /work/noaa/hwrf/scrub/maristiz/hafs_20241220_tideamp_nonans_times_mask_v2p1a_baseline/com/2024100118/12L
+cartopyDataDir: /work/noaa/hwrf/noscrub/local/share/cartopy

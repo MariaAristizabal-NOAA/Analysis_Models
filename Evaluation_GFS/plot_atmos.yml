@@ -1,0 +1,30 @@
+# yaml configure file
+#Helene
+stormModel: HFSA
+stormName: HELENE
+stormID: 09L
+stormBasin: AL
+stormDomain: storm
+ymdh: '2024092500'
+fhhh: f030
+standardLayer: 850
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/2024092500/09l
+#COMhafs: /scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20241220_v2p1a_baseline/2024092500/09l
+COMhafs: /scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20250210_v2p1a_ha30/2024092500/09l
+cartopyDataDir: /scratch1/NCEPDEV/hwrf/noscrub/local/share/cartopy
+
+#
+#Milton
+#stormModel: HFSA
+#stormName: MILTON
+#stormID: 14L
+#stormBasin: AL
+#stormDomain: storm
+#ymdh: '2024100800'
+#fhhh: f042
+#standardLayer: 850
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/2024100800/14l
+#COMhafs: /scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20241220_v2p1a_baseline/2024100800/14l
+#COMhafs: /scratch2/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20250210_v2p1a_ha30/2024100800/14l
+#cartopyDataDir: /scratch1/NCEPDEV/hwrf/noscrub/local/share/cartopy
+

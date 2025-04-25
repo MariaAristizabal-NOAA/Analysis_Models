@@ -1,0 +1,32 @@
+# yaml configure file
+stormModel: HFSA
+#stormModel: HFSB
+stormName: BERYL
+stormID: 02L
+stormBasin: AL
+stormDomain: storm
+#stormDomain: parent
+ymdh: '2024062818'
+fhhh: f024
+standardLayer: 850
+COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/hafs_20250131_v2p1b_hpb5_kappa_shear_Ric_025/2024062818/02l
+cartopyDataDir: /scratch1/NCEPDEV/hwrf/noscrub/local/share/cartopy
+
+#
+#stormModel: HFSA
+#stormModel: HFSB
+#stormName: LEE
+#stormID: 13L
+#stormBasin: AL
+#stormDomain: storm
+#stormDomain: parent
+#ymdh: '2023090700'
+#fhhh: f054
+#standardLayer: 850
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HAFSv2A_final/2023090700/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HAFSv2_h3a0_rtofsv2/2023090700/13l
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HAFSv2_h3a0_rtofsv2_mom6epbl/2023090700/13l
+#
+#COMhafs: /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HAFSv2_h3a0_rtofsv2_mom6ri/2023090700/13l
+#cartopyDataDir: /scratch1/NCEPDEV/hwrf/noscrub/local/share/cartopy
+
