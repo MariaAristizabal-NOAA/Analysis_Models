@@ -84,6 +84,8 @@ kd_ePBL = np.empty((len(conf['COMhafs']),ni))
 kd_ePBL[:] = np.nan
 kd_shear = np.empty((len(conf['COMhafs']),ni))
 kd_shear[:] = np.nan
+kd_interface = np.empty((len(conf['COMhafs']),ni))
+kd_interface[:] = np.nan
 Zl = np.empty((len(conf['COMhafs']),nl))
 Zl[:] = np.nan 
 Zi = np.empty((len(conf['COMhafs']),ni))
@@ -126,6 +128,7 @@ for exp in np.arange(len(conf['COMhafs'])):
         tempp0 = np.asarray(nc000['temp'][0,:,:,:])
         kdd_ePBL = np.asarray(nc['Kd_ePBL'][0,:,:,:])
         kdd_shear = np.asarray(nc['Kd_shear'][0,:,:,:])
+        kdd_interface = np.asarray(nc['Kd_interface'][0,:,:,:])
         lon = np.asarray(nc.xh)
         lat = np.asarray(nc.yh)
         lonq = np.asarray(nc.xq)
@@ -169,6 +172,7 @@ for exp in np.arange(len(conf['COMhafs'])):
         mld[exp] = mldd[ypos,xpos]
         kd_ePBL[exp,:] = kdd_ePBL[:,ypos,xpos]
         kd_shear[exp,:] = kdd_shear[:,ypos,xpos]
+        kd_interface[exp,:] = kdd_interface[:,ypos,xpos]
         Zl[exp,:] = zl
         Zi[exp,:] = zi
     
@@ -300,6 +304,39 @@ else:
 
 model_info = os.environ.get('TITLEgraph','').strip()
 var_info = 'Kd_shear ($m^2/s$) Profile at  ' + str(np.round(lon_prof,2)) + ' ' + hemis + ' ' + str(np.round(lat_prof+1,2))
+storm_info = conf['stormName']+conf['stormID']
+title_left = """{0}\n{1}\n{2}""".format(model_info,var_info,storm_info)
+ax.set_title(title_left, loc='left', y=0.99,fontsize=8)
+title_right = conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+conf['validTime'].strftime(' Valid: %Y%m%d%HZ')
+ax.set_title(title_right, loc='right', y=0.99,fontsize=8)
+footer = os.environ.get('FOOTERgraph','Experimental HAFS Product').strip()
+
+# Kd_interface profile
+kd_max = np.empty((len(conf['COMhafs']),kd_ePBL.shape[1]))
+kd_max[:] = np.nan
+for exp in np.arange(len(conf['COMhafs'])):
+    for z in np.arange(kd_ePBL.shape[1]):
+       kd_max[exp,z] = np.max([kd_ePBL[exp,z],kd_shear[exp,z]])
+
+fig,ax = plt.subplots(figsize=(4,7))
+for exp in np.arange(len(conf['COMhafs'])):
+    ax.plot(kd_max[exp,:],-zi,'x-',color=conf['exp_colors'][exp],label=conf['exp_labels'][exp],markeredgecolor='k',markersize=7)
+    ax.plot(kd_interface[exp,:],-zi,'.-',color=conf['exp_colors'][exp],label=conf['exp_labels'][exp],markeredgecolor='k',markersize=7)
+    ax.plot(np.arange(0,0.31,0.01),-np.tile(mld[exp],len(np.arange(0,0.31,0.01))),'--',color=conf['exp_colors'][exp])
+
+plt.legend()
+ax.set_xlim([0,0.3])
+ax.set_ylim([-150,0])
+ax.set_ylabel('Depth (m)')
+ax.set_xlabel('Kd_shear')
+
+if lon_eye >= 0:
+    hemis = 'E'
+else:
+    hemis = 'W'
+
+model_info = os.environ.get('TITLEgraph','').strip()
+var_info = 'Kd_interface ($m^2/s$) Profile at  ' + str(np.round(lon_prof,2)) + ' ' + hemis + ' ' + str(np.round(lat_prof+1,2))
 storm_info = conf['stormName']+conf['stormID']
 title_left = """{0}\n{1}\n{2}""".format(model_info,var_info,storm_info)
 ax.set_title(title_left, loc='left', y=0.99,fontsize=8)
