@@ -1,0 +1,38 @@
+# yaml configure file
+rdate: '2023090600'
+mom6_file: '/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/NCODA_MOM6/rtofs.20230907/ocnm_2023_248_21.nc'
+
+ncoda_file:  '/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/NCODA_MOM6/rtofs.20230907/ncoda/hycom_var/restart/seatmp_lyr_1o4500x3297_2023090600_0024_fcstfld'
+# z level to read. 1 is the surface. 41 is the last layer.
+rLayer: 10
+# Plotting range of values
+min_value: -5
+max_value: 36
+dvalue: 5
+cmap_name: 'Spectral_r'
+#min_value: -1
+#max_value: 1.1
+#dvalue: 0.1
+#cmap_name: 'coolwarm'
+
+#ncoda_file:  '/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/NCODA_output/rtofs.20230907/ncoda/hycom_var/restart/seatmp_pre_1o4500x3297_2023090600_0000_fcsterr'
+# Plotting range of values
+#min_value: 0
+#max_value: 2.5
+#dvalue: 0.2
+#cmap_name: 'Reds'
+
+#ncoda_file:  '/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/NCODA_output/rtofs.20230907/ncoda/hycom_var/restart/seatmp_pre_1o4500x3297_2023090600_0000_analinc'
+# Plotting range of values
+#min_value: -1.0
+#max_value: 1.1
+#dvalue: 0.1
+#cmap_name: 'coolwarm'
+
+#ncoda_file:  '/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/NCODA_output/rtofs.20230907/ncoda/hycom_var/restart/seatmp_pre_1o4500x3297_2023090600_0000_analfld'
+# Plotting range of values
+#min_value = -5
+#max_value = 36
+#dvalue = 5
+#cmap_name: 'Spectral_r'
+

@@ -1,0 +1,8 @@
+# yaml configure file
+rdate: '2023090600'
+ncoda_file:  '/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/NCODA_MOM6/rtofs.20230907/ncoda/hycom_var/restart/seatmp_pre_1o4500x3297_2023090600_0000_rawdata'
+mom6_backg: '/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/RTOFS_MOM6/rtofs.20230906/ocnp_2023_249_00.nc'
+mom6_anal: '/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/RTOFS_MOM6/rtofs.20230907/ocnp_2023_249_00.nc'
+mom6_f24: '/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/RTOFS_MOM6/rtofs.20230907/ocnp_2023_250_00.nc'
+
+

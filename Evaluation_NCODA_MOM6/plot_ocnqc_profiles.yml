@@ -1,0 +1,6 @@
+# yaml configure file
+ocnqc_file:  /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/NCODA_MOM6/rtofs.20230907/ncoda/ocnqc/profile/2023090600.profile
+#ocnqc_file:  /scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/NCODA_MOM6/rtofs.20230907/ncoda/ocnqc/profile/2023082300.profile
+cartopyDataDir: /scratch1/NCEPDEV/hwrf/local/share/cartopy
+
+
