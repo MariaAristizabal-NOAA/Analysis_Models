@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 #import cartopy.crs as ccrs
 #import cartopy.feature as cfeature
 
-sys.path.append('/home/Maria.Aristizabal/Analysis_Models/Evaluation_NCODA_MOM6/MyPython_Dmitry/ncoda_utils')
+sys.path.append('/home/Maria.Aristizabal/RTOFS_utilities_Dmitry/MyPython/ncoda_utils')
 import mod_read_ncoda as rncoda
 
 ###################################################################
