@@ -1,0 +1,12 @@
+# yaml configure file
+stormModel: HFSA
+#stormModel: HFSB
+stormName: ERIN
+stormID: 05L
+stormBasin: AL
+ymdh: '2025081500'
+fhhh: f084
+trackon: 'yes'
+COMhafs: /scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/2025081500/05l
+cartopyDataDir: /scratch3/NCEPDEV/hwrf/noscrub/local/cartopy
+
