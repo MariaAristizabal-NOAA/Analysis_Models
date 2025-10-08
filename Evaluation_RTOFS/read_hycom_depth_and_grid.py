@@ -4,8 +4,10 @@
 #gridfile_hycom = '/work/noaa/hwrf/save/maristiz/hafsv2p1_final_20250409_Kd_output_MOM6/fix/fix_hycom/hafs_hycom_nhc.basin.regional.grid'
 #depthfile_hycom = '/work/noaa/hwrf/save/maristiz/hafsv2p1_final_20250409_Kd_output_MOM6/fix/fix_hycom/hafs_hycom_jtnh.basin.regional.depth'
 #gridfile_hycom = '/work/noaa/hwrf/save/maristiz/hafsv2p1_final_20250409_Kd_output_MOM6/fix/fix_hycom/hafs_hycom_jtnh.basin.regional.grid'
-depthfile_hycom = '/work/noaa/hwrf/save/maristiz/hafsv2p1_final_20250409_Kd_output_MOM6/fix/fix_hycom/hafs_hycom_jtsh.basin.regional.depth'
-gridfile_hycom = '/work/noaa/hwrf/save/maristiz/hafsv2p1_final_20250409_Kd_output_MOM6/fix/fix_hycom/hafs_hycom_jtsh.basin.regional.grid'
+#depthfile_hycom = '/work/noaa/hwrf/save/maristiz/hafsv2p1_final_20250409_Kd_output_MOM6/fix/fix_hycom/hafs_hycom_jtsh.basin.regional.depth'
+#gridfile_hycom = '/work/noaa/hwrf/save/maristiz/hafsv2p1_final_20250409_Kd_output_MOM6/fix/fix_hycom/hafs_hycom_jtsh.basin.regional.grid'
+depthfile_hycom = '/work/noaa/hwrf/save/maristiz/scripts_to_prep_MOM6/RTOFS_IC_ncl/2025062400_AR_domain/regional.depth'
+gridfile_hycom = '/work/noaa/hwrf/save/maristiz/scripts_to_prep_MOM6/RTOFS_IC_ncl/2025062400_AR_domain/regional.grid'
 
 #%%
 import matplotlib.pyplot as plt
@@ -23,6 +25,8 @@ idm = int([line.split() for line in lines_grid if 'idm' in line][0][0])
 jdm = int([line.split() for line in lines_grid if 'jdm' in line][0][0])
 lon_hycom = np.array(readgrids(gridfile_hycom,'plon:',[0]))
 lat_hycom = np.array(readgrids(gridfile_hycom,'plat:',[0]))
+pang_hycom = np.array(readgrids(gridfile_hycom,'pang:',[0]))
+
 
 #%% Reading depths
 depth_hycom = readdepth(depthfile_hycom,'depth',pntidx=None)
