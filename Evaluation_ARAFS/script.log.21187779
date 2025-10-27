@@ -1,0 +1,94 @@
+Parse the config file: plot_atmos3.yml:
+ARAFS
+f000
+grib2file: /work/noaa/hwrf/save/kwu/gaeaData/3Hr/2023011400/00E/2023011400.arafs.parent.atm.f000.grb2
+Extracting lat, lon
+Extracting surface temperature
+Model time  2023-01-14 00:00:00
+Obs time  2023-01-14T00:00:00.000000000
+f024
+grib2file: /work/noaa/hwrf/save/kwu/gaeaData/3Hr/2023011400/00E/2023011400.arafs.parent.atm.f024.grb2
+Extracting lat, lon
+Extracting surface temperature
+Model time  2023-01-15 00:00:00
+Obs time  2023-01-15T00:00:00.000000000
+f048
+grib2file: /work/noaa/hwrf/save/kwu/gaeaData/3Hr/2023011400/00E/2023011400.arafs.parent.atm.f048.grb2
+Extracting lat, lon
+Extracting surface temperature
+Model time  2023-01-16 00:00:00
+Obs time  2023-01-16T00:00:00.000000000
+f072
+grib2file: /work/noaa/hwrf/save/kwu/gaeaData/3Hr/2023011400/00E/2023011400.arafs.parent.atm.f072.grb2
+Extracting lat, lon
+Extracting surface temperature
+Model time  2023-01-17 00:00:00
+Obs time  2023-01-17T00:00:00.000000000
+f096
+grib2file: /work/noaa/hwrf/save/kwu/gaeaData/3Hr/2023011400/00E/2023011400.arafs.parent.atm.f096.grb2
+Extracting lat, lon
+Extracting surface temperature
+Model time  2023-01-18 00:00:00
+Obs time  2023-01-18T00:00:00.000000000
+f120
+grib2file: /work/noaa/hwrf/save/kwu/gaeaData/3Hr/2023011400/00E/2023011400.arafs.parent.atm.f120.grb2
+Extracting lat, lon
+Extracting surface temperature
+Model time  2023-01-19 00:00:00
+Obs time  2023-01-19T00:00:00.000000000
+ARAFS_OCN
+f000
+grib2file: /work/noaa/hwrf/save/kwu/gaeaData/Exp4_OCP_2/2023011400/00E/00e.2023011400.arafs.parent.atm.f000.grb2
+Extracting lat, lon
+Extracting surface temperature
+Model time  2023-01-14 00:00:00
+Obs time  2023-01-14T00:00:00.000000000
+f024
+grib2file: /work/noaa/hwrf/save/kwu/gaeaData/Exp4_OCP_2/2023011400/00E/00e.2023011400.arafs.parent.atm.f024.grb2
+Extracting lat, lon
+Extracting surface temperature
+Model time  2023-01-15 00:00:00
+Obs time  2023-01-15T00:00:00.000000000
+f048
+grib2file: /work/noaa/hwrf/save/kwu/gaeaData/Exp4_OCP_2/2023011400/00E/00e.2023011400.arafs.parent.atm.f048.grb2
+Extracting lat, lon
+Extracting surface temperature
+Model time  2023-01-16 00:00:00
+Obs time  2023-01-16T00:00:00.000000000
+f072
+grib2file: /work/noaa/hwrf/save/kwu/gaeaData/Exp4_OCP_2/2023011400/00E/00e.2023011400.arafs.parent.atm.f072.grb2
+Extracting lat, lon
+Extracting surface temperature
+Model time  2023-01-17 00:00:00
+Obs time  2023-01-17T00:00:00.000000000
+f096
+grib2file: /work/noaa/hwrf/save/kwu/gaeaData/Exp4_OCP_2/2023011400/00E/00e.2023011400.arafs.parent.atm.f096.grb2
+Extracting lat, lon
+Extracting surface temperature
+Model time  2023-01-18 00:00:00
+Obs time  2023-01-18T00:00:00.000000000
+f120
+grib2file: /work/noaa/hwrf/save/kwu/gaeaData/Exp4_OCP_2/2023011400/00E/00e.2023011400.arafs.parent.atm.f120.grb2
+Extracting lat, lon
+Extracting surface temperature
+Model time  2023-01-19 00:00:00
+Obs time  2023-01-19T00:00:00.000000000
+MOM6
+f000
+Model time  2023-01-19 00:00:00
+Obs time  2023-01-19T00:00:00.000000000
+f024
+Model time  2023-01-19 00:00:00
+Obs time  2023-01-19T00:00:00.000000000
+f048
+Model time  2023-01-19 00:00:00
+Obs time  2023-01-19T00:00:00.000000000
+f072
+Model time  2023-01-19 00:00:00
+Obs time  2023-01-19T00:00:00.000000000
+f096
+Model time  2023-01-19 00:00:00
+Obs time  2023-01-19T00:00:00.000000000
+f120
+Model time  2023-01-19 00:00:00
+Obs time  2023-01-19T00:00:00.000000000

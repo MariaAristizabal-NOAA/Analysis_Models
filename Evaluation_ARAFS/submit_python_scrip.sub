@@ -1,0 +1,23 @@
+#!/bin/sh
+#SBATCH --job-name=ARAFS_analysis
+#SBATCH --account=hurricane
+##SBATCH --account=hwrf
+#SBATCH --qos=batch
+##SBATCH --qos=debug
+##SBATCH -N 6
+#SBATCH -n 2
+#SBATCH -t 2:00:00
+##SBATCH -t 00:30:00
+##SBATCH --partition=orion
+##SBATCH --partition=debug
+#SBATCH -o script.log.%j
+#SBATCH -e script.log.%j
+##SBATCH -D.
+#SBATCH --mail-user=Maria.Aristizabal@noaa.gov
+#SBATCH --mail-type=ALL
+
+source /home/maristiz/load_miniconda_work2.sh
+conda activate WCOSS2_env
+
+python surf_temp_OSTIA_vs_ARAFS.py
+#python surf_temp_OSTIA_vs_ARAFS_stats.py
