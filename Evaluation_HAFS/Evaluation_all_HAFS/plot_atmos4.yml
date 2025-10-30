@@ -1,0 +1,19 @@
+# yaml configure file
+stormModel: HFSA
+Stormid: 13l
+Basin: al
+Experiments: ['HFSA']
+Exp_colors: ['darkviolet']
+Exp_markers: ['p','o']
+stormDomain: parent
+Data_prod: ['ARGO']
+ymdh: '2025102418'
+fhhhs: [f000,f024,f048,f072,f096,f120]
+COMmodels: ['/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/']
+COMobs: ['/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/Data/Argo_floats/2025/']
+Fileobs: ['argofloats_Hurr_Melissa.nc']
+cartopyDataDir: /scratch3/NCEPDEV/hwrf/noscrub/local/cartopy
+xlim: [-80,-60]
+ylim: [10,30]
+folder_myutils: '/home/Maria.Aristizabal/Maria_Utils/'
+abdeck_folder: '/scratch4/HFIP/hwrfv3/noscrub/input/abdeck/'

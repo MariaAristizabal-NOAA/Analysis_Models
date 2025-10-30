@@ -1,0 +1,17 @@
+# yaml configure file
+stormModel: HFSA
+stormName: MELISSA
+stormID: 13L
+stormBasin: AL
+ymdh: '2025102418'
+fhhh: f018
+trackon: 'yes'
+COMhafs: ['/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/2025102418/13l']
+cartopyDataDir: /scratch3/NCEPDEV/hwrf/noscrub/local/cartopy
+exp_labels: ['HFSA']
+exp_colors: ['darkviolet']
+#exp_colors: ['purple','dodgerblue','#00c8c8']
+
+
+#
+

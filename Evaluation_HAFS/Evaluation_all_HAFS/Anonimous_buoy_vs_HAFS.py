@@ -2,18 +2,19 @@
 # forecasting cycle to be used
 
 # Erin
-#storm_num = '05'
-#basin = 'al'
-#storm_id = '05l'
-#cycle = '2025081500'
-#year = '2025'
+storm_num = '98'
+basin = 'al'
+storm_id = '98l'
+cycle = '2025101818'
+year = '2025'
 
-# Melissa
+'''
 storm_num = '13'
 basin = 'al'
 storm_id = '13l'
 cycle = '2025102112'
 year = '2025'
+'''
 
 exp_names = ['HFSA_oper']
 exp_labels = ['HFSA']
@@ -31,7 +32,7 @@ bath_file = scratch_folder +'bathymetry_files/GEBCO_2014_2D_-100.0_0.0_-10.0_70.
 
 best_track_file = abdeck_folder + 'btk/b' + basin + storm_num + cycle[0:4] + '.dat'
 
-url_NDBC = '/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/Data/NDBC_buoys/2025/NDBC_buoy_Melissa_2025.nc'
+url_buoy = '/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/Data/Buoy_Hurr_Melissa_2025/buoy_1.nc'
 
 lon_lim = [-80,-50.0]
 lat_lim = [10.0,40.0]
@@ -100,45 +101,28 @@ lon_best_track, lat_best_track, t_best_track, int_best_track, name_storm = get_b
 time_best_track = np.asarray([datetime.strptime(t,'%Y%m%d%H') for t in t_best_track])
 
 #################################################################################
-#%% Read Saildrone data
+#%% Read  data
 # Sam
 
-url = url_NDBC
+url = url_buoy
 
 gdata = xr.open_dataset(url)#,decode_times=False)
 
-stationB = gdata.station.values
-latitude = np.asarray(gdata.latitude)
-longitude = np.asarray(gdata.longitude)
+latitude = np.asarray(gdata.lat)
+longitude = np.asarray(gdata.lon)
 time = np.asarray(gdata.time)
-wd = np.asarray(gdata.wd) # wind direction (the direction the wind is coming from in degrees clockwise from true N)
-wspd = np.asarray(gdata.wspd) # Average wind speed (m/s)
-wvht = np.asarray(gdata.wvht) # Significant wave height (meters) is calculated as the average of the highest one-third of all of the wave heights during the 20-minute sampling period.
-dpd = np.asarray(gdata.dpd) # Dominant wave period (seconds) is the period with the maximum wave energy.
-apd = np.asarray(gdata.apd) # Average wave period (seconds) of all waves during the 20-minute period.
-mwd = np.asarray(gdata.mwd) # Mean wave direction corresponding to energy of the dominant period (DOMPD).
-bar = np.asarray(gdata.bar) # Air pressure (hPa).
-wtmp = np.asarray(gdata.wtmp) # Sea surface temperature (Celsius).
-
-times = np.asarray(gdata.time)
-timestamp = mdates.date2num(time)
+sst = np.asarray(gdata.sst)-273.15 
+timestampp = mdates.date2num(time)
 #times = np.asarray(mdates.num2date(timestamps))
 oktimeg = np.logical_and(mdates.date2num(time) >= mdates.date2num(tini),\
                          mdates.date2num(time) <= mdates.date2num(tend))
 
 # Fields within time window
-timesB = times[oktimeg]
-timestampB = timestamp[oktimeg]
+timeB = time[oktimeg]
+timestampB = timestampp[oktimeg]
 latB = latitude[oktimeg]
 lonB = longitude[oktimeg]
-wdB = wd[oktimeg]
-wspdB = wspd[oktimeg]
-wvhtB = wvht[oktimeg]
-dpdB = dpd[oktimeg]
-apdB = apd[oktimeg]
-mwdB = mwd[oktimeg]
-barB = bar[oktimeg]
-wtmpB = wtmp[oktimeg]
+sstB = sst[oktimeg]
 
 #################################################################################
 #%% Loop the experiments
@@ -169,8 +153,8 @@ target_mwdB = np.empty((len(folder_exps),43))
 target_mwdB[:] = np.nan
 target_barB = np.empty((len(folder_exps),43))
 target_barB[:] = np.nan
-target_wtmpB = np.empty((len(folder_exps),43))
-target_wtmpB[:] = np.nan
+target_sstB = np.empty((len(folder_exps),43))
+target_sstB[:] = np.nan
 
 for i,folder in enumerate(folder_exps):
     print(folder)
@@ -300,7 +284,7 @@ for i,folder in enumerate(folder_exps):
     lat_obs = latB[oklo]
     timestamp_obs = timestamp_obss[oklo]
 
-    target_timeBocean, target_wtmpB[i,0:len(ncfiles)] = get_var_from_model_following_trajectory(lon_obs,lat_obs,timestamp_obs,ncfiles,temp_name,time_name=time_name,lon_name=lon_name,lat_name=lat_name,depth_level=0)
+    target_timeBocean, target_sstB[i,0:len(ncfiles)] = get_var_from_model_following_trajectory(lon_obs,lat_obs,timestamp_obs,ncfiles,temp_name,time_name=time_name,lon_name=lon_name,lat_name=lat_name,depth_level=0)
         
     target_timeB_ocean.append(target_timeBocean)
 
@@ -309,13 +293,15 @@ for i,folder in enumerate(folder_exps):
 #%% Figure track
 lev = np.arange(-9000,9100,100)
 
+okt = np.where(t_best_track == cycle)[0][0]
+
 fig,ax = plt.subplots()
 plt.contourf(bath_lon,bath_lat,bath_elev,[0,10000],colors='silver')
 plt.contour(bath_lon,bath_lat,bath_elev,[0],colors='k')
-plt.plot(lon_best_track, lat_best_track,'o-',color='k',label='Best Track')
+plt.plot(lon_best_track[okt:], lat_best_track[okt:],'o-',color='k',label='Best Track')
 for i in np.arange(len(exp_names)):
     plt.plot(lon_forec_track[i,::2], lat_forec_track[i,::2],'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
-plt.plot(lonB, latB,'*',color='blue',label='NDBC Buoy '+np.unique(stationB)[0],markersize=7)
+plt.plot(lonB, latB,'*',color='blue',label='Buoy ',markersize=7)
 #plt.legend(loc='upper right',bbox_to_anchor=[1.3,0.8])
 plt.legend(loc='upper right')
 plt.title('Track Forecast ' + storm_num + ' cycle '+ cycle,fontsize=18)
@@ -328,24 +314,24 @@ lev = np.arange(-9000,9100,100)
 fig,ax = plt.subplots()
 plt.contourf(bath_lon,bath_lat,bath_elev,[0,10000],colors='silver')
 plt.contour(bath_lon,bath_lat,bath_elev,[0],colors='k')
-plt.plot(lon_best_track, lat_best_track,'o-',color='k',label='Best Track')
+plt.plot(lon_best_track[okt:], lat_best_track[okt:],'o-',color='k',label='Best Track')
 for i in np.arange(len(exp_names)):
     plt.plot(lon_forec_track[i,::2], lat_forec_track[i,::2],'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
-plt.plot(lonB, latB,'*',color='blue',label='NDBC Buoy '+np.unique(stationB)[0],markersize=7)
+plt.plot(lonB, latB,'*',color='blue',label='Buoy',markersize=7)
 plt.legend(loc='upper right',bbox_to_anchor=[1.3,1.0])
 #plt.legend(loc='upper right')
 plt.title('Track Forecast ' + storm_num + ' cycle '+ cycle,fontsize=18)
 plt.axis('scaled')
-plt.xlim([np.nanmin(lonB)-3,np.nanmax(lonB)+3])
-plt.ylim([np.nanmin(latB)-3,np.nanmax(latB)+3])
-
+plt.xlim([np.nanmin(lonB)-8,np.nanmax(lonB)+8])
+plt.ylim([np.nanmin(latB)-8,np.nanmax(latB)+8])
 
 #################################################################################
 
 fig,ax = plt.subplots(figsize=(10, 4))
-plt.plot(timesB,wtmpB,'.-',color='blue',label='NDBC Buoy '+np.unique(stationB)[0])
+#plt.plot(timestampB,sstB,'.-',color='blue',label='Buoy')
+plt.plot(timestampp,sst,'.-',color='blue',label='Buoy')
 for i in np.arange(len(exp_names)):
-    plt.plot(target_timeB_ocean[i],target_wtmpB[i,0:len(target_timeB_ocean[i])],'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
+    plt.plot(target_timeB_ocean[i],target_sstB[i,0:len(target_timeB_ocean[i])],'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
 #plt.legend(loc='upper right',bbox_to_anchor=[1.3,1.0])
 plt.legend(loc='upper right')
 plt.title('Water Temperature Cycle '+ cycle,fontsize=18)
@@ -367,69 +353,4 @@ ax.xaxis.set_major_formatter(date_form)
 plt.ylim([1000,1020])
 '''
 
-fig,ax = plt.subplots(figsize=(10, 4))
-plt.plot(timesB,wspdB,'.-',color='blue',label='NDBC Buoy '+np.unique(stationB)[0])
-for i in np.arange(len(exp_names)):
-    plt.plot(target_timeB_ww3[i],target_wspdB[i,0:len(target_timeB_ww3[i])],'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
-#plt.legend(loc='upper right',bbox_to_anchor=[1.3,1.0])
-plt.legend(loc='upper right')
-plt.title('Wind Speed Cycle '+ cycle,fontsize=18)
-plt.ylabel('($m/s$)',fontsize=14)
-date_form = DateFormatter("%m-%d")
-ax.xaxis.set_major_formatter(date_form)
-
-fig,ax = plt.subplots(figsize=(10, 4))
-plt.plot(timesB,wvhtB,'.-',color='blue',label='NDBC Buoy '+np.unique(stationB)[0])
-for i in np.arange(len(exp_names)):
-    plt.plot(target_timeB_ww3[i],target_wvhtB[i,0:len(target_timeB_ww3[i])],'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
-#plt.legend(loc='upper right',bbox_to_anchor=[1.3,1.0])
-plt.legend(loc='upper right')
-plt.title('Significant Wave Height Cycle '+ cycle,fontsize=18)
-plt.ylabel('(meters)',fontsize=14)
-date_form = DateFormatter("%m-%d")
-ax.xaxis.set_major_formatter(date_form)
-
-fig,ax = plt.subplots(figsize=(10, 4))
-plt.plot(timesB,wdB,'.-',color='blue',label='NDBC Buoy '+np.unique(stationB)[0])
-for i in np.arange(len(exp_names)):
-    plt.plot(target_timeB_ww3[i],target_wdB[i,0:len(target_timeB_ww3[i])],'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
-#plt.legend(loc='upper right',bbox_to_anchor=[1.3,1.0])
-plt.legend(loc='upper right')
-plt.title('Wind Direction Cycle '+ cycle,fontsize=18)
-plt.ylabel('(degrees)',fontsize=14)
-date_form = DateFormatter("%m-%d")
-ax.xaxis.set_major_formatter(date_form)
-
-fig,ax = plt.subplots(figsize=(10, 4))
-plt.plot(timesB,dpdB,'.-',color='blue',label='NDBC Buoy '+np.unique(stationB)[0])
-for i in np.arange(len(exp_names)):
-    plt.plot(target_timeB_ww3[i],target_dpdB[i,0:len(target_timeB_ww3[i])],'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
-#plt.legend(loc='upper right',bbox_to_anchor=[1.3,1.0])
-plt.legend(loc='upper right')
-plt.title('Dominant Wave Period Cycle '+ cycle,fontsize=18)
-plt.ylabel('(Seconds)',fontsize=14)
-date_form = DateFormatter("%m-%d")
-ax.xaxis.set_major_formatter(date_form)
-
-fig,ax = plt.subplots(figsize=(10, 4))
-plt.plot(timesB,apdB,'.-',color='blue',label='NDBC Buoy '+np.unique(stationB)[0])
-for i in np.arange(len(exp_names)):
-    plt.plot(target_timeB_ww3[i],target_apdB[i,0:len(target_timeB_ww3[i])],'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
-#plt.legend(loc='upper right',bbox_to_anchor=[1.3,1.0])
-plt.legend(loc='upper right')
-plt.title('Average Wave Period Cycle '+ cycle,fontsize=18)
-plt.ylabel('(Seconds)',fontsize=14)
-date_form = DateFormatter("%m-%d")
-ax.xaxis.set_major_formatter(date_form)
-
-fig,ax = plt.subplots(figsize=(10, 4))
-plt.plot(timesB,mwdB,'.-',color='blue',label='NDBC Buoy '+np.unique(stationB)[0])
-for i in np.arange(len(exp_names)):
-    plt.plot(target_timeB_ww3[i],target_mwdB[i,0:len(target_timeB_ww3[i])],'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
-#plt.legend(loc='upper right',bbox_to_anchor=[1.3,1.0])
-plt.legend(loc='upper right')
-plt.title('Dominant Wave Direction Cycle '+ cycle,fontsize=18)
-plt.ylabel('(Degrees)',fontsize=14)
-date_form = DateFormatter("%m-%d")
-ax.xaxis.set_major_formatter(date_form)
 
