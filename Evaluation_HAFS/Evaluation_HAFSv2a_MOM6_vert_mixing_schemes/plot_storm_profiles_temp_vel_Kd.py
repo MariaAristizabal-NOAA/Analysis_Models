@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 from scipy.interpolate import RegularGridInterpolator
 
+import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
@@ -61,8 +62,8 @@ def HYCOM_coord_to_geo_coord(lonh,lath):
 
 #================================================================
 # Parse the yaml config file
-print('Parse the config file: plot_ocean3.yml:')
-with open('plot_ocean3.yml', 'rt') as f:
+print('Parse the config file: plot_ocean.yml:')
+with open('plot_ocean.yml', 'rt') as f:
     conf = yaml.safe_load(f)
 conf['stormNumber'] = conf['stormID'][0:2]
 conf['initTime'] = pd.to_datetime(conf['ymdh'], format='%Y%m%d%H', errors='coerce')
@@ -71,276 +72,194 @@ conf['fcstTime'] = pd.to_timedelta(conf['fhour'], unit='h')
 conf['validTime'] = conf['initTime'] + conf['fcstTime']
 
 #================================================================
-# Read ocean files
-nl = 55
-ni = 56
-temp = np.empty((len(conf['COMhafs']),nl))
-temp[:] = np.nan
-dtemp = np.empty((len(conf['COMhafs']),nl))
-dtemp[:] = np.nan  
-mld = np.empty((len(conf['COMhafs'])))
-mld[:] = np.nan
-kd_ePBL = np.empty((len(conf['COMhafs']),ni))
-kd_ePBL[:] = np.nan
-kd_shear = np.empty((len(conf['COMhafs']),ni))
-kd_shear[:] = np.nan
-kd_interface = np.empty((len(conf['COMhafs']),ni))
-kd_interface[:] = np.nan
-Zl = np.empty((len(conf['COMhafs']),nl))
-Zl[:] = np.nan 
-Zi = np.empty((len(conf['COMhafs']),ni))
-Zi[:] = np.nan
-V = np.empty((len(conf['COMhafs']),nl))
-V[:] = np.nan 
+# Get lat and lon from adeck file
 
-for exp in np.arange(len(conf['COMhafs'])):
-
-    # Get lat and lon from adeck file
+if conf['trackon']=='yes':
     adeck_name = conf['stormID'].lower()+'.'+conf['ymdh']+'.'+conf['stormModel'].lower()+'.trak.atcfunix'
-    adeck_file = os.path.join(conf['COMhafs'][exp],adeck_name)
+    adeck_file = os.path.join(conf['COMhafs'],adeck_name)
 
     fhour,lat_adeck,lon_adeck,init_time,valid_time = get_adeck_track(adeck_file)
 
     print('lon_adeck = ',lon_adeck)
     print('lat_adeck = ',lat_adeck)
 
-    oceanf = glob.glob(os.path.join(conf['COMhafs'][exp],'*f006.nc'))[0].split('/')[-1].split('.')
+#================================================================
+# Read ocean files
+
+oceanf = glob.glob(os.path.join(conf['COMhafs'],'*f006.nc'))[0].split('/')[-1].split('.')
+
+ocean = [f for f in oceanf if f == 'hycom' or f == 'mom6'][0]
+
+if ocean == 'mom6':
+    fname000 =  conf['stormID'].lower()+'.'+conf['ymdh']+'.'+conf['stormModel'].lower()+'.mom6.'+'f000.nc'
+    fname =  conf['stormID'].lower()+'.'+conf['ymdh']+'.'+conf['stormModel'].lower()+'.mom6.'+conf['fhhh']+'.nc'
+
+if ocean == 'hycom':
+    fname000 =  conf['stormID'].lower()+'.'+conf['ymdh']+'.'+conf['stormModel'].lower()+'.hycom.3z.'+'f000.nc'
+    fname =  conf['stormID'].lower()+'.'+conf['ymdh']+'.'+conf['stormModel'].lower()+'.hycom.3z.'+conf['fhhh']+'.nc'
+
+ncfile000 = os.path.join(conf['COMhafs'], fname000)
+nc000 = xr.open_dataset(ncfile000)
+ncfile = os.path.join(conf['COMhafs'], fname)
+nc = xr.open_dataset(ncfile)
+
+if ocean == 'mom6':
+    ssuu = np.asarray(nc['uo'][0,:,:,:])
+    ssvv = np.asarray(nc['vo'][0,:,:,:])
+    temp = np.asarray(nc['temp'][0,:,:,:])
+    kdd_ePBL = np.asarray(nc['Kd_ePBL'][0,:,:,:])
+    kdd_shear = np.asarray(nc['Kd_shear'][0,:,:,:])
+    lon = np.asarray(nc.xh)
+    lat = np.asarray(nc.yh)
+    lonq = np.asarray(nc.xq)
+    latq = np.asarray(nc.yq)
+    mldd = np.asarray(nc['MLD_0125'][0,:,:])
+    zl = np.asarray(nc['z_l'])
+    zi = np.asarray(nc['z_i'])
+
+if ocean == 'hycom':
+    ssu = np.asarray(nc['u_velocity'][0,:,:,:])/100
+    ssv = np.asarray(nc['v_velocity'][0,:,:,:])/100
+    varr = np.sqrt(ssu**2 + ssv**2)
+    mldd = np.asarray(nc['mixed_layer_thickness'][0,:,:])
+    zl = np.asarray(nc['Z'])
+    lonh = np.asarray(nc.Longitude)
+    lath = np.asarray(nc.Latitude)
+    lon, lat = HYCOM_coord_to_geo_coord(lonh,lath)
+
+lonmin_raw = np.min(lon)
+lonmax_raw = np.max(lon)
+print('raw lonlat limit: ', np.min(lon), np.max(lon), np.min(lat), np.max(lat))
+
+#================================================================
+#%% Latitudinal transect
+okfhour = conf['fhhh'][1:] == fhour
+if len(lon_adeck[okfhour])==0 or len(lat_adeck[okfhour])==0:
+    print('There is not latitude or longitude for the center of the storm at this forecast hour. Exiting plot_storm_crs_sn_temp.py')
+    sys.exit()
+else:
+    lon_eye = lon_adeck[okfhour][0]
+    xpos = int(np.round(np.interp(lon_eye,lon,np.arange(len(lon)))))
+    lat_eye = lat_adeck[okfhour][0]
+    ypos = int(np.round(np.interp(lat_eye,lat,np.arange(len(lat)))))
     
-    ocean = [f for f in oceanf if f == 'hycom' or f == 'mom6'][0]
-    
-    if ocean == 'mom6':
-        fname000 =  conf['stormID'].lower()+'.'+conf['ymdh']+'.'+conf['stormModel'].lower()+'.mom6.'+'f000.nc'
-        fname =  conf['stormID'].lower()+'.'+conf['ymdh']+'.'+conf['stormModel'].lower()+'.mom6.'+conf['fhhh']+'.nc'
-    
-    if ocean == 'hycom':
-        fname000 =  conf['stormID'].lower()+'.'+conf['ymdh']+'.'+conf['stormModel'].lower()+'.hycom.3z.'+'f000.nc'
-        fname =  conf['stormID'].lower()+'.'+conf['ymdh']+'.'+conf['stormModel'].lower()+'.hycom.3z.'+conf['fhhh']+'.nc'
-    
-    ncfile000 = os.path.join(conf['COMhafs'][exp], fname000)
-    nc000 = xr.open_dataset(ncfile000)
-    ncfile = os.path.join(conf['COMhafs'][exp], fname)
-    nc = xr.open_dataset(ncfile)
-    
-    if ocean == 'mom6':
-        uu = np.asarray(nc['uo'][0,:,:,:])
-        vv = np.asarray(nc['vo'][0,:,:,:])
-        tempp = np.asarray(nc['temp'][0,:,:,:])
-        tempp0 = np.asarray(nc000['temp'][0,:,:,:])
-        kdd_ePBL = np.asarray(nc['Kd_ePBL'][0,:,:,:])
-        kdd_shear = np.asarray(nc['Kd_shear'][0,:,:,:])
-        kdd_interface = np.asarray(nc['Kd_interface'][0,:,:,:])
-        lon = np.asarray(nc.xh)
-        lat = np.asarray(nc.yh)
-        lonq = np.asarray(nc.xq)
-        latq = np.asarray(nc.yq)
-        mldd = np.asarray(nc['MLD_0125'][0,:,:])
-        zl = np.asarray(nc['z_l'])
-        zi = np.asarray(nc['z_i'])
-    
-    if ocean == 'hycom':
-        uu = np.asarray(nc['u_velocity'][0,:,:,:])/100
-        vv = np.asarray(nc['v_velocity'][0,:,:,:])/100
-        #VV = np.sqrt(ssu**2 + ssv**2)
-        mldd = np.asarray(nc['mixed_layer_thickness'][0,:,:])
-        zl = np.asarray(nc['Z'])
-        lonh = np.asarray(nc.Longitude)
-        lath = np.asarray(nc.Latitude)
-        lon, lat = HYCOM_coord_to_geo_coord(lonh,lath)
-    
-    lonmin_raw = np.min(lon)
-    lonmax_raw = np.max(lon)
-    print('raw lonlat limit: ', np.min(lon), np.max(lon), np.min(lat), np.max(lat))
+    ssu = ssuu[:,:,xpos]
+    ssv = ssvv[:,:,xpos]
+    mld = mldd[:,xpos]
+    kd_ePBL = kdd_ePBL[:,:,xpos]
+    kd_shear = kdd_shear[:,:,xpos]
+
+    #zzl,ltth = np.meshgrid(zl,lonq)
+    zll,lttq = np.meshgrid(zl,latq)
+
+    interpolator = RegularGridInterpolator((zl,lat),ssu,bounds_error=False, fill_value=None)
+    ssu_interp = interpolator((zll,lttq)).T
+
+    var = np.sqrt(ssu_interp**2 + ssv**2)
     
     #================================================================
-    #%% profiles at eye location
-    okfhour = conf['fhhh'][1:] == fhour
-    if len(lon_adeck[okfhour])==0 or len(lat_adeck[okfhour])==0:
-        print('There is not latitude or longitude for the center of the storm at this forecast hour. Exiting plot_storm_crs_sn_temp.py')
-        sys.exit()
+    # Temp
+    lat_eye = lat_adeck[okfhour][0]
+
+    fig,ax = plt.subplots(figsize=(8,4))
+    cmap = plt.colormaps['YlOrRd']
+    ncolors = cmap.N
+    levels = np.arange(0,2.1,0.1)
+    norm = matplotlib.colors.BoundaryNorm(levels, ncolors=cmap.N,extend='max')
+    ctr = ax.pcolor(latq,-zl,var,cmap='YlOrRd',norm=norm)
+    cbar = fig.colorbar(ctr,extendrect=True)
+    #ctr = ax.contourf(latq,-zl,var,cmap='YlOrRd',**kw,extend='both')
+    #cbar.set_label('$^oC$',fontsize=14)
+    cs = ax.contour(latq,-zl,var,[26],colors='k')
+    ax.plot(lat,-mld,'-',color='green')
+    ax.plot(np.tile(lat_eye,len(zl)),-zl,'-k')
+    ax.clabel(cs,cs.levels,inline=True,fmt='%1.1f',fontsize=10)
+    ax.set_xlim([lat_eye-4,lat_eye+4])
+    ax.set_ylim([-150,0])
+    ax.set_ylabel('Depth (m)')
+    ax.set_xlabel('Latitude')
+    
+    if lon_eye >= 0:
+        hemis = 'E'
     else:
-        lon_eye = lon_adeck[okfhour][0]
-        lat_eye = lat_adeck[okfhour][0]
-        lon_prof = lon_eye
-        lat_prof = lat_eye + 0.5
-        xpos = int(np.round(np.interp(lon_prof,lon,np.arange(len(lon)))))
-        ypos = int(np.round(np.interp(lat_prof,lat,np.arange(len(lat)))))
+        hemis = 'W'
         
-        temp[exp,:] = tempp[:,ypos,xpos]
-        dtemp[exp,:] = tempp[:,ypos,xpos] - tempp0[:,ypos,xpos]
-        u =  uu[:,ypos,xpos]
-        v = vv[:,ypos,xpos]
-        mld[exp] = mldd[ypos,xpos]
-        kd_ePBL[exp,:] = kdd_ePBL[:,ypos,xpos]
-        kd_shear[exp,:] = kdd_shear[:,ypos,xpos]
-        kd_interface[exp,:] = kdd_interface[:,ypos,xpos]
-        Zl[exp,:] = zl
-        Zi[exp,:] = zi
+    model_info = os.environ.get('TITLEgraph','').strip()
+    var_info = 'Speed ($m/s$) X-section at  ' + str(np.round(lon_eye,2)) + ' ' + hemis
+    storm_info = conf['stormName']+conf['stormID']
+    title_left = """{0}\n{1}\n{2}""".format(model_info,var_info,storm_info)
+    ax.set_title(title_left, loc='left', y=0.99,fontsize=8)
+    title_right = conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+conf['validTime'].strftime(' Valid: %Y%m%d%HZ')
+    ax.set_title(title_right, loc='right', y=0.99,fontsize=8)
+    footer = os.environ.get('FOOTERgraph','Experimental HAFS Product').strip()
+    ax.text(1.0,-0.2, footer, fontsize=8, va="top", ha="right", transform=ax.transAxes)
     
-        V[exp,:] = np.sqrt(u**2 + v**2)
-        
-#================================================================
-# Temp profile
-fig,ax = plt.subplots(figsize=(4,7))
-for exp in np.arange(len(conf['COMhafs'])):
-    ax.plot(temp[exp,:],-zl,'.-',color=conf['exp_colors'][exp],label=conf['exp_labels'][exp],markeredgecolor='k',markersize=7)
-    ax.plot(np.arange(10,31),-np.tile(mld[exp],len(np.arange(10,31))),'--',color=conf['exp_colors'][exp])
-
-plt.legend()
-ax.set_xlim([10,30])
-ax.set_ylim([-150,0])
-ax.set_ylabel('Depth (m)')
-ax.set_xlabel('Temperature')
-
-if lon_eye >= 0:
-    hemis = 'E'
-else:
-    hemis = 'W'
-
-model_info = os.environ.get('TITLEgraph','').strip()
-var_info = 'Temperature ($^oC$) Profile at  ' + str(np.round(lon_prof,2)) + ' ' + hemis + ' ' + str(np.round(lat_prof,2))
-storm_info = conf['stormName']+conf['stormID']
-title_left = """{0}\n{1}\n{2}""".format(model_info,var_info,storm_info)
-ax.set_title(title_left, loc='left', y=0.99,fontsize=8)
-title_right = conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+conf['validTime'].strftime(' Valid: %Y%m%d%HZ')
-ax.set_title(title_right, loc='right', y=0.99,fontsize=8)
-footer = os.environ.get('FOOTERgraph','Experimental HAFS Product').strip()
-ax.text(1.0,-0.2, footer, fontsize=8, va="top", ha="right", transform=ax.transAxes)
+    pngFile = conf['stormName'].upper()+conf['stormID'].upper()+'.'+conf['ymdh']+'.'+conf['stormModel']+'.ocean.storm.crs_sn_temp'+'.'+conf['fhhh'].lower()+'.png'
+    #plt.savefig(pngFile,bbox_inches='tight',dpi=150)
+    #plt.close()
     
-# dtemp profile
-fig,ax = plt.subplots(figsize=(4,7))
-for exp in np.arange(len(conf['COMhafs'])):
-    ax.plot(dtemp[exp,:],-zl,'.-',color=conf['exp_colors'][exp],label=conf['exp_labels'][exp],markeredgecolor='k',markersize=7)
-    ax.plot(np.arange(-4,5),-np.tile(mld[exp],len(np.arange(-4,5))),'--',color=conf['exp_colors'][exp])
+    ##################
+    fig,ax = plt.subplots(figsize=(8,4))
+    #ctr = ax.contourf(lat,-zi,kd_ePBL,cmap='plasma',**kw,extend='both')
+    cmap = plt.colormaps['plasma']
+    ncolors = cmap.N
+    levels = np.arange(0,0.21,0.01)
+    norm = matplotlib.colors.BoundaryNorm(levels, ncolors=cmap.N,extend='max')
+    ctr = ax.pcolor(lat,-zi,kd_ePBL,cmap='plasma',norm=norm)
+    cbar = fig.colorbar(ctr,extendrect=True)
+    cbar.set_label('$m^2/s$',fontsize=14)
+    ax.plot(lat,-mld,'-',color='green')
+    ax.plot(np.tile(lat_eye,len(zl)),-zl,'-k')
+    ax.set_ylim([-150,0])
+    ax.set_xlim([lat_eye-4,lat_eye+4])
+    ax.set_ylabel('Depth (m)')
+    ax.set_xlabel('Latitude')
 
-plt.legend()
-ax.set_xlim([-4,4])
-ax.set_ylim([-150,0])
-ax.set_ylabel('Depth (m)')
-ax.set_xlabel('Temperature Change')
+    if lon_eye >= 0:
+        hemis = 'E'
+    else:
+        hemis = 'W'
 
-if lon_eye >= 0:
-    hemis = 'E'
-else:
-    hemis = 'W'
+    model_info = os.environ.get('TITLEgraph','').strip()
+    var_info = 'Kd ePBL ($m^2/s$) X-section at  ' + str(np.round(lon_eye,2)) + ' ' + hemis
+    storm_info = conf['stormName']+conf['stormID']
+    title_left = """{0}\n{1}\n{2}""".format(model_info,var_info,storm_info)
+    ax.set_title(title_left, loc='left', y=0.99,fontsize=8)
+    title_right = conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+conf['validTime'].strftime(' Valid: %Y%m%d%HZ')
+    ax.set_title(title_right, loc='right', y=0.99,fontsize=8)
+    footer = os.environ.get('FOOTERgraph','Experimental HAFS Product').strip()
+    ax.text(1.0,-0.2, footer, fontsize=8, va="top", ha="right", transform=ax.transAxes)
 
-model_info = os.environ.get('TITLEgraph','').strip()
-var_info = 'Temperature Change ($^oC$) Profile at  ' + str(np.round(lon_prof,2)) + ' ' + hemis + ' ' + str(np.round(lat_prof,2))
-storm_info = conf['stormName']+conf['stormID']
-title_left = """{0}\n{1}\n{2}""".format(model_info,var_info,storm_info)
-ax.set_title(title_left, loc='left', y=0.99,fontsize=8)
-title_right = conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+conf['validTime'].strftime(' Valid: %Y%m%d%HZ')
-ax.set_title(title_right, loc='right', y=0.99,fontsize=8)
-footer = os.environ.get('FOOTERgraph','Experimental HAFS Product').strip()
-ax.text(1.0,-0.2, footer, fontsize=8, va="top", ha="right", transform=ax.transAxes)
+    ##################
+    fig,ax = plt.subplots(figsize=(8,4))
+    #ctr = ax.contourf(lat,-zi,kd_ePBL,cmap='plasma',**kw,extend='both')
+    cmap = plt.colormaps['plasma']
+    ncolors = cmap.N
+    levels = np.arange(0,0.21,0.01)
+    norm = matplotlib.colors.BoundaryNorm(levels, ncolors=cmap.N,extend='max')
+    ctr = ax.pcolor(lat,-zi,kd_shear,cmap='plasma',norm=norm)
+    cbar = fig.colorbar(ctr,extendrect=True)
+    cbar.set_label('$m^2/s$',fontsize=14)
+    ax.plot(lat,-mld,'-',color='green')
+    ax.plot(np.tile(lat_eye,len(zl)),-zl,'-k')
+    ax.set_ylim([-150,0])
+    ax.set_xlim([lat_eye-4,lat_eye+4])
+    ax.set_ylabel('Depth (m)')
+    ax.set_xlabel('Latitude')
 
-# Speed profile
-fig,ax = plt.subplots(figsize=(4,7))
-for exp in np.arange(len(conf['COMhafs'])):
-    ax.plot(V[exp,:],-zl,'.-',color=conf['exp_colors'][exp],label=conf['exp_labels'][exp],markeredgecolor='k',markersize=7)
-    ax.plot(np.arange(0,2.1,0.1),-np.tile(mld[exp],len(np.arange(0,2.1,0.1))),'--',color=conf['exp_colors'][exp])
+    if lon_eye >= 0:
+        hemis = 'E'
+    else:
+        hemis = 'W'
 
-plt.legend()
-ax.set_xlim([0,2.0])
-ax.set_ylim([-150,0])
-ax.set_ylabel('Depth (m)')
-ax.set_xlabel('Speed')
+    model_info = os.environ.get('TITLEgraph','').strip()
+    var_info = 'Kd shear ($m^2/s$) X-section at  ' + str(np.round(lon_eye,2)) + ' ' + hemis
+    storm_info = conf['stormName']+conf['stormID']
+    title_left = """{0}\n{1}\n{2}""".format(model_info,var_info,storm_info)
+    ax.set_title(title_left, loc='left', y=0.99,fontsize=8)
+    title_right = conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+conf['validTime'].strftime(' Valid: %Y%m%d%HZ')
+    ax.set_title(title_right, loc='right', y=0.99,fontsize=8)
+    footer = os.environ.get('FOOTERgraph','Experimental HAFS Product').strip()
+    ax.text(1.0,-0.2, footer, fontsize=8, va="top", ha="right", transform=ax.transAxes)
 
-if lon_eye >= 0:
-    hemis = 'E'
-else:
-    hemis = 'W'
-
-model_info = os.environ.get('TITLEgraph','').strip()
-var_info = 'Speed ($m/s$) Profile at  ' + str(np.round(lon_prof,2)) + ' ' + hemis + ' ' + str(np.round(lat_prof,2))
-storm_info = conf['stormName']+conf['stormID']
-title_left = """{0}\n{1}\n{2}""".format(model_info,var_info,storm_info)
-ax.set_title(title_left, loc='left', y=0.99,fontsize=8)
-title_right = conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+conf['validTime'].strftime(' Valid: %Y%m%d%HZ')
-ax.set_title(title_right, loc='right', y=0.99,fontsize=8)
-footer = os.environ.get('FOOTERgraph','Experimental HAFS Product').strip()
-
-# Kd_ePBL profile
-fig,ax = plt.subplots(figsize=(4,7))
-for exp in np.arange(len(conf['COMhafs'])):
-    ax.plot(kd_ePBL[exp,:],-zi,'.-',color=conf['exp_colors'][exp],label=conf['exp_labels'][exp],markeredgecolor='k',markersize=7)
-    ax.plot(np.arange(0,0.31,0.01),-np.tile(mld[exp],len(np.arange(0,0.31,0.01))),'--',color=conf['exp_colors'][exp])
-
-plt.legend()
-ax.set_xlim([0,0.3])
-ax.set_ylim([-150,0])
-ax.set_ylabel('Depth (m)')
-ax.set_xlabel('Kd_ePBL')
-
-if lon_eye >= 0:
-    hemis = 'E'
-else:
-    hemis = 'W'
-
-model_info = os.environ.get('TITLEgraph','').strip()
-var_info = 'Kd_ePBL ($m^2/s$) Profile at  ' + str(np.round(lon_prof,2)) + ' ' + hemis + ' ' + str(np.round(lat_prof,2))
-storm_info = conf['stormName']+conf['stormID']
-title_left = """{0}\n{1}\n{2}""".format(model_info,var_info,storm_info)
-ax.set_title(title_left, loc='left', y=0.99,fontsize=8)
-title_right = conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+conf['validTime'].strftime(' Valid: %Y%m%d%HZ')
-ax.set_title(title_right, loc='right', y=0.99,fontsize=8)
-footer = os.environ.get('FOOTERgraph','Experimental HAFS Product').strip()
-
-# Kd_shear profile
-fig,ax = plt.subplots(figsize=(4,7))
-for exp in np.arange(len(conf['COMhafs'])):
-    ax.plot(kd_shear[exp,:],-zi,'.-',color=conf['exp_colors'][exp],label=conf['exp_labels'][exp],markeredgecolor='k',markersize=7)
-    ax.plot(np.arange(0,0.31,0.01),-np.tile(mld[exp],len(np.arange(0,0.31,0.01))),'--',color=conf['exp_colors'][exp])
-
-plt.legend()
-ax.set_xlim([0,0.3])
-ax.set_ylim([-150,0])
-ax.set_ylabel('Depth (m)')
-ax.set_xlabel('Kd_shear')
-
-if lon_eye >= 0:
-    hemis = 'E'
-else:
-    hemis = 'W'
-
-model_info = os.environ.get('TITLEgraph','').strip()
-var_info = 'Kd_shear ($m^2/s$) Profile at  ' + str(np.round(lon_prof,2)) + ' ' + hemis + ' ' + str(np.round(lat_prof+1,2))
-storm_info = conf['stormName']+conf['stormID']
-title_left = """{0}\n{1}\n{2}""".format(model_info,var_info,storm_info)
-ax.set_title(title_left, loc='left', y=0.99,fontsize=8)
-title_right = conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+conf['validTime'].strftime(' Valid: %Y%m%d%HZ')
-ax.set_title(title_right, loc='right', y=0.99,fontsize=8)
-footer = os.environ.get('FOOTERgraph','Experimental HAFS Product').strip()
-
-# Kd_interface profile
-kd_max = np.empty((len(conf['COMhafs']),kd_ePBL.shape[1]))
-kd_max[:] = np.nan
-for exp in np.arange(len(conf['COMhafs'])):
-    for z in np.arange(kd_ePBL.shape[1]):
-       kd_max[exp,z] = np.max([kd_ePBL[exp,z],kd_shear[exp,z]])
-
-fig,ax = plt.subplots(figsize=(4,7))
-for exp in np.arange(len(conf['COMhafs'])):
-    ax.plot(kd_max[exp,:],-zi,'x-',color=conf['exp_colors'][exp],label=conf['exp_labels'][exp],markeredgecolor='k',markersize=7)
-    ax.plot(kd_interface[exp,:],-zi,'.-',color=conf['exp_colors'][exp],label=conf['exp_labels'][exp],markeredgecolor='k',markersize=7)
-    ax.plot(np.arange(0,0.31,0.01),-np.tile(mld[exp],len(np.arange(0,0.31,0.01))),'--',color=conf['exp_colors'][exp])
-
-plt.legend()
-ax.set_xlim([0,0.3])
-ax.set_ylim([-150,0])
-ax.set_ylabel('Depth (m)')
-ax.set_xlabel('Kd_shear')
-
-if lon_eye >= 0:
-    hemis = 'E'
-else:
-    hemis = 'W'
-
-model_info = os.environ.get('TITLEgraph','').strip()
-var_info = 'Kd_interface ($m^2/s$) Profile at  ' + str(np.round(lon_prof,2)) + ' ' + hemis + ' ' + str(np.round(lat_prof+1,2))
-storm_info = conf['stormName']+conf['stormID']
-title_left = """{0}\n{1}\n{2}""".format(model_info,var_info,storm_info)
-ax.set_title(title_left, loc='left', y=0.99,fontsize=8)
-title_right = conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+conf['validTime'].strftime(' Valid: %Y%m%d%HZ')
-ax.set_title(title_right, loc='right', y=0.99,fontsize=8)
-footer = os.environ.get('FOOTERgraph','Experimental HAFS Product').strip()
-
+    #================================================================
