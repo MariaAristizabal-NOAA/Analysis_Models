@@ -64,10 +64,20 @@ plt.colorbar()
 fig, ax = plt.subplots(figsize=(12, 6))
 plt.pcolor(xgrid[1::2,1::2],ygrid[1::2,1::2],wet,cmap=plt.cm.coolwarm)
 plt.colorbar()
-
+plt.plot(xgrid[1::2,1::2][::30,::30],ygrid[1::2,1::2][::30,::30],color='grey')
+plt.plot(xgrid[1::2,1::2][::30,::30].T,ygrid[1::2,1::2][::30,::30].T,color='grey')
 cslevels = np.arange(840,1040,4)
 cs = ax.contourf(lon, lat, slp, levels=cslevels,alpha=0.5)
-#cs = ax.contour(lon, lat, slp, levels=cslevels, colors='black', linewidths=0.6)
+
+'''
+fig, ax = plt.subplots(figsize=(12, 6))
+plt.pcolor(xgrid[1::2,1::2][:,0:1750],ygrid[1::2,1::2][:,0:1750],wet[:,0:1750],cmap=plt.cm.coolwarm)
+plt.colorbar()
+plt.plot(xgrid[1::2,1::2][::30,::30],ygrid[1::2,1::2][::30,::30],color='grey')
+plt.plot(xgrid[1::2,1::2][::30,::30].T,ygrid[1::2,1::2][::30,::30].T,color='grey')
+cslevels = np.arange(840,1040,4)
+cs = ax.contourf(lon, lat, slp, levels=cslevels,alpha=0.5)
+'''
 
 #################################################################################
 
