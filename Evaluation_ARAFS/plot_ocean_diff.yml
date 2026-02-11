@@ -2,13 +2,12 @@
 stormModel: ARAFS
 stormDomain: parent
 stormID: 00E
-stormName: 'Atm. River'
 ymdh: '2023011400'
-fhhh: f000
-fhhhs: [f000,f024,f048,f072,f096,f120]
+fhhhi: f000
+fhhhf: f096
 COMarafs: /work/noaa/hwrf/save/kwu/gaeaData/Exp4_OCP_2/2023011400/00E
-  #COMarafs: /work/noaa/hwrf/save/kwu/gaeaData/3Hr/2023011400/00E
 cartopyDataDir: /work/noaa/hwrf/noscrub/local/share/cartopy
-xlim: [-180,-110]
-ylim: [10,45]
-
+xlim: [-175,-110]
+ylim: [10,47]
+  #xlim: [-140,-110]
+  #ylim: [10,47]

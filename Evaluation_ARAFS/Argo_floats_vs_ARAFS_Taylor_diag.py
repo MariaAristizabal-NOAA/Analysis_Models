@@ -337,7 +337,7 @@ angle_lim = np.pi/2
 std_lim = 1.5
 
 fig,ax = taylor_template(angle_lim,std_lim)
-ax.plot(0,1,'o',label='OSTIA'+' =  '+str(np.round(number_obs_temp[ex],2)),color='red',markersize=10,markeredgecolor='k')
+ax.plot(0,1,'o',label='ARGO'+' =  '+str(np.round(number_obs_temp[ex],2)),color='red',markersize=10,markeredgecolor='k')
 
 for ex,exp in enumerate(experiments):  # loop the models
     print(exp)

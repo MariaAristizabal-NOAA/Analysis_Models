@@ -1,0 +1,14 @@
+# yaml configure file
+stormModel: ARAFS
+stormID: 00E
+exp_labels: ['ARAFS','ARAFS_OCN']
+exp_colors: ['blue','orange']
+exp_markers: ['p','p','o','o','o']
+stormDomain: parent
+ymdh: '2023011400'
+COMmodels: ['/work/noaa/hwrf/save/kwu/gaeaData/3Hr/','/work/noaa/hwrf/save/kwu/gaeaData/Exp4_OCP_2/']
+cartopyDataDir: /work/noaa/hwrf/noscrub/local/share/cartopy
+xlim: [-180,-110]
+ylim: [10,45]
+  #xlim: [-170,-130]
+  #ylim: [25,40]

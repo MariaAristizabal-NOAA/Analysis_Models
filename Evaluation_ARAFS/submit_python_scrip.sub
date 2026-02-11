@@ -20,4 +20,5 @@ source /home/maristiz/load_miniconda_work2.sh
 conda activate WCOSS2_env
 
 python surf_temp_OSTIA_vs_ARAFS.py
-#python surf_temp_OSTIA_vs_ARAFS_stats.py
+#python Argo_floats_vs_ARAFS_Taylor_diag.py
+

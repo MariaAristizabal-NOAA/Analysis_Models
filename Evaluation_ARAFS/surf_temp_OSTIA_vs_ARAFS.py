@@ -108,6 +108,7 @@ for ex,exp in enumerate(experiments):
             lon_arafs = lon_sub
             lat_arafs = lat_sub
 
+            '''
             fname_ocn = '00e.'+conf['ymdh']+'.'+conf['stormModel'].lower()+'.mom6.'+fhhh+'.nc'
             ncfile = os.path.join(conf['COMmodels'][2]+conf['ymdh']+'/'+conf['Stormid']+'/', fname_ocn)
             nc = xr.open_dataset(ncfile)
@@ -128,7 +129,7 @@ for ex,exp in enumerate(experiments):
 
             lon_mom6 = lon_sub_ocn
             lat_mom6 = lat_sub_ocn
-
+            '''
         
         ################################################################
         if exp == 'MOM6':
@@ -177,6 +178,27 @@ for ex,exp in enumerate(experiments):
         #################################################################
         # interpolation from MOM6 sub to ARAFS sub in order to use ocean masking on ARAFS fields and get rid off lakes in the mainland.
         # --- Original grid ---
+
+        fname_ocn = '00e.'+conf['ymdh']+'.'+conf['stormModel'].lower()+'.mom6.f000.nc'
+        ncfile = os.path.join(conf['COMmodels'][2]+conf['ymdh']+'/'+conf['Stormid']+'/', fname_ocn)
+        nc = xr.open_dataset(ncfile)
+ 
+        tmp_ocn = np.asarray(nc['SST'][0,:,:])
+        lon_ocn = np.asarray(nc.xh)
+        lat_ocn = np.asarray(nc.yh)
+        ocean = np.isfinite(tmp_ocn)
+ 
+        # subset
+        oklon_ocn = np.logical_and(lon_ocn>=xlim[0],lon_ocn<xlim[1])
+        oklat_ocn = np.logical_and(lat_ocn>=ylim[0],lat_ocn<ylim[1])
+ 
+        lon_sub_ocn = lon_ocn[oklon_ocn]
+        lat_sub_ocn = lat_ocn[oklat_ocn]
+ 
+        ocean_sub = ocean[oklat_ocn,:][:,oklon_ocn]
+ 
+        lon_mom6 = lon_sub_ocn
+        lat_mom6 = lat_sub_ocn
 
         lon_subb, lat_subb =  np.meshgrid(lon_mom6, lat_mom6)
 
@@ -300,7 +322,7 @@ for ex,exp in enumerate(experiments):
 plt.figure(figsize=(10,6))
 for ex,exp in enumerate(experiments):
     plt.errorbar(fhhhs,mean_tmp_model[ex,:],std_tmp_model[ex,:],fmt='o-',capsize=5,label=exp)
-plt.errorbar(fhhhs,mean_sst_obs,std_sst_obs,fmt='o-',capsize=5,label='OSTIA')
+#plt.errorbar(fhhhs,mean_sst_obs,std_sst_obs,fmt='o-',capsize=5,label='OSTIA')
 plt.legend()
 plt.ylabel('SST no interpolation ($^oC$)')
 plt.xlabel('Forecast Hour')

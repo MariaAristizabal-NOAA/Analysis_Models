@@ -1,9 +1,12 @@
 # yaml configure file
 stormModel: ARAFS
 stormDomain: parent
+stormID: 00E
 ymdh: '2023011400'
-fhhh: f000
+fhhh: f120
 COMarafs: /work/noaa/hwrf/save/kwu/gaeaData/Exp4_OCP_2/2023011400/00E
 cartopyDataDir: /work/noaa/hwrf/noscrub/local/share/cartopy
-xlim: [-180,-110]
-ylim: [10,45]
+xlim: [-175,-110]
+ylim: [10,47]
+  #xlim: [-140,-110]
+  #ylim: [10,47]
