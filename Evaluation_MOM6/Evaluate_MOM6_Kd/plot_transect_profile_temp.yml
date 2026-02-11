@@ -1,0 +1,4 @@
+# yaml configure file
+ncfiles: ['/gpfs/f6/drsa-hurr1/world-shared/save/Maria.Aristizabal/MOM6-examples_May2_2025/ocean_only/idealized_hurricane_ePBL/prog.nc','/gpfs/f6/drsa-hurr1/world-shared/save/Maria.Aristizabal/MOM6-examples_May2_2025/ocean_only/idealized_hurricane/prog.nc']
+labels: ['ePBL','KPP']
+
