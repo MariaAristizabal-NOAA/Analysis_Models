@@ -195,6 +195,7 @@ if len(lon_adeck[okfhour])!=0 and len(lat_adeck[okfhour])!=0:
                 mnmx="(min,max)="+"(%6.1f"%np.nanmin(var)+","+"%6.1f)"%np.nanmax(var)
                 plt.text(lon_adeck[nhour]-2.15-central_longitude,lat_adeck[nhour]-4.75,mnmx,fontsize=8,color='DarkOliveGreen',fontweight='bold',bbox=dict(boxstyle="round",color='w',alpha=0.5))
                 ax.set_extent([lon_adeck[nhour]-9.5,lon_adeck[nhour]+9.5,lat_adeck[nhour]-9,lat_adeck[nhour]+9],crs=ccrs.PlateCarree())
+                #ax.set_extent([lon_adeck[nhour]-5.5,lon_adeck[nhour]+5.5,lat_adeck[nhour]-5,lat_adeck[nhour]+5],crs=ccrs.PlateCarree())
             else:
                 print('Longitude track limits are out of the ocean domain')
     
@@ -280,6 +281,7 @@ if len(lon_adeck[okfhour])!=0 and len(lat_adeck[okfhour])!=0:
                 mnmx="(min,max)="+"(%6.1f"%np.nanmin(dvar)+","+"%6.1f)"%np.nanmax(dvar)
                 plt.text(lon_adeck[nhour]-2.15-central_longitude,lat_adeck[nhour]-4.75,mnmx,fontsize=8,color='DarkOliveGreen',fontweight='bold',bbox=dict(boxstyle="round",color='w',alpha=0.5))
                 ax.set_extent([lon_adeck[nhour]-9.5,lon_adeck[nhour]+9.5,lat_adeck[nhour]-9,lat_adeck[nhour]+9],crs=ccrs.PlateCarree())
+                #ax.set_extent([lon_adeck[nhour]-5.5,lon_adeck[nhour]+5.5,lat_adeck[nhour]-5,lat_adeck[nhour]+5],crs=ccrs.PlateCarree())
             else:
                 print('Longitude track limits are out of the ocean domain')
     

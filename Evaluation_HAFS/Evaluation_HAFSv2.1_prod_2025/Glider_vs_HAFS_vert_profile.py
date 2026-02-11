@@ -9,10 +9,10 @@ storm_names = ['Erin']
 # time eye passage closest to glider
 teyes = ['2025081706']
 
-exp_names = ['HFSA_oper','HFSB_oper']
-exp_labels = ['HFSA','HFSB']
-exp_colors = ['purple','limegreen']
-hafs_ab = ['hfsa','hfsb']
+exp_names = ['HFSA_oper','HAFSv2.1.1A']
+exp_labels = ['HFSA','HFXA']
+exp_colors = ['darkviolet','steelblue']
+hafs_ab = ['hfsa','hfsa']
 ocean = ['mom6','mom6']
 scratch_folder = ['/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/','/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/']
 

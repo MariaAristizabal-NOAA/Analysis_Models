@@ -9,11 +9,11 @@ storm_num = '05'
 basin = 'al'
 storm_id = '05l'
 storm_name= 'erin'
-models = ['hfsa','hfsb']
+models = ['hfsa','hfsa']
 
-exp_names = ['HFSA_oper','HFSB_oper']
-exp_labels = ['HFSA','HFSB']
-exp_colors = ['darkviolet','lawngreen']
+exp_names = ['HFSA_oper','HAFSv2.1.1A']
+exp_labels = ['HFSA','HFXA']
+exp_colors = ['darkviolet','steelblue']
 
 lon_lim = [-80,-50.0]
 lat_lim = [10.0,40.0]
@@ -26,9 +26,9 @@ bath_file = scratch_folder +'bathymetry_files/GEBCO_2014_2D_-100.0_0.0_-10.0_70.
 
 best_track_file = abdeck_folder + 'btk/b' + basin + storm_num + cycle[0:4] + '.dat'
 
-#url_glider = scratch_folder + 'Data/Gliders/2025/sg668-20250625T0000.nc'
+url_glider = scratch_folder + 'Data/Gliders/2025/sg668-20250625T0000.nc'
 #url_glider = scratch_folder + 'Data/Gliders/2025/ng783-20250611T0000.nc'
-url_glider = scratch_folder + 'Data/Gliders/2025/echo-20250810T0000.nc'
+#url_glider = scratch_folder + 'Data/Gliders/2025/echo-20250810T0000.nc'
 
 ################################################################################
 import sys

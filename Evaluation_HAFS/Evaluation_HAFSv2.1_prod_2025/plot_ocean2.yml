@@ -6,10 +6,10 @@ stormBasin: AL
 ymdh: '2025102418'
 fhhh: f018
 trackon: 'yes'
-COMhafs: ['/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/2025102418/13l']
+COMhafs: ['/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/2025102418/13l','/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HAFSv2.1.1A/2025102418/13l']
 cartopyDataDir: /scratch3/NCEPDEV/hwrf/noscrub/local/cartopy
-exp_labels: ['HFSA']
-exp_colors: ['darkviolet']
+exp_labels: ['HFSA','HAXA']
+exp_colors: ['darkviolet','steelblue']
 #exp_colors: ['purple','dodgerblue','#00c8c8']
 
 

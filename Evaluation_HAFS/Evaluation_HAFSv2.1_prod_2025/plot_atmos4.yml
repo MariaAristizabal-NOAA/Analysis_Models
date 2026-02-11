@@ -2,14 +2,14 @@
 stormModel: HFSA
 Stormid: 13l
 Basin: al
-Experiments: ['HFSA']
-Exp_colors: ['darkviolet']
+Experiments: ['HFSA','HFXA']
+Exp_colors: ['darkviolet','steelblue']
 Exp_markers: ['p','o']
 stormDomain: parent
 Data_prod: ['ARGO']
 ymdh: '2025102418'
 fhhhs: [f000,f024,f048,f072,f096,f120]
-COMmodels: ['/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/']
+COMmodels: ['/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/2025102418/13l','/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HAFSv2.1.1A/2025102418/13l']
 COMobs: ['/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/Data/Argo_floats/2025/']
 Fileobs: ['argofloats_Hurr_Melissa.nc']
 cartopyDataDir: /scratch3/NCEPDEV/hwrf/noscrub/local/cartopy

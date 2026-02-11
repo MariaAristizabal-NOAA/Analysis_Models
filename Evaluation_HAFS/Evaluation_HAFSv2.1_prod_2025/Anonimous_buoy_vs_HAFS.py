@@ -1,25 +1,25 @@
 #%% User input
 # forecasting cycle to be used
 
-# Erin
+# Melissa
+'''
 storm_num = '98'
 basin = 'al'
 storm_id = '98l'
 cycle = '2025101818'
 year = '2025'
-
 '''
+
 storm_num = '13'
 basin = 'al'
 storm_id = '13l'
 cycle = '2025102112'
 year = '2025'
-'''
 
-exp_names = ['HFSA_oper']
-exp_labels = ['HFSA']
-exp_colors = ['purple']
-hafs = ['hfsa']
+exp_names = ['HFSA_oper','HAFSv2.1.1A']
+exp_labels = ['HFSA','HFXA']
+exp_colors = ['darkviolet','steelblue']
+hafs = ['hfsa','hfsa']
 
 lon_lim = [-80,-55]
 lat_lim = [10.0,40.0]
@@ -207,6 +207,7 @@ for i,folder in enumerate(folder_exps):
     #################################################################################
     #%% Retrieve wave parameters
 
+    '''
     #%% Reading WW3 grid
     grbs = pygrib.open(files_hafs_ww3[0])
     grbs.seek(0)
@@ -243,7 +244,7 @@ for i,folder in enumerate(folder_exps):
     target_timeBww3, target_mwdB[i,:] = get_var_from_ww3_grb2_following_trajectory(lon_obs,lat_obs,timestamp_obs,grib2file,'dirpw',typeoflevel='surface',level='1')
 
     target_timeB_ww3.append(target_timeBww3)
-
+    '''
     #################################################################################
     #%% Retrieve ocean output
 
@@ -279,7 +280,7 @@ for i,folder in enumerate(folder_exps):
     timestamp_obss = timestampB
     kwargs = dict(depth_level = 0)
 
-    oklo = np.isfinite(lon_obss)
+    oklo = np.isfinite(lonB)
     lon_obs = lonB[oklo]
     lat_obs = latB[oklo]
     timestamp_obs = timestamp_obss[oklo]
@@ -331,7 +332,7 @@ fig,ax = plt.subplots(figsize=(10, 4))
 #plt.plot(timestampB,sstB,'.-',color='blue',label='Buoy')
 plt.plot(timestampp,sst,'.-',color='blue',label='Buoy')
 for i in np.arange(len(exp_names)):
-    plt.plot(target_timeB_ocean[i],target_sstB[i,0:len(target_timeB_ocean[i])],'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
+    plt.plot(target_timeB_ocean[i],target_sstB[i,0:len(target_timeB_ocean[i])],'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7,alpha=0.5)
 #plt.legend(loc='upper right',bbox_to_anchor=[1.3,1.0])
 plt.legend(loc='upper right')
 plt.title('Water Temperature Cycle '+ cycle,fontsize=18)

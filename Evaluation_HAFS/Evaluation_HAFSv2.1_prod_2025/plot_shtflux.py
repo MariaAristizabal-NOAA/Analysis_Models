@@ -24,7 +24,6 @@ import matplotlib.ticker as mticker
 from matplotlib.gridspec import GridSpec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-import pyproj
 import cartopy
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
@@ -130,7 +129,6 @@ transform = ccrs.PlateCarree(lon_offset)
 # create figure and axes instances
 fig = plt.figure()
 ax = plt.axes(projection=myproj)
-#ax.axis('equal')
 ax.axis('scaled')
 
 cflevels = np.arange(-400,401,50)

@@ -203,10 +203,10 @@ int_track[:] = np.nan
 for ex,exp in enumerate(experiments):
     print(exp)
     #%% Get storm track from trak atcf files
-    if experiments[ex] == 'HFSA':
-        file_track = commodels[ex] + cycle + '/' + storm_id + '/' + storm_id + '.' + cycle + '.hfsa.trak.atcfunix'
-    if experiments[ex] == 'HFSB':
-        file_track = commodels[ex] + cycle + '/' + storm_id + '/' + storm_id + '.' + cycle + '.hfsb.trak.atcfunix'
+    if experiments[ex] == 'HFSA' or experiments[ex] == 'HFXA':
+        file_track = commodels[ex] + '/' + storm_id + '.' + cycle + '.hfsa.trak.atcfunix'
+    if experiments[ex] == 'HFSB' or experiments[ex] == 'HFXB':
+        file_track = commodels[ex] + '/' + storm_id + '.' + cycle + '.hfsb.trak.atcfunix'
 
     # Read track file
     okn = get_storm_track_and_int(file_track,storm_num)[0].shape[0]
@@ -268,9 +268,7 @@ temp_Model = []
 
 for ex,exp in enumerate(experiments):
     print(exp)
-    ################################################################
-    if exp == 'HFSA':
-        files_model = np.sort(glob.glob(conf['COMmodels'][ex]+conf['ymdh']+'/'+conf['Stormid']+'/*mom6*.nc'))
+    files_model = np.sort(glob.glob(conf['COMmodels'][ex]+'/*mom6*.nc'))
          
     times_model = []
     timestamps_model = []
@@ -285,6 +283,9 @@ for ex,exp in enumerate(experiments):
         print(plat_id)
         okid = np.asarray(OBS['platform_number']) == plat_id
         timestamp_obs_unique = np.unique(timestamp_obs[okid])
+
+        fig = plt.figure(figsize=(6,8))
+
         for tt in timestamp_obs_unique:
             oktime = timestamp_obs[okid] == tt 
             timepp = time_obs[okid][oktime]
@@ -331,20 +332,20 @@ for ex,exp in enumerate(experiments):
             # Interpolate Argo temp onto model temp
             tempp_int = np.interp(depth_model,depthp,tempp,left=np.nan,right=np.nan)
 
-            fig = plt.figure(figsize=(6,8))
+            #fig = plt.figure(figsize=(6,8))
             plt.plot(tempp,-depthp,'.-',label='ARGO '+plat_id)
             plt.plot(temp_model,-depth_model,'.-',label=exp)
             #plt.plot(tempp_int,-depth_model,'o-',label='ARGO int')
-            plt.legend()
-            plt.xlabel('Temperature $^oC$')
-            plt.ylabel('Depth (m)')
-            plt.title('Lon = '+str(np.round(lonp[0],2))+' Lat = '+str(np.round(latp[0],2))+' time =  '+str(timep[0])[0:16])
-            #plt.ylim([np.min(-depthp),0])
-            plt.ylim([-250,0])
-            plt.xlim([15,30])
 
             temp_Obs.append(tempp_int.tolist())
             temp_Model.append(temp_model.tolist())
+
+        plt.legend()
+        plt.xlabel('Temperature $^oC$')
+        plt.ylabel('Depth (m)')
+        plt.title('Lon = '+str(np.round(lonp[0],2))+' Lat = '+str(np.round(latp[0],2))+' time =  '+str(timep[0])[0:16])       #plt.ylim([np.min(-depthp),0])
+        plt.ylim([-250,0])
+        plt.xlim([15,30])
      
     #################################################################
     # Calculate statistics

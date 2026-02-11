@@ -1,10 +1,11 @@
 # yaml configure file
 stormModel: HFSA
-stormName: MELISSA
-stormID: 13l
+stormName: ERIN
+stormID: 05l
 stormBasin: al
-ymdh: '2025102418'
-fhhh: f078
+ymdh: '2025081500'
+fhhh: f084
 trackon: 'yes'
-COMhafs: /scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/2025102418/13l
+  #COMhafs: /scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/2025102418/13l
+COMhafs: /scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HAFSv2.1.1A/2025081500/05l
 cartopyDataDir: /scratch3/NCEPDEV/hwrf/noscrub/local/cartopy
