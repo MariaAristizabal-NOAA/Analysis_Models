@@ -1,24 +1,19 @@
 #!/bin/sh
-#SBATCH --job-name=ARAFS_analysis
-#SBATCH --account=hurricane
-##SBATCH --account=hwrf
-#SBATCH --qos=batch
-##SBATCH --qos=debug
-##SBATCH -N 6
-#SBATCH -n 2
-#SBATCH -t 2:00:00
-##SBATCH -t 00:30:00
-##SBATCH --partition=orion
-##SBATCH --partition=debug
-#SBATCH -o script.log.%j
-#SBATCH -e script.log.%j
-##SBATCH -D.
+#SBATCH --job-name=OSTIA_vs_ARAFS_Bias
+#SBATCH --account=ar-cpu
+#SBATCH --qos=normal
+##SBATCH --nodes=2-2
+##SBATCH --tasks-per-node=60
+##SBATCH --cpus-per-task=3
+#SBATCH -t 12:00:00
+#SBATCH --clusters=c6
+#SBATCH -o OSTIA_vs_ARAFS_Bias.%j.log
+#SBATCH -e OSTIA_vs_ARAFS_Bias.%j.log
 #SBATCH --mail-user=Maria.Aristizabal@noaa.gov
 #SBATCH --mail-type=ALL
 
-source /home/maristiz/load_miniconda_work2.sh
+source /ncrc/home1/Maria.Aristizabal/load_miniconda.sh
 conda activate WCOSS2_env
 
-python surf_temp_OSTIA_vs_ARAFS.py
-#python Argo_floats_vs_ARAFS_Taylor_diag.py
+python surf_temp_OSTIA_vs_ARAFS_Bias_Taylor_diag_non_overlaping_atm.py 
 

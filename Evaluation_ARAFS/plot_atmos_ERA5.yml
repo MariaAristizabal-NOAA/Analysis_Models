@@ -1,0 +1,26 @@
+# yaml configure file
+stormModel: ARAFS
+stormid: 00E
+
+exp_labels: ['Uncoupled','Coupled']
+exp_colors: ['dodgerblue','indianred']
+exp_markers: ['o','*']
+COMmodels: ['/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
+
+#ymdhs: ['2023010700']
+#ymdhs: ['2023010600','2023010700','2023010800','2023010900','2023011000','2023030700','2023030800','2023030900','2023031000','2023031100']
+ymdhs: ['2023010600','2023010700','2023010800','2023010900','2023011000','2023030700','2023030800','2023030900','2023031000','2023031100','2024021600','2024021700','2024021800','2024021900','2024022000','2025020100','2025020200','2025020300','2025020400','2025020500','2025022000','2025022100','2025022200','2025022300','2025022400','2026010300','2026010400','2026010500','2026010600','2026010700']
+
+#fhhhs: [f000]
+#fhhhs: [f000,f012,f024,f036,f048,f060,f072,f084,f096,f108,f120]
+fhhhs: [f000,f024,f048,f072,f096,f120]
+
+Data_prod: 'ERA5'
+COMobs: '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ERA5/'
+Fileobs_prefix: 'e5.oper.an.sfc.128_235_skt.ll025sc.'
+
+ymdhs_colors: ['red','red','red','red','red','green','green','green','green','green','blue','blue','blue','blue','blue','violet','violet','violet','violet','violet','orange','orange','orange','orange','orange','cyan','cyan','cyan','cyan','cyan']
+
+cartopyDataDir: /work/noaa/hwrf/noscrub/local/share/cartopy
+xlim: [-180,-110]
+ylim: [10,45]
