@@ -52,7 +52,6 @@ sst_std[:] = np.nan
 for exp in np.arange(len(conf['COMmodels'])): 
 
     #===========================================================
-    # Read fluxes
     for f,fh in enumerate(ff):
 
         if len(str(fh))==3:
