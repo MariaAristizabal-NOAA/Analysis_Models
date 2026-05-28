@@ -1,0 +1,15 @@
+# yaml configure file
+stormModel: HFSA
+stormName: MELISSA
+stormID: 13L
+stormBasin: AL
+  #stormDomain: parent
+stormDomain: storm
+ymdh: '2025102212'
+COMhafs: ['/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSA_oper/2025102212/13l','/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HAFS_v2p2a_gfsv17/2025102212/13l'] 
+#,'/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HFSB_oper/2025102418/13l','/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/HAFS_v2p2b_gfsv17/2025102418/13l',]
+exp_labels: ['HFSA','HFSA_GFSv17','HFSB','HFSB_GFSv17']
+exp_colors: ['darkviolet','deeppink','lime','lightseagreen']
+best_track_file: /scratch4/HFIP/hwrfv3/noscrub/input/abdeck/btk/bal132025.dat 
+
+
