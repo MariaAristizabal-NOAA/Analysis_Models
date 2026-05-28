@@ -2,12 +2,11 @@
 stormModel: ARAFS
 stormDomain: parent
 stormID: 00E
-ymdh: '2023011400'
+ymdh: '2025121100'
 fhhhi: f000
-fhhhf: f096
-COMarafs: /work/noaa/hwrf/save/kwu/gaeaData/Exp4_OCP_2/2023011400/00E
-cartopyDataDir: /work/noaa/hwrf/noscrub/local/share/cartopy
-xlim: [-175,-110]
-ylim: [10,47]
-  #xlim: [-140,-110]
-  #ylim: [10,47]
+fhhhf: f120
+COMarafs: /gpfs/f6/drsa-hurr1/world-shared/scrub/Maria.Aristizabal/ARAFS_alaska_coupled_ocean_HYCOM_cutout_ar-cpu_120h_a/com/2025121100/00E
+cartopyDataDir: /gpfs/f6/drsa-hurr1/world-shared/noscrub/local/share/cartopy
+xlim: [-214,-70]
+ylim: [-20,70]
+

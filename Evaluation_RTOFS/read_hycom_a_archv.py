@@ -1,17 +1,17 @@
 #%% User input
 
 # RTOFS grid file name
-hycom_grid = '/work2/noaa/hwrf/save/maristiz/scripts_to_prep_MOM6/RTOFS_IC/2020082512_JTNC/regional.grid'
-hycom_depth = '/work2/noaa/hwrf/save/maristiz/scripts_to_prep_MOM6/RTOFS_IC/2020082512_JTNC/regional.depth'
+hycom_grid = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/RTOFS_fix/Global/rtofs_glo.navy_0.08.regional.grid'
+hycom_depth = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/RTOFS_fix/Global/depth_GLBb0.08_09m11'
 #afile = 'archv_rtofs'
 #afile = 'archv_inc_mom6'
-afile = '/work2/noaa/hwrf/save/maristiz/scripts_to_prep_MOM6/RTOFS_IC/2020082512_JTNC/archv_in'
-#afile = 'diff_temp_mom6_minus_rtofs'
-#afile = 'diff_saln_mom6_minus_rtofs'
+afile = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/arafs-input/COMrtofsv2.5/rtofs.20260103/rtofs_glo.t00z.n00.archv'
 
-var_name = 'temp'
-klayer = '1'
+#var_name = 'temp'
+#klayer = '1'
 #klayer = '30'
+var_name = 'surflx'
+klayer = '0'
 
 #%%
 import numpy as np
@@ -26,7 +26,7 @@ import numpy.ma as ma
 import struct
 
 import sys
-sys.path.append('/home/maristiz/Utils/HYCOM_utils/')
+sys.path.append('/ncrc/home1/Maria.Aristizabal/Hyun-Sook_Utils/')
 from utils4HYCOM import readBinz, readgrids, parse_z
 from utils4HYCOM import readdepth
 
@@ -100,14 +100,19 @@ plt.title(var_name + ' layer ' + klayer,fontsize=14)
 plt.text(260,-10,'max val = ' + str(np.max(fld2)),fontsize=14)
 plt.text(260,-15,'min val = ' + str(np.min(fld2)),fontsize=14)
 
-kw = dict(levels=np.arange(0,36,1))
+#kw = dict(levels=np.arange(0,36,1))
+kw = dict(levels=np.arange(-500,501,50))
 fig,ax1 = plt.subplots(figsize = (7,5))
-plt.contourf(lon_hycom,lat_hycom,fld2,cmap='Spectral_r',**kw)
+#plt.contourf(lon_hycom,lat_hycom,fld2,cmap='Spectral_r',**kw)
+#plt.contourf(lon_hycom,lat_hycom,fld2,cmap='Spectral_r')
+plt.contourf(lon_hycom,lat_hycom,fld2,cmap='coolwarm',**kw,extend='both')
 plt.axis('scaled')
 plt.colorbar()
 plt.title(var_name + ' layer ' + klayer,fontsize=14)
-plt.xlim([122,124])
-plt.ylim([23,25])
+plt.xlim([160,270])
+plt.ylim([0,85])
+plt.xlim([900,2500])
+plt.ylim([1500,3000])
 #plt.text(260,-10,'max val = ' + str(np.max(fld2)),fontsize=14)
 #plt.text(260,-15,'min val = ' + str(np.min(fld2)),fontsize=14)
 

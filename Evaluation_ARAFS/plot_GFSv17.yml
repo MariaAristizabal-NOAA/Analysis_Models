@@ -1,0 +1,10 @@
+# yaml configure file
+stormModel: GFS
+ymdh: '2026010300'
+fhhh: f120
+grib2file: /gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/GFSv17/gfs.20260103/00/model/atmos/master/gfs.t00z.sflux.f120.grib2
+cartopyDataDir: /gpfs/f6/drsa-hurr1/world-shared/noscrub/local/share/cartopy
+
+xlim: [-220,-70]
+ylim: [-20,85]
+
