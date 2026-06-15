@@ -98,7 +98,7 @@ ax.plot(xgrid[0,:]+180,ygrid[0,:],color='red',linewidth=2,transform=transform,la
 cs = ax.contourf(lon, lat, slp, levels=cslevels,alpha=0.5,transform=transform)
 ax.plot(lon[::30,::30][0,-1],lat[::30,::30][0,-1],color='yellow',label='Atm. Domain')
 
-plt.legend(ncol=2, loc='lower center', bbox_to_anchor=(0.5, -0.15))
+plt.legend(ncol=2, loc='lower center', bbox_to_anchor=(0.5, -0.15),fontsize=18)
 
 #ax.plot(lon[::30,::30][:,-1],lat[::30,::30][:,-1],color='yellow')
 #ax.plot(lon[::30,::30][:,0],lat[::30,::30][:,0],color='yellow')
