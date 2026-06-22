@@ -27,8 +27,8 @@ from matplotlib.ticker import (MultipleLocator, FormatStrFormatter)
 
 #================================================================
 # Parse the yaml config file
-print('Parse the config file: plot_atmos.yml:')
-with open('plot_atmos.yml', 'rt') as f:
+print('Parse the config file: plot_ocean.yml:')
+with open('plot_ocean.yml', 'rt') as f:
     conf = yaml.safe_load(f)
 conf['stormNumber'] = conf['stormID'][0:2]
 conf['initTime'] = pd.to_datetime(conf['ymdh'], format='%Y%m%d%H', errors='coerce')
