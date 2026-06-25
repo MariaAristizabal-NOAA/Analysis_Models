@@ -107,7 +107,7 @@ sea_surface_temp = np.asarray(gdata.sea_surface_temperature)
 
 times = np.asarray(gdata.time)
 timestamps = mdates.date2num(times)
-times = np.asarray(mdates.num2date(timestamps))
+#times = np.asarray(mdates.num2date(timestamps))
 oktimeg = np.logical_and(mdates.date2num(times) >= mdates.date2num(tini),\
                          mdates.date2num(times) <= mdates.date2num(tend))
 

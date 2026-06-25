@@ -1,9 +1,10 @@
 #%% User input
 
 # forecasting cycle to be used
-cycle = '2026010300'
+#cycle = '2026010300'
+cycle = '2024021500'
 #url_drifter = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/Data/Lagrangian_Drifters_Scripps/LDL_sea_level_press_Jan_2026.nc'
-url_drifter = '/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/Data/Scripts_lagrang_drifters/LDL_sea_level_press_Jan_2026.nc'
+url_drifter = '/work/noaa/hwrf/noscrub/maristiz/Data/Scripts_lagrang_drifters/LDL_sea_level_press_Jan_2023_to_Jan_2026.nc'
 
 exp_labels = ['uncoupled','Coupled']
 exp_colors = ['blue','orange']
@@ -11,12 +12,8 @@ exp_colors = ['blue','orange']
 lon_lim = [-180,-80]
 lat_lim = [0,70]
 
-folder_exps = ['/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
-
-# folder utils for Hycom 
-#folder_utils4hycom= '/home/Maria.Aristizabal/Repos/NCEP_scripts/'
-#folder_uom= '/home/Maria.Aristizabal/Repos/Upper_ocean_metrics/'
-#folder_myutils= '/home/Maria.Aristizabal/Utils/'
+folder_exps = ['/work/noaa/hurricane/malasala/Maria_Murali/ARAFSv1_coupled/']
+#folder_exps = ['/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
 
 ################################################################################
 import xarray as xr
@@ -25,7 +22,6 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
 from matplotlib.dates import DateFormatter
-from matplotlib.ticker import (MultipleLocator, FormatStrFormatter)
 import sys
 import os
 import glob
@@ -85,12 +81,9 @@ tini = datetime.strptime(date_ini,'%Y/%m/%d/%H/%M/%S')
 tend = tini + timedelta(hours=120)
 date_end = tend.strftime('%Y/%m/%d/%H/%M/%S')
 
-################################################################################
-#%% Time fv3
-#time_fv3 = [tini + timedelta(hours=int(dt)) for dt in np.arange(0,121,3)]
-
 ###############################################################################
 #%% Read drifter data
+print('Reading lagrangian drifter data')
 url = url_drifter
 
 gdata = xr.open_dataset(url)#,decode_times=False)
@@ -102,7 +95,6 @@ sea_level_pressure = np.asarray(gdata.sea_level_pressure)
 
 times = np.asarray(gdata.time)
 timestamps = mdates.date2num(times)
-times = np.asarray(mdates.num2date(timestamps))
 oktimeg = np.logical_and(mdates.date2num(times) >= mdates.date2num(tini),\
                          mdates.date2num(times) <= mdates.date2num(tend))
 
@@ -129,18 +121,9 @@ wmo_idD = wmo_idDr[oklat][oklon]
 
 codes = np.unique(wmo_idD)
 
-'''
-oklon = np.logical_and(lonD <= -157,lonD >= -160)
-oklat = np.logical_and(latD[oklon] <= 50,latD[oklon] >= 49)
-np.unique(wmo_idD[oklon][oklat])
-
-oklon = np.logical_and(lonD <= -156,lonD >= -160)
-oklat = np.logical_and(latD[oklon] <= 20,latD[oklon] >= 16)
-np.unique(wmo_idD[oklon][oklat])
-'''
-
 ########################################################################
 # Get lon and lat from model
+print('Reading lat and lon from fv3')
 files_fv3 = sorted(glob.glob(os.path.join(folder_exps[0]+cycle+'/00E/','arafs*.grb2')))
 model = grib2io.open(files_fv3[0],mode='r')
 
@@ -153,7 +136,8 @@ target_slp = np.empty((len(folder_exps),43))
 target_slp[:] = np.nan
 
 #for code in [7810735.]:
-for code in [7801738.]:
+#[7801736.,2802110.,2802121.,3801723.]
+for code in [7801736.]:
     print(code)
     okcode = wmo_idD == code
     timed = timeD[okcode]
@@ -203,7 +187,7 @@ for code in [7801738.]:
 
         #######################################################################
     
-    # Figure SST
+    # Figure SLP    
     fig,ax = plt.subplots(figsize=(10, 4))
     plt.plot(timed,slpd,'o-',color='k',label='Drifter '+ str(code),markersize=5,markeredgecolor='k')
     for i in np.arange(len(exp_labels)):

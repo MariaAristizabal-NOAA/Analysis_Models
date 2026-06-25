@@ -9,7 +9,8 @@ exp_colors = ['blue','orange']
 lon_lim = [-180,-80]
 lat_lim = [0,70]
 
-folder_exps = ['/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
+folder_exps = ['/work2/noaa/hurricane/malasala/Maria_Murali/']
+#folder_exps = ['/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
 
 # folder utils for Hycom
 #folder_myutils= '/home/Maria.Aristizabal/Utils/'
@@ -125,7 +126,6 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
 from matplotlib.dates import DateFormatter
-from matplotlib.ticker import (MultipleLocator, FormatStrFormatter)
 import sys
 import os
 import glob
@@ -155,7 +155,6 @@ sea_level_pressure = np.asarray(gdata.sea_level_pressure)
 
 times = np.asarray(gdata.time)
 timestamps = mdates.date2num(times)
-times = np.asarray(mdates.num2date(timestamps))
 oktimeg = np.logical_and(mdates.date2num(times) >= mdates.date2num(tini),\
                          mdates.date2num(times) <= mdates.date2num(tend))
 

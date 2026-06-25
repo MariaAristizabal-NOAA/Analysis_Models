@@ -156,7 +156,6 @@ sea_level_pressure = np.asarray(gdata.sea_level_pressure)
 
 times = np.asarray(gdata.time)
 timestamps = mdates.date2num(times)
-#times = np.asarray(mdates.num2date(timestamps))
 #oktimeg = np.logical_and(mdates.date2num(times) >= mdates.date2num(tini),\
 #                         mdates.date2num(times) <= mdates.date2num(tend))
 

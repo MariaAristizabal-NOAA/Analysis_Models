@@ -7,7 +7,7 @@ WMO_numbers = [7801738.]
 
 WMO_AR_recon = [7810735,7810736,7810737,7810738,7810739,7810740,7810741,7810742,7810743,7810744,7810745,7810746,7810747,7810748,7810749,7810750,7810751,7810752,7810753,7810754,7810755,7810756,7810757,7810758,7810759,7810760,7810761,7810762,7810763,7810764,7810847,7810848,7810849,7810850,7810851,7810852,7810853,7810854,7810855,7810856,7810857,7810858,7810859,7810860,7810861,7810862,7810863,7810864,7810865,7810866,7810837,7810838,7810839,7810840,7810841,7810842,7810843,7810844,7810845,7810846,7810555,2802108,1801806,2802107,6801916,6801917,6801914,5802101,2802104,6801915,3801707,7801736,2802106,7801735,5802104,2802110,7801738,1801808,3801709,7801737,2802109,1801809,7801734,4804122,2802111,3801708,2802105,7801733,5802102,5802103,1801807,6801936,4804132,6801937,1801818,7801759,5802124,2802129,2802128,7801758,1801821,7801761,6801934,4804134,1801820,4804135,3801716,6801938,2802126,5802122,4804133,6801939,2802127,1801819,6801935,5802125,5802123,1801822,3801717,7801760,1801823,5802111,3801715,7801746,2802121,7801750,4804142,1801827,6801948,7801768,6801949,6801947,3801723,1801828,4804140,2802133,3801722,3801725,3801726,3801724,4804141,7801770,6801946,7801769]
 
-url_drifter = '/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/Data/Scripts_lagrang_drifters/LDL_sea_level_press_Jan_2023_to_Jan_2026.nc'
+url_drifter = '/work/noaa/hwrf/noscrub/maristiz//Data/Scripts_lagrang_drifters/LDL_sea_level_press_Jan_2023_to_Jan_2026.nc'
 
 exp_labels = ['uncoupled','Coupled']
 exp_colors = ['blue','orange']
@@ -15,7 +15,8 @@ exp_colors = ['blue','orange']
 lon_lim = [-180,-80]
 lat_lim = [0,70]
 
-folder_exps = ['/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
+folder_exps = ['/work2/noaa/hurricane/malasala/Maria_Murali/']
+#folder_exps = ['/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
 
 ################################################################################
 import xarray as xr
@@ -96,7 +97,6 @@ sea_level_pressure = np.asarray(gdata.sea_level_pressure)
 
 times = np.asarray(gdata.time)
 timestamps = mdates.date2num(times)
-times = np.asarray(mdates.num2date(timestamps))
 oktimeg = np.logical_and(mdates.date2num(times) >= mdates.date2num(tini),\
                          mdates.date2num(times) <= mdates.date2num(tend))
 
