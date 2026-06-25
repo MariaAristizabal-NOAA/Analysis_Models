@@ -1,9 +1,13 @@
 #%% User input
 
 # forecasting cycle to be used
-cycle = '2026010300'
-#url_drifter = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/Data/Lagrangian_Drifters_Scripps/LDL_sea_level_press_Jan_2026.nc'
-url_drifter = '/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/Data/Scripts_lagrang_drifters/LDL_sea_level_press_Jan_2026.nc'
+cycle = '2024021500'
+
+WMO_numbers = [7801738.]
+
+WMO_AR_recon = [7810735,7810736,7810737,7810738,7810739,7810740,7810741,7810742,7810743,7810744,7810745,7810746,7810747,7810748,7810749,7810750,7810751,7810752,7810753,7810754,7810755,7810756,7810757,7810758,7810759,7810760,7810761,7810762,7810763,7810764,7810847,7810848,7810849,7810850,7810851,7810852,7810853,7810854,7810855,7810856,7810857,7810858,7810859,7810860,7810861,7810862,7810863,7810864,7810865,7810866,7810837,7810838,7810839,7810840,7810841,7810842,7810843,7810844,7810845,7810846,7810555,2802108,1801806,2802107,6801916,6801917,6801914,5802101,2802104,6801915,3801707,7801736,2802106,7801735,5802104,2802110,7801738,1801808,3801709,7801737,2802109,1801809,7801734,4804122,2802111,3801708,2802105,7801733,5802102,5802103,1801807,6801936,4804132,6801937,1801818,7801759,5802124,2802129,2802128,7801758,1801821,7801761,6801934,4804134,1801820,4804135,3801716,6801938,2802126,5802122,4804133,6801939,2802127,1801819,6801935,5802125,5802123,1801822,3801717,7801760,1801823,5802111,3801715,7801746,2802121,7801750,4804142,1801827,6801948,7801768,6801949,6801947,3801723,1801828,4804140,2802133,3801722,3801725,3801726,3801724,4804141,7801770,6801946,7801769]
+
+url_drifter = '/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/Data/Scripts_lagrang_drifters/LDL_sea_level_press_Jan_2023_to_Jan_2026.nc'
 
 exp_labels = ['uncoupled','Coupled']
 exp_colors = ['blue','orange']
@@ -13,11 +17,6 @@ lat_lim = [0,70]
 
 folder_exps = ['/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
 
-# folder utils for Hycom 
-#folder_utils4hycom= '/home/Maria.Aristizabal/Repos/NCEP_scripts/'
-#folder_uom= '/home/Maria.Aristizabal/Repos/Upper_ocean_metrics/'
-#folder_myutils= '/home/Maria.Aristizabal/Utils/'
-
 ################################################################################
 import xarray as xr
 import numpy as np
@@ -25,7 +24,6 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
 from matplotlib.dates import DateFormatter
-from matplotlib.ticker import (MultipleLocator, FormatStrFormatter)
 import sys
 import os
 import glob
@@ -85,10 +83,6 @@ tini = datetime.strptime(date_ini,'%Y/%m/%d/%H/%M/%S')
 tend = tini + timedelta(hours=120)
 date_end = tend.strftime('%Y/%m/%d/%H/%M/%S')
 
-################################################################################
-#%% Time fv3
-#time_fv3 = [tini + timedelta(hours=int(dt)) for dt in np.arange(0,121,3)]
-
 ###############################################################################
 #%% Read drifter data
 url = url_drifter
@@ -130,14 +124,106 @@ wmo_idD = wmo_idDr[oklat][oklon]
 codes = np.unique(wmo_idD)
 
 '''
-oklon = np.logical_and(lonD <= -157,lonD >= -160)
-oklat = np.logical_and(latD[oklon] <= 50,latD[oklon] >= 49)
-np.unique(wmo_idD[oklon][oklat])
+ok_id = wmo_id == WMO_numbers[0]
+wmo_id[ok_id]
 
-oklon = np.logical_and(lonD <= -156,lonD >= -160)
-oklat = np.logical_and(latD[oklon] <= 20,latD[oklon] >= 16)
-np.unique(wmo_idD[oklon][oklat])
+# Fields for this specific drifter
+timeDrf = times[ok_id]
+timestampDrf = timestamps[ok_id]
+latDrf = latitude[ok_id]
+lonDrf = longitude[ok_id]
+wmo_idDrf = wmo_id[ok_id]
+code_id = np.unique(wmo_idDrf)[0]
+slpDrf = sea_level_pressure[ok_id]
+
+fig = plt.figure()
+ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
+ax.plot(lonDrf, latDrf,'.',color='k',label='Lagrangian Drifter: '+str(code_id))
+plt.legend(loc='lower right',bbox_to_anchor=[1.0,-0.2])
+#plt.title('Time Window: '+ str(tini)[0:13] + ' - ' + str(tend)[0:13],fontsize=18)
+plt.axis('scaled')
+plt.xlim(lon_lim)
+plt.ylim(lat_lim)
+
+ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+
+plt.figure(figsize=(12,5))
+plt.plot(timeDrf,slpDrf,'.-',label='Lagrangian Drifter: '+str(code_id))
+plt.title('Sea Level Pressure')
+plt.legend()
 '''
+
+########################################################################
+# Find drifters that are part of the AR recon campaing
+fig = plt.figure()
+ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
+#plt.legend(loc='lower right',bbox_to_anchor=[1.0,-0.2])
+#plt.title('Time Window: '+ str(tini)[0:13] + ' - ' + str(tend)[0:13],fontsize=18)
+plt.axis('scaled')
+plt.xlim(lon_lim)
+plt.ylim(lat_lim)
+ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+
+wmo_ar_recon = []
+wmo_ar_recon_wc = []
+for wmo_num in WMO_AR_recon:
+    ok_id = wmo_id == wmo_num
+    if len(wmo_id[ok_id]) != 0:
+        #print(np.unique(wmo_id[ok_id])[0])
+        wmo_ar_recon.append(np.unique(wmo_id[ok_id])[0])
+
+        # Fields for this specific drifter
+        latdd = latitude[ok_id]
+        londd = longitude[ok_id]
+        wmo_iddd = wmo_id[ok_id]
+
+        # Find drifter within lon limits
+        oklon = np.logical_and(londd >= lon_lim[0],londd < lon_lim[1])
+
+        # Fields within the lon and lat limits
+        if len(londd[oklon]) > 0:
+            latld = latdd[oklon]
+            lonld = londd[oklon]
+            wmo_ar_recon_wc.append(np.unique(wmo_iddd[oklon])[0])
+            print(np.unique(wmo_iddd[oklon])[0])
+
+            ax.plot(lonld, latld,'.',color='k')
+
+#for wmo_num in wmo_ar_recon_wc:
+for wmo_num in [7801736.,2802110.,2802121.,3801723.]:
+    ok_id = wmo_id == wmo_num
+    print(np.unique(wmo_id[ok_id])[0])
+
+    # Fields for this specific drifter
+    timedd = times[ok_id]
+    timestampdd = timestamps[ok_id]
+    latdd = latitude[ok_id]
+    londd = longitude[ok_id]
+    wmo_iddd = wmo_id[ok_id]
+    code_id = np.unique(wmo_iddd)[0]
+    slpdd = sea_level_pressure[ok_id]
+
+    print(timedd[0])
+
+    fig = plt.figure()
+    ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
+    ax.plot(londd, latdd,'.',color='k',label='Lagrangian Drifter: '+str(code_id))
+    plt.legend(loc='lower right',bbox_to_anchor=[1.0,-0.2])
+    plt.axis('scaled')
+    plt.xlim(lon_lim)
+    plt.ylim(lat_lim)
+    ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+    ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+    ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+
+    plt.figure(figsize=(12,5))
+    plt.plot(timedd,slpdd,'.-',label='Lagrangian Drifter: '+str(code_id))
+    plt.title('Sea Level Pressure')
+    plt.legend()
 
 ########################################################################
 # Get lon and lat from model
@@ -152,15 +238,15 @@ target_time = []
 target_slp = np.empty((len(folder_exps),43))
 target_slp[:] = np.nan
 
-#for code in [7810735.]:
-for code in [7801738.]:
+#for code in WMO_numbers:
+for code in [7801736.,2802110.,2802121.,3801723.]:
     print(code)
+    # Fields within time window and lat and lon limits
     okcode = wmo_idD == code
     timed = timeD[okcode]
     timestampd = timestampD[okcode]
     latd = latD[okcode]
     lond = lonD[okcode]
-    platform_coded = wmo_idD[okcode]
     slpdd = slpD[okcode]
 
     slpd = np.empty((len(slpdd)))
@@ -203,13 +289,13 @@ for code in [7801738.]:
 
         #######################################################################
     
-    # Figure SST
+    # Figure SLP
     fig,ax = plt.subplots(figsize=(10, 4))
     plt.plot(timed,slpd,'o-',color='k',label='Drifter '+ str(code),markersize=5,markeredgecolor='k')
     for i in np.arange(len(exp_labels)):
         plt.plot(target_timeD,target_slp[i,0:len(target_timeD)]/100,'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
     #plt.legend(loc='upper right',bbox_to_anchor=[1.7,1.0])
-    plt.legend(loc='upper left')
+    plt.legend(loc='upper right')
     plt.title('Sea Level Pressure Cycle '+ cycle,fontsize=18)
     plt.ylabel('($^oC$)',fontsize=14)
     date_form = DateFormatter("%m-%d")
@@ -246,5 +332,4 @@ plt.ylim([np.nanmin(latD)-1,np.nanmax(latD)+1])
 ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
 ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
 ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
-
 
