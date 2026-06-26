@@ -1,13 +1,15 @@
 #%% User input
 
 # forecasting cycle to be used
-cycle = '2024021500'
+cycle = '2025120900'
 
-WMO_numbers = [7801738.]
+# 2023-2026
+#WMO_AR_recon = [7810735,7810736,7810737,7810738,7810739,7810740,7810741,7810742,7810743,7810744,7810745,7810746,7810747,7810748,7810749,7810750,7810751,7810752,7810753,7810754,7810755,7810756,7810757,7810758,7810759,7810760,7810761,7810762,7810763,7810764,7810847,7810848,7810849,7810850,7810851,7810852,7810853,7810854,7810855,7810856,7810857,7810858,7810859,7810860,7810861,7810862,7810863,7810864,7810865,7810866,7810837,7810838,7810839,7810840,7810841,7810842,7810843,7810844,7810845,7810846,7810555,2802108,1801806,2802107,6801916,6801917,6801914,5802101,2802104,6801915,3801707,7801736,2802106,7801735,5802104,2802110,7801738,1801808,3801709,7801737,2802109,1801809,7801734,4804122,2802111,3801708,2802105,7801733,5802102,5802103,1801807,6801936,4804132,6801937,1801818,7801759,5802124,2802129,2802128,7801758,1801821,7801761,6801934,4804134,1801820,4804135,3801716,6801938,2802126,5802122,4804133,6801939,2802127,1801819,6801935,5802125,5802123,1801822,3801717,7801760,1801823,5802111,3801715,7801746,2802121,7801750,4804142,1801827,6801948,7801768,6801949,6801947,3801723,1801828,4804140,2802133,3801722,3801725,3801726,3801724,4804141,7801770,6801946,7801769]
 
-WMO_AR_recon = [7810735,7810736,7810737,7810738,7810739,7810740,7810741,7810742,7810743,7810744,7810745,7810746,7810747,7810748,7810749,7810750,7810751,7810752,7810753,7810754,7810755,7810756,7810757,7810758,7810759,7810760,7810761,7810762,7810763,7810764,7810847,7810848,7810849,7810850,7810851,7810852,7810853,7810854,7810855,7810856,7810857,7810858,7810859,7810860,7810861,7810862,7810863,7810864,7810865,7810866,7810837,7810838,7810839,7810840,7810841,7810842,7810843,7810844,7810845,7810846,7810555,2802108,1801806,2802107,6801916,6801917,6801914,5802101,2802104,6801915,3801707,7801736,2802106,7801735,5802104,2802110,7801738,1801808,3801709,7801737,2802109,1801809,7801734,4804122,2802111,3801708,2802105,7801733,5802102,5802103,1801807,6801936,4804132,6801937,1801818,7801759,5802124,2802129,2802128,7801758,1801821,7801761,6801934,4804134,1801820,4804135,3801716,6801938,2802126,5802122,4804133,6801939,2802127,1801819,6801935,5802125,5802123,1801822,3801717,7801760,1801823,5802111,3801715,7801746,2802121,7801750,4804142,1801827,6801948,7801768,6801949,6801947,3801723,1801828,4804140,2802133,3801722,3801725,3801726,3801724,4804141,7801770,6801946,7801769]
+# 2025-2026
+WMO_AR_recon = [7810735,7810736,7810737,7810738,7810739,7810740,7810741,7810742,7810743,7810744,7810745,7810746,7810747,7810748,7810749,7810750,7810751,7810752,7810753,7810754,7810755,7810756,7810757,7810758,7810759,7810760,7810761,7810762,7810763,7810764,7810847,7810848,7810849,7810850,7810851,7810852,7810853,7810854,7810855,7810856,7810857,7810858,7810859,7810860,7810861,7810862,7810863,7810864,7810865,7810866,7810837,7810838,7810839,7810840,7810841,7810842,7810843,7810844,7810845,7810846]
 
-url_drifter = '/work/noaa/hwrf/noscrub/maristiz//Data/Scripts_lagrang_drifters/LDL_sea_level_press_Jan_2023_to_Jan_2026.nc'
+url_drifter = '/work/noaa/hwrf/noscrub/maristiz//Data/Scripts_lagrang_drifters/LDL_sea_level_press_Dec_1_2025_to_Mar_31_2026.nc'
 
 exp_labels = ['uncoupled','Coupled']
 exp_colors = ['blue','orange']
@@ -15,7 +17,7 @@ exp_colors = ['blue','orange']
 lon_lim = [-180,-80]
 lat_lim = [0,70]
 
-folder_exps = ['/work2/noaa/hurricane/malasala/Maria_Murali/']
+folder_exps = ['/work/noaa/hurricane/malasala/Maria_Murali/ARAFSv1_coupled/']
 #folder_exps = ['/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
 
 ################################################################################
@@ -33,9 +35,6 @@ import grib2io
 import cartopy
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
-
-#sys.path.append(folder_myutils)
-#from my_models_utils get_var_from_model_following_trajectory
 
 # Increase fontsize of labels globally
 plt.rc('xtick',labelsize=14)
@@ -93,12 +92,30 @@ gdata = xr.open_dataset(url)#,decode_times=False)
 latitude = np.asarray(gdata.latitude)
 longitude = np.asarray(gdata.longitude)
 wmo_id = np.asarray(gdata.wmo_ID)
+wmo_id_unique = np.unique(wmo_id)
 sea_level_pressure = np.asarray(gdata.sea_level_pressure)
 
 times = np.asarray(gdata.time)
 timestamps = mdates.date2num(times)
 oktimeg = np.logical_and(mdates.date2num(times) >= mdates.date2num(tini),\
                          mdates.date2num(times) <= mdates.date2num(tend))
+
+# figure of all lagragian drifter in the publicably available file
+fig = plt.figure()
+ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
+ax.plot(longitude, latitude,'.',color='k',markersize=1)
+#plt.legend(loc='lower right',bbox_to_anchor=[1.0,-0.2])
+plt.title('Time Window: '+ str(times[0])[0:10] + ' - ' + str(times[-1])[0:10]+'\n Total number drifters = '+str(len(wmo_id_unique)),fontsize=18)
+plt.axis('scaled')
+#plt.xlim(lon_lim)
+#plt.ylim(lat_lim)
+ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, linestyle=(0, (5, 10)))
+gl.top_labels = False
+gl.right_labels = False
+
 
 # Fields within time window
 timeDr = times[oktimeg]
@@ -160,13 +177,17 @@ plt.legend()
 fig = plt.figure()
 ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
 #plt.legend(loc='lower right',bbox_to_anchor=[1.0,-0.2])
-#plt.title('Time Window: '+ str(tini)[0:13] + ' - ' + str(tend)[0:13],fontsize=18)
+plt.title('Time Window: '+ str(times[0])[0:10] + ' - ' + str(times[-1])[0:10],fontsize=18)
 plt.axis('scaled')
 plt.xlim(lon_lim)
 plt.ylim(lat_lim)
 ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
 ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
 ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+
+gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, linestyle=(0, (5, 10)))
+gl.top_labels = False
+gl.right_labels = False
 
 wmo_ar_recon = []
 wmo_ar_recon_wc = []
@@ -191,10 +212,11 @@ for wmo_num in WMO_AR_recon:
             wmo_ar_recon_wc.append(np.unique(wmo_iddd[oklon])[0])
             print(np.unique(wmo_iddd[oklon])[0])
 
-            ax.plot(lonld, latld,'.',color='k')
+            ax.plot(lonld, latld,'.',color='k',markersize=1)
 
 #for wmo_num in wmo_ar_recon_wc:
-for wmo_num in [7801736.,2802110.,2802121.,3801723.]:
+#for wmo_num in [7801736.,2802110.,2802121.,3801723.]:
+for wmo_num in [7810735.]:
     ok_id = wmo_id == wmo_num
     print(np.unique(wmo_id[ok_id])[0])
 
@@ -238,8 +260,8 @@ target_time = []
 target_slp = np.empty((len(folder_exps),43))
 target_slp[:] = np.nan
 
-#for code in WMO_numbers:
-for code in [7801736.,2802110.,2802121.,3801723.]:
+#for code in [7801736.,2802110.,2802121.,3801723.]:
+for code in [7810735.]:
     print(code)
     # Fields within time window and lat and lon limits
     okcode = wmo_idD == code
@@ -292,7 +314,7 @@ for code in [7801736.,2802110.,2802121.,3801723.]:
     # Figure SLP
     fig,ax = plt.subplots(figsize=(10, 4))
     plt.plot(timed,slpd,'o-',color='k',label='Drifter '+ str(code),markersize=5,markeredgecolor='k')
-    for i in np.arange(len(exp_labels)):
+    for i in np.arange(len(folder_exps)):
         plt.plot(target_timeD,target_slp[i,0:len(target_timeD)]/100,'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
     #plt.legend(loc='upper right',bbox_to_anchor=[1.7,1.0])
     plt.legend(loc='upper right')
@@ -301,11 +323,11 @@ for code in [7801736.,2802110.,2802121.,3801723.]:
     date_form = DateFormatter("%m-%d")
     ax.xaxis.set_major_formatter(date_form)
     
-    fig = plt.figure()
+    fig = plt.figure(figsize=(6,7))
     ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
     ax.axis('scaled')
     ax.plot(lonD, latD,'.',color='k',label='Lagrangian Drifters: '+str(len(lonD))+' Data Points')
-    ax.plot(lon_obsd, lat_obsd,'.',color='red',label='Lagrangian Drifters '+str(code)+': '+str(len(lon_obsd))+' Data Points')
+    ax.plot(lon_obsd, lat_obsd,'.',color='red',label='Lagrangian Drifter '+str(code)+': '+str(len(lon_obsd))+' Data Points')
     plt.legend(loc='lower right',bbox_to_anchor=[1.0,-0.2])
     plt.title('Time Window: '+ str(tini)[0:13] + ' - ' + str(tend)[0:13],fontsize=18)
     plt.axis('scaled')
@@ -315,6 +337,9 @@ for code in [7801736.,2802110.,2802121.,3801723.]:
     ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
     ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
     ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+    gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, linestyle=(0, (5, 10)))
+gl.top_labels = False
+gl.right_labels = False
 
 
     ########################################################################

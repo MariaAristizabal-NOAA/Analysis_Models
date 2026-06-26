@@ -1,10 +1,11 @@
 #%% User input
 
 # forecasting cycle to be used
-#cycle = '2026010300'
-cycle = '2024021500'
+cycle = '2026010300'
+#cycle = '2024021500'
 #url_drifter = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/Data/Lagrangian_Drifters_Scripps/LDL_sea_level_press_Jan_2026.nc'
-url_drifter = '/work/noaa/hwrf/noscrub/maristiz/Data/Scripts_lagrang_drifters/LDL_sea_level_press_Jan_2023_to_Jan_2026.nc'
+#url_drifter = '/work/noaa/hwrf/noscrub/maristiz/Data/Scripts_lagrang_drifters/LDL_sea_level_press_Jan_2023_to_Jan_2026.nc'
+url_drifter = '/work/noaa/hwrf/noscrub/maristiz/Data/Scripts_lagrang_drifters/LDL_sea_level_press_Dec_1_2025_to_Mar_31_2026.nc'
 
 exp_labels = ['uncoupled','Coupled']
 exp_colors = ['blue','orange']
@@ -136,8 +137,8 @@ target_slp = np.empty((len(folder_exps),43))
 target_slp[:] = np.nan
 
 #for code in [7810735.]:
-#[7801736.,2802110.,2802121.,3801723.]
-for code in [7801736.]:
+#for code in [7801736.]:
+for code in [7810754.]:
     print(code)
     okcode = wmo_idD == code
     timed = timeD[okcode]
@@ -190,7 +191,7 @@ for code in [7801736.]:
     # Figure SLP    
     fig,ax = plt.subplots(figsize=(10, 4))
     plt.plot(timed,slpd,'o-',color='k',label='Drifter '+ str(code),markersize=5,markeredgecolor='k')
-    for i in np.arange(len(exp_labels)):
+    for i in np.arange(len(folder_exps)):
         plt.plot(target_timeD,target_slp[i,0:len(target_timeD)]/100,'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
     #plt.legend(loc='upper right',bbox_to_anchor=[1.7,1.0])
     plt.legend(loc='upper left')
