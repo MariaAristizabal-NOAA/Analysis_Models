@@ -9,7 +9,8 @@ cycle = '2025120900'
 # 2025-2026
 WMO_AR_recon = [7810735,7810736,7810737,7810738,7810739,7810740,7810741,7810742,7810743,7810744,7810745,7810746,7810747,7810748,7810749,7810750,7810751,7810752,7810753,7810754,7810755,7810756,7810757,7810758,7810759,7810760,7810761,7810762,7810763,7810764,7810847,7810848,7810849,7810850,7810851,7810852,7810853,7810854,7810855,7810856,7810857,7810858,7810859,7810860,7810861,7810862,7810863,7810864,7810865,7810866,7810837,7810838,7810839,7810840,7810841,7810842,7810843,7810844,7810845,7810846]
 
-url_drifter = '/work/noaa/hwrf/noscrub/maristiz//Data/Scripts_lagrang_drifters/LDL_sea_level_press_Dec_1_2025_to_Mar_31_2026.nc'
+url_drifter = '/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/Data/Scripts_lagrang_drifters/LDL_sea_level_press_Dec_1_2025_to_Mar_31_2026.nc'
+#url_drifter = '/work/noaa/hwrf/noscrub/maristiz//Data/Scripts_lagrang_drifters/LDL_sea_level_press_Dec_1_2025_to_Mar_31_2026.nc'
 
 exp_labels = ['uncoupled','Coupled']
 exp_colors = ['blue','orange']
@@ -17,8 +18,8 @@ exp_colors = ['blue','orange']
 lon_lim = [-180,-80]
 lat_lim = [0,70]
 
-folder_exps = ['/work/noaa/hurricane/malasala/Maria_Murali/ARAFSv1_coupled/']
-#folder_exps = ['/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
+#folder_exps = ['/work/noaa/hurricane/malasala/Maria_Murali/ARAFSv1_coupled/']
+folder_exps = ['/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
 
 ################################################################################
 import xarray as xr
@@ -31,6 +32,7 @@ import sys
 import os
 import glob
 import grib2io
+import random
 
 import cartopy
 import cartopy.crs as ccrs
@@ -40,6 +42,21 @@ import cartopy.feature as cfeature
 plt.rc('xtick',labelsize=14)
 plt.rc('ytick',labelsize=14)
 plt.rc('legend',fontsize=14)
+
+################################################################################
+def generate_unique_rgb_colors(n):
+    if n > 256**3:
+        raise ValueError("Requested more colors than possible unique RGB values.")
+
+    colors = np.ones((n,3))
+    for i in np.arange(n):
+        # Generate a random RGB tuple
+        color = [random.randint(0, 255)/255,
+                 random.randint(0, 255)/255,
+                 random.randint(0, 255)/255]
+        colors[i,:] = color
+
+    return colors
 
 ################################################################################
 def get_var_from_model_following_trajectory_grb2_file(files_model,var_name,lon_model,lat_model,lon_obs,lat_obs,timestamp_obs):
@@ -97,8 +114,8 @@ sea_level_pressure = np.asarray(gdata.sea_level_pressure)
 
 times = np.asarray(gdata.time)
 timestamps = mdates.date2num(times)
-oktimeg = np.logical_and(mdates.date2num(times) >= mdates.date2num(tini),\
-                         mdates.date2num(times) <= mdates.date2num(tend))
+#oktimeg = np.logical_and(mdates.date2num(times) >= mdates.date2num(tini),\
+#                         mdates.date2num(times) <= mdates.date2num(tend))
 
 # figure of all lagragian drifter in the publicably available file
 fig = plt.figure()
@@ -116,61 +133,70 @@ gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, lines
 gl.top_labels = False
 gl.right_labels = False
 
-
-# Fields within time window
-timeDr = times[oktimeg]
-timestampDr = timestamps[oktimeg]
-latDr = latitude[oktimeg]
-lonDr = longitude[oktimeg]
-wmo_idDr = wmo_id[oktimeg]
-slpDr = sea_level_pressure[oktimeg]
-
 # Find the different drifter within lat, lon and time window
-oklat = np.logical_and(latDr >= lat_lim[0], latDr <= lat_lim[1])
-lonDD = lonDr[oklat]
+oklat = np.logical_and(latitude >= lat_lim[0], latitude <= lat_lim[1])
+lonDD = longitude[oklat]
 oklon = np.logical_and(lonDD >= lon_lim[0], lonDD <= lon_lim[1])
 
 # Fields within lat and lon window
-timeD = timeDr[oklat][oklon]
-timestampD = timestampDr[oklat][oklon]
-latD = latDr[oklat][oklon]
-lonD = lonDr[oklat][oklon]
-slpD = slpDr[oklat][oklon]
-wmo_idD = wmo_idDr[oklat][oklon]
+timeD = times[oklat][oklon]
+timestampD = timestamps[oklat][oklon]
+latD = latitude[oklat][oklon]
+lonD = longitude[oklat][oklon]
+slpD = sea_level_pressure[oklat][oklon]
+wmo_idD = wmo_id[oklat][oklon]
 
 codes = np.unique(wmo_idD)
 
-'''
-ok_id = wmo_id == WMO_numbers[0]
-wmo_id[ok_id]
-
-# Fields for this specific drifter
-timeDrf = times[ok_id]
-timestampDrf = timestamps[ok_id]
-latDrf = latitude[ok_id]
-lonDrf = longitude[ok_id]
-wmo_idDrf = wmo_id[ok_id]
-code_id = np.unique(wmo_idDrf)[0]
-slpDrf = sea_level_pressure[ok_id]
-
+# figure of all lagragian drifter in the publicably available file
+# within lat and lon limits
 fig = plt.figure()
 ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
-ax.plot(lonDrf, latDrf,'.',color='k',label='Lagrangian Drifter: '+str(code_id))
-plt.legend(loc='lower right',bbox_to_anchor=[1.0,-0.2])
-#plt.title('Time Window: '+ str(tini)[0:13] + ' - ' + str(tend)[0:13],fontsize=18)
+ax.plot(lonD, latD,'.',color='k',markersize=1)
+plt.title('Time Window: '+ str(times[0])[0:10] + ' - ' + str(times[-1])[0:10]+'\n Total number drifters = '+str(len(codes)),fontsize=18)
 plt.axis('scaled')
-plt.xlim(lon_lim)
-plt.ylim(lat_lim)
-
 ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
 ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
 ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, linestyle=(0, (5, 10)))
+gl.top_labels = False
+gl.right_labels = False
 
-plt.figure(figsize=(12,5))
-plt.plot(timeDrf,slpDrf,'.-',label='Lagrangian Drifter: '+str(code_id))
-plt.title('Sea Level Pressure')
-plt.legend()
-'''
+# figure of all lagragian drifter in the publicably available file
+# within lat and lon limits
+fig = plt.figure()
+ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
+plt.title('Time Window: '+ str(times[0])[0:10] + ' - ' + str(times[-1])[0:10]+'\n Total number drifters = '+str(len(codes)),fontsize=18)
+plt.axis('scaled')
+ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, linestyle=(0, (5, 10)))
+gl.top_labels = False
+gl.right_labels = False
+plt.xlim(lon_lim)
+plt.ylim(lat_lim)
+
+colors = generate_unique_rgb_colors(len(codes))
+
+for c,code in enumerate(codes):
+    print(code)
+    ok_id = wmo_idD == code
+    ax.plot(lonD[ok_id][1:-1],latD[ok_id][1:-1],'.',markersize=0.02,color=colors[c])
+    ax.plot(lonD[ok_id][0],latD[ok_id][0],'o',color=colors[c],markersize=4,markeredgecolor='k')
+    ax.plot(lonD[ok_id][-1],latD[ok_id][-1],'o',color=colors[c],markersize=4,markerfacecolor='none')
+
+# Fields within time window
+oktimeg = np.logical_and(mdates.date2num(timeD) >= mdates.date2num(tini),\
+                         mdates.date2num(timeD) <= mdates.date2num(tend))
+
+timeDr = timeD[oktimeg]
+timestampDr = timestampD[oktimeg]
+latDr = latD[oktimeg]
+lonDr = lonD[oktimeg]
+wmo_idDr = wmo_idD[oktimeg]
+slpDr = slpD[oktimeg]
+codes = np.unique(wmo_idDr)
 
 ########################################################################
 # Find drifters that are part of the AR recon campaing
@@ -191,7 +217,7 @@ gl.right_labels = False
 
 wmo_ar_recon = []
 wmo_ar_recon_wc = []
-for wmo_num in WMO_AR_recon:
+for c,wmo_num in enumerate(WMO_AR_recon):
     ok_id = wmo_id == wmo_num
     if len(wmo_id[ok_id]) != 0:
         #print(np.unique(wmo_id[ok_id])[0])
@@ -212,7 +238,9 @@ for wmo_num in WMO_AR_recon:
             wmo_ar_recon_wc.append(np.unique(wmo_iddd[oklon])[0])
             print(np.unique(wmo_iddd[oklon])[0])
 
-            ax.plot(lonld, latld,'.',color='k',markersize=1)
+            ax.plot(lonld[1:-1],latld[1:-1],'.',markersize=0.02,color=colors[c])
+            ax.plot(lonld[0],latld[0],'o',color=colors[c],markersize=4,markeredgecolor='k')
+            ax.plot(lonld[-1],latld[-1],'o',color=colors[c],markersize=4,markerfacecolor='none')
 
 #for wmo_num in wmo_ar_recon_wc:
 #for wmo_num in [7801736.,2802110.,2802121.,3801723.]:
