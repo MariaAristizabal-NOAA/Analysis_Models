@@ -11,7 +11,7 @@ import datetime
 import grib2io
 
 # Parse the yaml config file
-print('Parse the config file: plot_atmos.yml:')
+print('Parse the config file: concatenate_6h_acc_precip_to_ARAFS_grib2_file.yml:')
 with open('concatenate_6h_acc_precip_to_ARAFS_grib2_file.yml', 'rt') as f:
     conf = yaml.safe_load(f)
 
@@ -37,7 +37,7 @@ for ymdh in conf['ymdhs']:
         print(fhour)
         print(fhourm3)
     
-        fname = conf['stormModel'].lower()+'.'+ymdh+'.'+fhour+'.grb2'
+        fname = ymdh+'.'+conf['stormModel'].lower()+'.parent.atm.'+fhour+'.grb2'
         grib2file = os.path.join(conf['COMarafs']+ymdh+'/00E/', fname)
         
         if f >=6:
@@ -48,7 +48,7 @@ for ymdh in conf['ymdhs']:
             apcp_msg = grb.select(shortName='APCP', level=levstr)[0]
             apcp_data = grb.select(shortName='APCP', level=levstr)[0].data
         
-            fnamem3 = conf['stormModel'].lower()+'.'+ymdh+'.'+fhourm3+'.grb2'
+            fnamem3 = ymdh+'.'+conf['stormModel'].lower()+'.parent.atm.'+fhourm3+'.grb2'
             grib2filem3 = os.path.join(conf['COMarafs']+ymdh+'/00E/', fnamem3)
             print(f'grib2file: {grib2filem3}')
             grbm3 = grib2io.open(grib2filem3,mode='r')

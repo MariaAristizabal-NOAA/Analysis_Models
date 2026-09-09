@@ -97,28 +97,37 @@ for exp in np.arange(len(conf['COMmodels'])):
         end = time.perf_counter()
         print(f"Elapsed time: {end - start:.6f} seconds")
 
-np.savez('precip24_2026.npz', apcp24_mean=apcp24_mean, apcp24_max=apcp24_max, apcp24_min=apcp24_min, apcp24_std=apcp24_std)
-'''
-'''
-loaded_data_2023 = np.load('precip24_2023.npz')
-apcp24_mean_2023 = loaded_data_2023['apcp24_mean']
-loaded_data_2024 = np.load('precip24_2024.npz')
-apcp24_mean_2024 = loaded_data_2024['apcp24_mean']
-loaded_data_2025 = np.load('precip24_2025.npz')
-apcp24_mean_2025 = loaded_data_2025['apcp24_mean']
-loaded_data_2026 = np.load('precip24_2026.npz')
-apcp24_mean_2026 = loaded_data_2026['apcp24_mean']
-#apcp24_max = loaded_data['apcp24_max']
-#apcp24_min = loaded_data['apcp24_min']
-#apcp24_std = loaded_data['apcp24_std']
-
-apcp24_mean = np.hstack([apcp24_mean_2023,apcp24_mean_2024,apcp24_mean_2025,apcp24_mean_2026])
-
-np.savez('precip24.npz', apcp24_mean=apcp24_mean)
+np.savez('precip24_3.npz', apcp24_mean=apcp24_mean, apcp24_max=apcp24_max, apcp24_min=apcp24_min, apcp24_std=apcp24_std)
 '''
 
-loaded_data = np.load('precip24.npz')
-apcp24_mean = loaded_data['apcp24_mean']/0.0393701 # Convert inches to mm
+loaded_data1 = np.load('precip24.npz')
+apcp24_mean1 = loaded_data1['apcp24_mean']
+ymdhs1 = ['2023010600','2023010700','2023010800','2023010900','2023011000','2023030700','2023030800','2023030900','2023031000','2023031100','2024021600','2024021700','2024021800','2024021900','2024022000','2025020100','2025020200','2025020300','2025020400','2025020500','2025022000','2025022100','2025022200','2025022300','2025022400','2026010300','2026010400','2026010500','2026010600','2026010700']
+
+loaded_data2 = np.load('precip24_2.npz')
+apcp24_mean2 = loaded_data2['apcp24_mean']
+ymdhs2 = ['2023010500','2023030600','2024021500','2025013100','2025021900','2025120400', '2025120500','2025120600','2025120700','2025120800','2025120900','2025121000']
+
+loaded_data3 = np.load('precip24_3.npz')
+apcp24_mean3 = loaded_data3['apcp24_mean']
+ymdhs3 = ['2025121100','2025121500','2025121600','2025121700','2025121800','2025121900','2025122000','2025122100','2025122200','2025122300','2025122400']
+
+apcp24_mean0 = np.hstack([apcp24_mean1,apcp24_mean2,apcp24_mean3])
+ymdhs0 = np.hstack([ymdhs1,ymdhs2,ymdhs3])
+
+apcp24_mean = apcp24_mean0 * np.nan
+ymdhs_mean = []
+for c,ymdh in enumerate(conf['ymdhs']):
+    print(ymdh)
+    okc = np.where(ymdhs0 == ymdh)[0][0]
+    apcp24_mean[:,c,:] = apcp24_mean0[:,okc,:]
+    ymdhs_mean.append(ymdhs0[okc])
+
+np.savez('precip24_53_cycles.npz',apcp24_mean=apcp24_mean,ymdhs_mean=ymdhs_mean)
+
+loaded_data = np.load('precip24_53_cycles.npz')
+apcp24_mean = loaded_data['apcp24_mean']
+ymdhs_mean = loaded_data['ymdhs_mean']
 
 ########
 c = np.where([ymdh == conf['ymdh'] for ymdh in conf['ymdhs']])[0][0]
@@ -161,7 +170,9 @@ plt.xticks(np.arange(0,126,12))
 ##############
 fig,ax = plt.subplots(figsize = (13,7))
 for c,ymdh in enumerate(conf['ymdhs']):
-    plt.plot(ff,apcp24_diff[c,:],'o-',color=conf['ymdhs_colors'][c],markeredgecolor='k',markersize=10,label=conf['ymdhs'][c])
+    plt.plot(ff,apcp24_diff[c,:],'o-',color=conf['ymdhs_colors'][c],markeredgecolor='k',markersize=10)
+for c in [0,6,12,19,24,30,38,48]:
+    plt.plot(ff,apcp24_diff[c,:],'o-',color=conf['ymdhs_colors'][c],markeredgecolor='k',markersize=10,label=conf['ymdhs'][c][0:-4])
 ax.legend(bbox_to_anchor=(1.12, 1.1), loc='upper right')
 ax.plot(ff,np.zeros(len(ff)),'-k',linewidth=2)
 ax.tick_params(which='major', width=2)

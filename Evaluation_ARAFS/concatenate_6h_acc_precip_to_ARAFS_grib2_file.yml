@@ -1,0 +1,10 @@
+# yaml configure file
+stormModel: ARAFS
+stormID: 00E
+ymdhs: ['2023010500','2023010600']
+COMarafs: /gpfs/f6/ar-cpu/world-shared/Keqin.Wu/ursaData/ARAFS_E4/
+
+#ymdhs: ['2025122600','2025122700','2025122800','2025122900','2025123000','2025123100']
+#COMarafs: /gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled_with_6h_acc_precip/
+
+

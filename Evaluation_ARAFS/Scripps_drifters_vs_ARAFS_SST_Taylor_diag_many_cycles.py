@@ -1,6 +1,26 @@
 #%% User input
 # forecasting cycle to be used
-cycles = ['2023010600','2023030700','2024021600','2025020100','2025022000','2026010300']
+#cycles = ['2023010600','2023030700','2024021600','2025020100','2025022000','2026010300']
+cycles =  [
+    "2023010500", "2023010600", "2023010700", "2023010800", "2023010900", "2023011000",
+    "2023030600", "2023030700", "2023030800", "2023030900", "2023031000", "2023031100",
+    "2024021500", "2024021600", "2024021700", "2024021800", "2024021900", "2024022000",
+    "2025013100", "2025020100", "2025020200", "2025020300", "2025020400", "2025020500",
+    "2025021900", "2025022000", "2025022100", "2025022200", "2025022300", "2025022400",
+    "2025120400", "2025120500", "2025120600", "2025120700", "2025120800", "2025120900", "2025121000", "2025121100",
+    "2025121500", "2025121600", "2025121700", "2025121800", "2025121900", "2025122000", "2025122100", "2025122200", "2025122300", "2025122400",
+    "2026010300", "2026010400", "2026010500", "2026010600", "2026010700",
+] 
+
+cycles_colors = ['red','red','red','red','red','red',
+                 'green','green','green','green','green','green',
+                 'blue','blue','blue','blue','blue','blue',
+                 'violet','violet','violet','violet','violet','violet',
+                 'orange','orange','orange','orange','orange','orange',
+                 'olivedrab','olivedrab','olivedrab','olivedrab','olivedrab','olivedrab','olivedrab','olivedrab',
+                 'lightcoral','lightcoral','lightcoral','lightcoral','lightcoral','lightcoral','lightcoral','lightcoral','lightcoral','lightcoral',
+                 'cyan','cyan','cyan','cyan','cyan']
+
 url_drifter = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/Data/Lagrangian_Drifters_Scripps/LDL_SST_Jan_2023_to_Jan_2026.nc'
 
 exp_labels = ['Coupled']
@@ -117,6 +137,21 @@ def taylor_template(angle_lim,std_lim):
     return fig,ax1
 
 #####################################################################
+def generate_unique_rgb_colors(n):
+    if n > 256**3:
+        raise ValueError("Requested more colors than possible unique RGB values.")
+
+    colors = np.ones((n,3))
+    for i in np.arange(n):
+        # Generate a random RGB tuple
+        color = [random.randint(0, 255)/255,
+                 random.randint(0, 255)/255,
+                 random.randint(0, 255)/255]
+        colors[i,:] = color
+
+    return colors
+
+#####################################################################
 import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
@@ -127,6 +162,11 @@ from matplotlib.ticker import (MultipleLocator, FormatStrFormatter)
 import sys
 import os
 import glob
+import random
+
+import cartopy
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
 
 # Increase fontsize of labels globally
 plt.rc('xtick',labelsize=14)
@@ -186,6 +226,30 @@ sstD = sstDr[oklat][oklon]
 wmo_idD = wmo_idDr[oklat][oklon]
 
 codes = np.unique(wmo_idD)
+
+# figure of all lagragian drifter in the publicably available file
+# within lat and lon limits
+fig = plt.figure()
+ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
+plt.title('Time Window: '+ str(times[0])[0:10] + ' - ' + str(times[-1])[0:10]+'\n Total number drifters = '+str(len(codes)),fontsize=18)
+plt.axis('scaled')
+ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, linestyle=(0, (5, 10)))
+gl.top_labels = False
+gl.right_labels = False
+plt.xlim(lon_lim)
+plt.ylim(lat_lim)
+
+colors = generate_unique_rgb_colors(len(codes))
+
+for c,code in enumerate(codes):
+    print(code)
+    ok_id = wmo_idD == code
+    ax.plot(lonD[ok_id][1:-1],latD[ok_id][1:-1],'.',markersize=0.02,color=colors[c])
+    ax.plot(lonD[ok_id][0],latD[ok_id][0],'o',color=colors[c],markersize=4,markeredgecolor='k')
+    ax.plot(lonD[ok_id][-1],latD[ok_id][-1],'o',color=colors[c],markersize=4,markerfacecolor='none')
 
 ########################################################################
 number_obs = np.empty((len(folder_exps),len(cycles)))
@@ -248,6 +312,7 @@ for i,folder in enumerate(folder_exps):
         bias[i,c] = np.nanmean(subsst_model_array) - np.nanmean(subsst_obs_array)
         corr[i,c] = np.corrcoef(subsst_obs_array,subsst_model_array)[0,1]
         
+        '''
         plt.figure()
         plt.plot(subsst_obs_array,subsst_model_array,'.',color=exp_colors[i],markersize=7,markeredgecolor='k')
         plt.plot(np.arange(33),np.arange(33),'-',color='silver',linewidth=2)
@@ -262,6 +327,7 @@ for i,folder in enumerate(folder_exps):
         plt.text(15,6,'STD obs = ' + str(np.round(std_subsst_obs[i,c],2)))
         plt.text(15,4,'STD model = ' + str(np.round(std_subsst_model[i,c],2)))
         plt.text(15,2,'Corr = ' + str(np.round(corr[i,c],2)))
+        '''
 
 ##################################################################
 # Taylor diagram
@@ -293,4 +359,23 @@ plt.clabel(contours, inline=1, fontsize=10)
 plt.grid(linestyle=':',alpha=0.5)
 plt.title('SST ',fontsize=18)
 #plt.savefig('fig7',bbox_inches = 'tight',pad_inches = 0.1)
+
+# Bias plot
+time_cycles = [datetime(int(cycle[0:4]),int(cycle[4:6]),int(cycle[6:8]),int(cycle[8:10]), 0) for cycle in cycles]
+
+fig,ax = plt.subplots(figsize=(11,5))
+plt.plot(time_cycles,bias[0,:],'--k')
+plt.plot(time_cycles,bias[0,:]*0,'-',color='grey')
+for c,cycle in enumerate(cycles):
+    plt.plot(time_cycles[c],bias[0,c],'o-',color=cycles_colors[c],markersize=7,markeredgecolor='k')
+for c in [0,6,12,19,24,30,38,48]:
+    plt.plot(time_cycles[c],bias[0,c],'o',color=cycles_colors[c],markersize=7,markeredgecolor='k',label=cycles[c][0:-4])
+plt.legend(ncol=4, loc='upper center')
+#plt.legend(loc='upper right',bbox_to_anchor=[1.1,1.1])
+plt.title('SST Bias ',fontsize=18)
+plt.ylabel('($^oC$)',fontsize=14)
+plt.ylim([-0.5,0.2])
+date_form = DateFormatter("%Y")
+#date_form = DateFormatter("%Y-%m-%d")
+ax.xaxis.set_major_formatter(date_form)
 

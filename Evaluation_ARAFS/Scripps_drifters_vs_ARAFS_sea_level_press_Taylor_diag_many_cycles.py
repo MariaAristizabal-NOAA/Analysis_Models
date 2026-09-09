@@ -1,6 +1,8 @@
 #%% User input
 # forecasting cycle to be used
 cycles = ['2023010600','2023030700','2024021600','2025020100','2025022000','2026010300']
+cycles_colors = ['red','green','blue','violet','orange','cyan']
+
 url_drifter = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/Data/Lagrangian_Drifters_Scripps/LDL_sea_level_press_Jan_2023_to_Jan_2026.nc'
 
 exp_labels = ['UnCoupled','Coupled']
@@ -118,6 +120,21 @@ def taylor_template(angle_lim,std_lim):
     return fig,ax1
 
 #####################################################################
+def generate_unique_rgb_colors(n):
+    if n > 256**3:
+        raise ValueError("Requested more colors than possible unique RGB values.")
+
+    colors = np.ones((n,3))
+    for i in np.arange(n):
+        # Generate a random RGB tuple
+        color = [random.randint(0, 255)/255,
+                 random.randint(0, 255)/255,
+                 random.randint(0, 255)/255]
+        colors[i,:] = color
+
+    return colors
+
+#####################################################################
 import xarray as xr
 import numpy as np
 import grib2io
@@ -129,6 +146,11 @@ from matplotlib.ticker import (MultipleLocator, FormatStrFormatter)
 import sys
 import os
 import glob
+import random
+
+import cartopy
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
 
 # Increase fontsize of labels globally
 plt.rc('xtick',labelsize=14)
@@ -188,6 +210,30 @@ wmo_idD = wmo_idDr[oklat][oklon]
 
 codes = np.unique(wmo_idD)
 
+# figure of all lagragian drifter in the publicably available file
+# within lat and lon limits
+fig = plt.figure()
+ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
+plt.title('Time Window: '+ str(times[0])[0:10] + ' - ' + str(times[-1])[0:10]+'\n Total number drifters = '+str(len(codes)),fontsize=18)
+plt.axis('scaled')
+ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, linestyle=(0, (5, 10)))
+gl.top_labels = False
+gl.right_labels = False
+plt.xlim(lon_lim)
+plt.ylim(lat_lim)
+
+colors = generate_unique_rgb_colors(len(codes))
+
+for c,code in enumerate(codes):
+    print(code)
+    ok_id = wmo_idD == code
+    ax.plot(lonD[ok_id][1:-1],latD[ok_id][1:-1],'.',markersize=0.02,color=colors[c])
+    ax.plot(lonD[ok_id][0],latD[ok_id][0],'o',color=colors[c],markersize=4,markeredgecolor='k')
+    ax.plot(lonD[ok_id][-1],latD[ok_id][-1],'o',color=colors[c],markersize=4,markerfacecolor='none')
+
 ########################################################################
 number_obs = np.empty((len(folder_exps),len(cycles)))
 number_obs[:] = np.nan
@@ -212,7 +258,6 @@ for i,folder in enumerate(folder_exps):
         #%% Get list files
         files_fv3 = sorted(glob.glob(os.path.join(folder+cycle+'/00E/','arafs*.grb2')))
         model = grib2io.open(files_fv3[0],mode='r')
-    
         lon_fv3 = model.select(shortName='ELON')[0].data
         lat_fv3 = model.select(shortName='NLAT')[0].data
     
@@ -293,4 +338,22 @@ plt.clabel(contours, inline=1, fontsize=10)
 plt.grid(linestyle=':',alpha=0.5)
 plt.title('Sea Level Pressure',fontsize=18)
 plt.savefig('SLP_Tyler_diagram',bbox_inches = 'tight',pad_inches = 0.1)
+
+# Bias plot
+bias = np.array([[0.42,-0.55,-0.15,1.41,-0.32,0.34],[0.53,-0.54,-0.31,1.32,-0.55,0.17]])
+time_cycles = [datetime(int(cycle[0:4]),int(cycle[4:6]),int(cycle[6:8]),int(cycle[8:10]), 0) for cycle in cycles]
+
+fig,ax = plt.subplots(figsize=(11,5))
+plt.plot(time_cycles,bias[0,:]*0,'-',color='grey')
+for exp in np.arange(len(folder_exps)):
+    plt.plot(time_cycles,bias[exp,:],'--k')
+    plt.plot(time_cycles,bias[exp,:],'o',color=exp_colors[exp],label=exp_labels[exp],markersize=8,markeredgecolor='k')
+plt.legend(ncol=3, loc='upper center')
+#plt.legend(loc='upper right',bbox_to_anchor=[1.1,1.1])
+plt.title('Mean Sea Level Pressure Bias ',fontsize=18)
+plt.ylabel('(hPa)',fontsize=14)
+plt.ylim([-2,2])
+date_form = DateFormatter("%Y-%m")
+#date_form = DateFormatter("%Y-%m-%d")
+ax.xaxis.set_major_formatter(date_form)
 

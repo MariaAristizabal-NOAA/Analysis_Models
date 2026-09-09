@@ -9,7 +9,8 @@ cycle = '2025120900'
 # 2025-2026
 WMO_AR_recon = [7810735,7810736,7810737,7810738,7810739,7810740,7810741,7810742,7810743,7810744,7810745,7810746,7810747,7810748,7810749,7810750,7810751,7810752,7810753,7810754,7810755,7810756,7810757,7810758,7810759,7810760,7810761,7810762,7810763,7810764,7810847,7810848,7810849,7810850,7810851,7810852,7810853,7810854,7810855,7810856,7810857,7810858,7810859,7810860,7810861,7810862,7810863,7810864,7810865,7810866,7810837,7810838,7810839,7810840,7810841,7810842,7810843,7810844,7810845,7810846]
 
-url_drifter = '/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/Data/Scripts_lagrang_drifters/LDL_sea_level_press_Dec_1_2025_to_Mar_31_2026.nc'
+url_drifter = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/Data/Lagrangian_Drifters_Scripps/LDL_sea_level_press_Dec_1_2025_to_Mar_31_2026.nc'
+#url_drifter = '/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/Data/Scripts_lagrang_drifters/LDL_sea_level_press_Dec_1_2025_to_Mar_31_2026.nc'
 #url_drifter = '/work/noaa/hwrf/noscrub/maristiz//Data/Scripts_lagrang_drifters/LDL_sea_level_press_Dec_1_2025_to_Mar_31_2026.nc'
 
 exp_labels = ['uncoupled','Coupled']
@@ -19,7 +20,8 @@ lon_lim = [-180,-80]
 lat_lim = [0,70]
 
 #folder_exps = ['/work/noaa/hurricane/malasala/Maria_Murali/ARAFSv1_coupled/']
-folder_exps = ['/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
+#folder_exps = ['/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
+folder_exps = ['/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
 
 ################################################################################
 import xarray as xr
@@ -351,6 +353,18 @@ for code in [7810735.]:
     date_form = DateFormatter("%m-%d")
     ax.xaxis.set_major_formatter(date_form)
     
+    fig,ax = plt.subplots(figsize=(10, 4))
+    plt.plot(timed,slpd,'o-',color='k',label='Drifter '+ str(code),markersize=5,markeredgecolor='k')
+    for i in np.arange(len(folder_exps)):
+        plt.plot(target_timeD,target_slp[i,0:len(target_timeD)]/100,'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
+    #plt.legend(loc='upper right',bbox_to_anchor=[1.7,1.0])
+    plt.legend(loc='upper right')
+    plt.title('Sea Level Pressure Cycle '+ cycle,fontsize=18)
+    plt.ylabel('($^oC$)',fontsize=14)
+    date_form = DateFormatter("%m-%d")
+    ax.xaxis.set_major_formatter(date_form)
+    plt.xlim([target_time[0][0],target_time[0][-1]])
+
     fig = plt.figure(figsize=(6,7))
     ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
     ax.axis('scaled')

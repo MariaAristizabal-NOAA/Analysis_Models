@@ -1,5 +1,5 @@
 #!/bin/sh
-#SBATCH --job-name=OSTIA_vs_ARAFS_Bias
+#SBATCH --job-name=skin_temp_ERA5_vs_ARAFS
 #SBATCH --account=ar-cpu
 #SBATCH --qos=normal
 ##SBATCH --nodes=2-2
@@ -7,13 +7,13 @@
 ##SBATCH --cpus-per-task=3
 #SBATCH -t 12:00:00
 #SBATCH --clusters=c6
-#SBATCH -o OSTIA_vs_ARAFS_Bias.%j.log
-#SBATCH -e OSTIA_vs_ARAFS_Bias.%j.log
+#SBATCH -o skin_temp_ERA5_vs_ARAFS.%j.log
+#SBATCH -e skin_temp_ERA5_vs_ARAFS.%j.log
 #SBATCH --mail-user=Maria.Aristizabal@noaa.gov
 #SBATCH --mail-type=ALL
 
 source /ncrc/home1/Maria.Aristizabal/load_miniconda.sh
 conda activate WCOSS2_env
 
-python surf_temp_OSTIA_vs_ARAFS_Bias_Taylor_diag_non_overlaping_atm.py 
+python plot_atmos_skin_temp_ERA5_vs_ARAFS_Bias_Taylor_only_overlaping_atm.py 
 

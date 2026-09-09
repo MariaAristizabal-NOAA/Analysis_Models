@@ -133,12 +133,12 @@ for exp in np.arange(len(conf['COMmodels'])):
     fig,ax = plt.subplots(figsize = (9,6))
     if np.isfinite(np.mean(mld_mean[exp,:,:])):
         for c,ymdh in enumerate(conf['ymdhs']):
-            #if c!=0 and c%5 == 0:
-            if c%5 == 0:
-                plt.plot(ff,mld_mean[exp,c,:],'o-',color=conf['ymdhs_colors'][c],label=conf['ymdhs'][c][0:-4],markeredgecolor='k',markersize=7,alpha=0.5)
-            else:
-                plt.plot(ff,mld_mean[exp,c,:],'o-',color=conf['ymdhs_colors'][c],markeredgecolor='k',markersize=7,alpha=0.5)
-ax.legend(loc='upper left',bbox_to_anchor=(0.95,1.1))
+            plt.plot(ff,mld_mean[exp,c,:],'o-',color=conf['ymdhs_colors'][c],markeredgecolor='k',markersize=7,alpha=0.5)
+        for c in [0,6,12,19,24,30,38,48]:    
+            plt.plot(ff,mld_mean[exp,c,:],'o-',color=conf['ymdhs_colors'][c],label=conf['ymdhs'][c][0:-4],markeredgecolor='k',markersize=7,alpha=0.5)
+
+plt.legend(ncol=4, loc='upper center')
+#ax.legend(loc='upper left',bbox_to_anchor=(0.95,1.1))
 ax.tick_params(which='major', width=2)
 ax.tick_params(which='major', length=7)
 ax.tick_params(which='minor', length=4, color='k')
@@ -149,6 +149,7 @@ plt.xlabel('Forecast Lead Time (Hr)',fontsize=14,labelpad=10)
 plt.ylabel('MLD ($m$)',fontsize=14,labelpad=10)
 plt.title('Domain Mean Mixed Layer Depth',fontsize=14)
 plt.xlim([0,121])
+plt.ylim([50,100])
 plt.xticks(np.arange(0,120,12))
 
 ########
@@ -171,5 +172,5 @@ plt.ylabel('MLD ($m$)',fontsize=14,labelpad=10)
 plt.title('Domain Mean Mixed Layer Depth',fontsize=14)
 plt.xlim([0,121])
 plt.xticks(np.arange(0,120,12))
-
+plt.savefig("/ncrc/home1/Maria.Aristizabal/Figures_coupled_AR_AFS_paper/MLD_domain_mean.png", format="png", dpi=600, bbox_inches="tight", pad_inches=0.02)
 

@@ -1,0 +1,11 @@
+# yaml configure file
+stormModel: ARAFS
+stormDomain: parent
+stormID: 00E
+ymdh: '2023011000'
+experiments: ['ARAFS_OCN']
+COMarafs: ['/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/2023011000/00E/']
+cartopyDataDir: /gpfs/f6/drsa-hurr1/world-shared/noscrub/local/share/cartopy
+FileData: /gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/Data/Tide_gauge/2023/Arena_Cove_9416841.txt
+lon_station: -123.71
+lat_station: 38.92

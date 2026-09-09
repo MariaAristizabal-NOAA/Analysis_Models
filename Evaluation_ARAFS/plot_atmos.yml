@@ -1,21 +1,48 @@
 # yaml configure file
 stormModel: ARAFS
 stormID: 00E
-ymdh: '2025022100'
-fhhh: f096
+#ymdh: '2026011000'
+ymdh: '2023011000'
+fhhh: f072
 fhhhs: [f000,f006,f012,f018,f024,f030,f036,f042,f048,f054,f060,f066,f072,f078,f084,f090,f096,f102,f108,f120]
-COMarafs: /scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/
+COMarafs: /gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/
+#COMarafs: /gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/
+#COMarafs: /gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled_with_6h_acc_precip/
+#COMarafs: /gpfs/f6/ar-cpu/world-shared/Keqin.Wu/ursaData/ARAFS_E4/
 
 exp_labels: ['Uncoupled','Coupled']
 exp_colors: ['blue','orange']
 exp_markers: ['p','o']
-COMmodels: ['/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
+#COMmodels: ['/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
+COMmodels: ['/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/','/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/']
 
-ymdhs: ['2023010600','2023010700','2023010800','2023010900','2023011000','2023030700','2023030800','2023030900','2023031000','2023031100','2024021600','2024021700','2024021800','2024021900','2024022000','2025020100','2025020200','2025020300','2025020400','2025020500','2025022000','2025022100','2025022200','2025022300','2025022400','2026010300','2026010400','2026010500','2026010600','2026010700']
+#ymdhs: ['2023010600','2023010700','2023010800','2023010900','2023011000','2023030700','2023030800','2023030900','2023031000','2023031100','2024021600','2024021700','2024021800','2024021900','2024022000','2025020100','2025020200','2025020300','2025020400','2025020500','2025022000','2025022100','2025022200','2025022300','2025022400','2026010300','2026010400','2026010500','2026010600','2026010700']
 
-ymdhs_colors: ['red','red','red','red','red','green','green','green','green','green','blue','blue','blue','blue','blue','violet','violet','violet','violet','violet','orange','orange','orange','orange','orange','cyan','cyan','cyan','cyan','cyan']
+#ymdhs: ['2023010500','2023030600','2024021500','2025013100','2025021900','2025120400', '2025120500','2025120600','2025120700','2025120800','2025120900','2025121000']
+#ymdhs: ['2025121100','2025121500','2025121600','2025121700','2025121800','2025121900','2025122000','2025122100','2025122200','2025122300','2025122400']
 
-cartopyDataDir: /scratch3/NCEPDEV/hwrf/noscrub/local/cartopy
+ymdhs: [
+    "2023010500", "2023010600", "2023010700", "2023010800", "2023010900", "2023011000",
+    "2023030600", "2023030700", "2023030800", "2023030900", "2023031000", "2023031100",
+    "2024021500", "2024021600", "2024021700", "2024021800", "2024021900", "2024022000",
+    "2025013100", "2025020100", "2025020200", "2025020300", "2025020400", "2025020500",
+    "2025021900", "2025022000", "2025022100", "2025022200", "2025022300", "2025022400",
+    "2025120400", "2025120500", "2025120600", "2025120700", "2025120800", "2025120900", "2025121000", "2025121100",
+    "2025121500", "2025121600", "2025121700", "2025121800", "2025121900", "2025122000", "2025122100", "2025122200", "2025122300", "2025122400",
+    "2026010300", "2026010400", "2026010500", "2026010600", "2026010700",
+]
+
+ymdhs_colors:    ['red','red','red','red','red','red',
+                 'green','green','green','green','green','green',
+                 'blue','blue','blue','blue','blue','blue',
+                 'violet','violet','violet','violet','violet','violet',
+                 'orange','orange','orange','orange','orange','orange',
+                 'olivedrab','olivedrab','olivedrab','olivedrab','olivedrab','olivedrab','olivedrab','olivedrab',
+                 'lightcoral','lightcoral','lightcoral','lightcoral','lightcoral','lightcoral','lightcoral','lightcoral','lightcoral','lightcoral',
+                 'cyan','cyan','cyan','cyan','cyan']
+
+#cartopyDataDir: /scratch3/NCEPDEV/hwrf/noscrub/local/cartopy
+cartopyDataDir: /gpfs/f6/drsa-hurr1/world-shared/noscrub/local/share/cartopy
 
 xlim: [-210,-70]
 ylim: [-20,85]

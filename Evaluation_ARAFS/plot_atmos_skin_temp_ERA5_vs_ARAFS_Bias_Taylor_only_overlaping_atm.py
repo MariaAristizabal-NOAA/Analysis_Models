@@ -109,6 +109,7 @@ print('Extracting lat, lon')
 lat = grb.select(shortName='NLAT')[0].data
 lon = grb.select(shortName='ELON')[0].data
 
+"""
 # Read ocean lat and lon and land mask
 ocean_name = ymdhs[0]+'.'+conf['stormModel'].lower()+'.mom6.'+fhhhs[0]+'.nc'
 ocean_file = os.path.join(COMmodel_ocean+ymdhs[0]+'/00E/', ocean_name)
@@ -148,7 +149,6 @@ values = data.ravel()
 data_interp = griddata(points, values, (lon_targ, lat_targ), method='linear')
 
 ####################################################################
-"""
 mean_tmp_model = np.empty((len(exp_labels),len(ymdhs),len(fhhhs)))
 mean_tmp_model[:] = np.nan
 std_tmp_model = np.empty((len(exp_labels),len(ymdhs),len(fhhhs)))
@@ -340,23 +340,52 @@ for ex,exp in enumerate(exp_labels):
         end = time.perf_counter()
         print(f"Elapsed time: {end - start:.6f} seconds")
 
-np.savez('SKT_bias_ERA5.npz', number_obs=number_obs, mean_tmp_model=mean_tmp_model, std_tmp_model=std_tmp_model, mean_skt_obs=mean_skt_obs, std_skt_obs=std_skt_obs, bias=bias, corr=corr, bias_spatial=bias_spatial, lon_obs=lon_obs_sort, lat_obs=lat_obs, exp_labels=exp_labels, ymdhs=ymdhs, fhhhs=fhhhs)
+np.savez('SKT_bias_ERA5_2.npz', number_obs=number_obs, mean_tmp_model=mean_tmp_model, std_tmp_model=std_tmp_model, mean_skt_obs=mean_skt_obs, std_skt_obs=std_skt_obs, bias=bias, corr=corr, bias_spatial=bias_spatial, lon_obs=lon_obs_sort, lat_obs=lat_obs, exp_labels=exp_labels, ymdhs=ymdhs, fhhhs=fhhhs)
 """
 
-loaded_data = np.load('SKT_bias_ERA5.npz')
-number_obs = loaded_data['number_obs']
-mean_tmp_model = loaded_data['mean_tmp_model']
-mean_skt_obs = loaded_data['mean_skt_obs']
-std_tmp_model = loaded_data['std_tmp_model']
-std_skt_obs = loaded_data['std_skt_obs']
-bias = loaded_data['bias']
-corr = loaded_data['corr']
-bias_spatial = loaded_data['bias_spatial']
-lon_obs = loaded_data['lon_obs']
-lat_obs = loaded_data['lat_obs']
-exp_labels = loaded_data['exp_labels']
-ymdhs = loaded_data['ymdhs']
-fhhhs = loaded_data['fhhhs']
+loaded_data1 = np.load('SKT_bias_ERA5.npz')
+number_obs1 = loaded_data1['number_obs']
+mean_tmp_model1 = loaded_data1['mean_tmp_model']
+mean_skt_obs1 = loaded_data1['mean_skt_obs']
+std_tmp_model1 = loaded_data1['std_tmp_model']
+std_skt_obs1 = loaded_data1['std_skt_obs']
+bias1 = loaded_data1['bias']
+corr1 = loaded_data1['corr']
+bias_spatial1 = loaded_data1['bias_spatial']
+lon_obs1 = loaded_data1['lon_obs']
+lat_obs1 = loaded_data1['lat_obs']
+exp_labels1 = loaded_data1['exp_labels']
+ymdhs1 = loaded_data1['ymdhs']
+fhhhs1 = loaded_data1['fhhhs']
+
+loaded_data2 = np.load('SKT_bias_ERA5_2.npz')
+number_obs2 = loaded_data2['number_obs']
+mean_tmp_model2 = loaded_data2['mean_tmp_model']
+mean_skt_obs2 = loaded_data2['mean_skt_obs']
+std_tmp_model2 = loaded_data2['std_tmp_model']
+std_skt_obs2 = loaded_data2['std_skt_obs']
+bias2 = loaded_data2['bias']
+corr2 = loaded_data2['corr']
+bias_spatial2 = loaded_data2['bias_spatial']
+lon_obs2 = loaded_data2['lon_obs']
+lat_obs2 = loaded_data2['lat_obs']
+exp_labels2 = loaded_data2['exp_labels']
+ymdhs2 = loaded_data2['ymdhs']
+fhhhs2 = loaded_data2['fhhhs']
+
+number_obs = np.hstack([number_obs1,number_obs2])
+mean_tmp_model = np.hstack([mean_tmp_model1,mean_tmp_model2])
+mean_skt_obs = np.hstack([mean_skt_obs1,mean_skt_obs2])
+std_tmp_model = np.hstack([std_tmp_model1,std_tmp_model2])
+std_skt_obs = np.hstack([std_skt_obs1,std_skt_obs2])
+bias = np.hstack([bias1,bias2])
+corr = np.hstack([corr1,corr2])
+bias_spatial = np.hstack([bias_spatial1,bias_spatial2])
+lon_obs = lon_obs1 
+lat_obs = lat_obs1
+exp_labels = exp_labels1
+ymdhs = np.hstack([ymdhs1,ymdhs2])
+fhhhs = fhhhs1
 
 ##################################################################
 # Taylor diagram
@@ -390,8 +419,7 @@ contours = ax.contour(ts,rs,rms,[0.5,1,1.5],colors='0.5')
 plt.clabel(contours, inline=1, fontsize=10)
 plt.grid(linestyle=':',alpha=0.5)
 #plt.title('SST Cycle='+cycle+' fhour='+str(fhour),fontsize=18)
-plt.title('Skin Temperature',fontsize=18)
-plt.savefig('Taylor_diag_SKT',bbox_inches = 'tight',pad_inches = 0.1)
+plt.savefig("/ncrc/home1/Maria.Aristizabal/Figures_coupled_AR_AFS_paper/skin_temp_ERA5_Taylor_diagram.png", format="png", dpi=300, bbox_inches="tight", pad_inches=0.02)
 
 #y0 = 1.1
 #plt.text(1.5,y0,'Bias',fontsize=14)
@@ -403,31 +431,38 @@ plt.savefig('Taylor_diag_SKT',bbox_inches = 'tight',pad_inches = 0.1)
 mean_tmp_model_all_cycles = np.mean(mean_tmp_model,axis=1)
 mean_skt_obs_all_cycles = np.mean(mean_skt_obs,axis=1)
 mean_bias = np.mean(np.mean(bias,axis=1),axis=1)
-plt.figure(figsize=(11,6))
+plt.figure(figsize=(8,6)) #,dpi=300)
 for ex,exp in enumerate(exp_labels):
     print(exp)
     plt.plot(fhhhs,mean_tmp_model_all_cycles[ex,:],'.-',markersize=15,markeredgecolor='k',label=exp,color=exp_colors[ex])
 
 plt.plot(fhhhs,mean_skt_obs_all_cycles[0,:],'.-',markersize=15,markeredgecolor='grey',label=conf['Data_prod'],color='k')
 plt.legend()
-plt.text(0.05,0.1,'Bias ('+exp_labels[0]+') = '+str(np.round(mean_bias[0],3)),transform=ax.transAxes,fontsize=18)
-plt.text(0.05,0.05,'Bias ('+exp_labels[1]+') = '+str(np.round(mean_bias[1],3)),transform=ax.transAxes,fontsize=18)
-plt.title('Domain Mean Skin Temp: 30 cycles: Jan-Mar 2023-2026')
+plt.tight_layout()
+#plt.text(0.05,0.1,'Bias ('+exp_labels[0]+') = '+str(np.round(mean_bias[0],3)),transform=ax.transAxes,fontsize=18)
+#plt.text(0.05,0.05,'Bias ('+exp_labels[1]+') = '+str(np.round(mean_bias[1],3)),transform=ax.transAxes,fontsize=18)
+plt.title('Domain Mean Skin Temp: 53 cycles: 2023-2026')
 plt.ylabel('Temperature ($^oC$)')
 plt.xlabel('Forecast Hour')
 #plt.ylim([15,17])
-plt.ylim([15,16.5])
+plt.ylim([15.8,16.6])
+plt.savefig("/ncrc/home1/Maria.Aristizabal/Figures_coupled_AR_AFS_paper/skin_temp_ERA5_ARAFS_time_series.png", format="png", dpi=300, bbox_inches="tight") #, pad_inches=1)
+
 
 ##################################################################
 # spatial map mean bias skin temp
-#levels = np.arange(-10,10.1,1)
-levels = np.arange(-5,5.1,0.5)
+#levels = np.arange(-5,5.1,0.5)
+levels = np.arange(-1,1.1,0.1)
 for ex,exp in enumerate(exp_labels):
     bias_spat = np.nanmean(np.nanmean(bias_spatial[ex,:,:,:,:],axis=0),axis=0)
     plt.figure()
     plt.contourf(lon_obs,lat_obs,bias_spat,cmap='bwr',levels=levels,extend='both')
-    plt.colorbar(shrink=0.7)
-    plt.title('Mean Skin Temp: 30 cycles: Jan-Mar 2023-2026'+ '\n Bias (' + exp + ' - ERA5) = ' + str(np.round(np.nanmean(bias_spat),3)),fontsize=16)
+    plt.colorbar(shrink=0.7,ticks=np.arange(-1,1.1,0.2))
+    plt.title('Mean Skin Temp: 53 cycles: 2023-2026'+ '\n Bias (' + exp + ' - ERA5) = ' + str(np.round(np.nanmean(bias_spat),3)),fontsize=16)
     plt.axis('scaled')
     plt.xlim([np.min(lon),np.max(lon)])
     plt.ylim([np.min(lat),np.max(lat)])
+    plt.savefig("/ncrc/home1/Maria.Aristizabal/Figures_coupled_AR_AFS_paper/skin_temp_bias_spatial_"+exp+".png", format="png", dpi=300, bbox_inches="tight", pad_inches=0.02)
+
+
+
