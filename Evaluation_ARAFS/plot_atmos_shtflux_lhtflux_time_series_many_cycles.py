@@ -139,7 +139,7 @@ ymdhs_mean = loaded_data['ymdhs_mean']
 
 ########
 #c = np.where([ymdh == conf['ymdh'] for ymdh in conf['ymdhs']])[0][0]
-c = 0
+c = 3
 
 fig,ax = plt.subplots(figsize = (13,7))
 for exp in np.arange(len(conf['COMmodels'])):
@@ -175,6 +175,7 @@ plt.xticks(np.arange(0,126,12))
 
 ##############
 shfl_diff = np.diff(shfl_mean,axis=0)[0,:,:]
+shfl_perc_diff = shfl_diff[:,0]*100/np.abs(shfl_mean[0,:,0])
 
 fig,ax = plt.subplots(figsize = (13,7))
 for c,ymdh in enumerate(conf['ymdhs']):
@@ -199,6 +200,7 @@ plt.savefig('shfl_couple_minus_uncoupled.png')
 
 ##############
 lhfl_diff = np.diff(lhfl_mean,axis=0)[0,:,:]
+lhfl_perc_diff = lhfl_diff[:,0]*100/np.abs(lhfl_mean[0,:,0])
 
 fig,ax = plt.subplots(figsize = (13,7))
 for c,ymdh in enumerate(conf['ymdhs']):
@@ -221,7 +223,8 @@ plt.xticks(np.arange(0,126,12))
 plt.savefig('lhfl_couple_minus_uncoupled.png')
 
 ##############
-c = np.where([ymdh == conf['ymdh'] for ymdh in conf['ymdhs']])[0][0]
+#c = np.where([ymdh == conf['ymdh'] for ymdh in conf['ymdhs']])[0][0]
+c = 3
 
 fig,ax = plt.subplots(figsize = (13,7))
 plt.plot(ff,shfl_diff[c,:],'o-',color=conf['ymdhs_colors'][c],markeredgecolor='k',markersize=10,label=conf['ymdhs'][c])
@@ -254,5 +257,32 @@ plt.xlabel('Forecast Lead Time (Hr)',fontsize=18,labelpad=10)
 plt.ylabel('lhfl Diff($W/m^2$)',fontsize=18,labelpad=10)
 plt.title('Mean Latent (Coupled - Uncoupled)',fontsize=18)
 plt.xlim([0,126])
+
+###################
+# Total heat fluxes
+total_hfl_mean = shfl_mean + lhfl_mean
+total_hfl_diff = np.diff(total_hfl_mean,axis=0)[0,:,:]
+total_hfl_perc_diff = total_hfl_diff[:,0]*100/np.abs(total_hfl_mean[0,:,0])
+
+fig,ax = plt.subplots(figsize = (13,7))
+for c,ymdh in enumerate(conf['ymdhs']):
+    plt.plot(ff,total_hfl_diff[c,:],'o-',color=conf['ymdhs_colors'][c],markeredgecolor='k',markersize=10)
+for c in [0,6,12,19,24,30,38,48]:
+    plt.plot(ff,total_hfl_diff[c,:],'o-',color=conf['ymdhs_colors'][c],markeredgecolor='k',markersize=10,label=conf['ymdhs'][c][0:-4])
+ax.legend(bbox_to_anchor=(1.12, 1.1), loc='upper right')
+ax.plot(ff,np.zeros(len(ff)),'-k',linewidth=2)
+ax.tick_params(which='major', width=2)
+ax.tick_params(which='major', length=7)
+ax.tick_params(which='minor', length=4, color='k')
+ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
+ax.xaxis.set_minor_locator(MultipleLocator(3))
+ax.xaxis.set_ticks(np.arange(0,126,12))
+plt.xlabel('Forecast Lead Time (Hr)',fontsize=18,labelpad=10)
+plt.ylabel('Total hfl Diff($W/m^2$)',fontsize=18,labelpad=10)
+plt.title('Mean Total Heat Flux (Coupled - Uncoupled)',fontsize=18)
+plt.xlim([0,126])
+plt.xticks(np.arange(0,126,12))
+plt.savefig('total_hfl_couple_minus_uncoupled.png')
+
 
 

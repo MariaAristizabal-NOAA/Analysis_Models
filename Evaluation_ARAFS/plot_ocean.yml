@@ -2,7 +2,7 @@
 stormModel: ARAFS
 #stormDomain: parent
 stormID: 00E
-ymdh: '2023010800'
+ymdh: '2023011000'
 fhhh: f096
 #COMarafs: /scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/
   #COMarafs: /scratch4/HFIP/hafs-west/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled/
@@ -43,8 +43,10 @@ ymdhs_colors:    ['red','red','red','red','red','red',
 #cartopyDataDir: /scratch3/NCEPDEV/hwrf/noscrub/local/cartopy
 cartopyDataDir: /gpfs/f6/drsa-hurr1/world-shared/noscrub/local/share/cartopy
 
-xlim: [-210,-70]
-ylim: [-20,82]
+xlim: [-130,-110]
+ylim: [20,50]
+#xlim: [-210,-70]
+#ylim: [-20,82]
 #xlim: [-220,-120]
 #ylim: [45,82]
 

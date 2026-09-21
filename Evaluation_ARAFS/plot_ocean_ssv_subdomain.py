@@ -119,6 +119,15 @@ q = plt.quiver(lonh[::skip,::skip],lath[::skip,::skip],ssu_interp[::skip,::skip]
 plt.xlim(xlim)
 plt.ylim(ylim)
 
+# Add gridlines and labels
+gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, linestyle=(0, (5, 10)))
+gl.top_labels = False
+gl.right_labels = False
+gl.xlocator = mticker.FixedLocator(np.arange(-180., 180.+1, 20))
+gl.ylocator = mticker.FixedLocator(np.arange(-90., 90.+1, 10))
+gl.xlabel_style = {'size': 8, 'color': 'black'}
+gl.ylabel_style = {'size': 8, 'color': 'black'}
+
 # Add borders and coastlines
 ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
 ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')

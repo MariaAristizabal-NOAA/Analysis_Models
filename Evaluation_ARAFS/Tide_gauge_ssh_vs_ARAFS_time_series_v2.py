@@ -209,6 +209,7 @@ for ex,exp in enumerate(experiments):
 plt.ylabel('SSH (m)')
 plt.title(name_station + ', lon = ' + str(lon_station) + ', lat = ' + str(lat_station))
 plt.legend()
+plt.grid(True)
 
 #================================================================
 fig, ax1 = plt.subplots(figsize=(10, 5))
@@ -257,3 +258,4 @@ ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='n
 plt.xlim([-130,-110])
 plt.ylim([10,60])
 plt.title(name_station,fontsize=16)
+

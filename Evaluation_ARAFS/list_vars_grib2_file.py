@@ -20,7 +20,6 @@ print("-" * 50)
 for var, desc in sorted(unique_vars.items()):
     print(f"{var:<12} : {desc}")
 
-
 # Print all levels
 # Use defaultdict to group levels by variable short name
 var_levels = defaultdict(list)
