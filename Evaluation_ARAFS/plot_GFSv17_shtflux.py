@@ -62,13 +62,6 @@ for msg in grb:
         print('duration= ',msg.duration)
         print(' ')
 
-
-#print('Extracting lat, lon')
-#lat = np.asarray(grb.select(shortName='NLAT')[0].data)
-#lon = np.asarray(grb.select(shortName='ELON')[0].data)
-# The lon range in grib2 is typically between 0 and 360
-# Cartopy's PlateCarree projection typically uses the lon range of -180 to 180
-
 '''
 print('raw lonlat limit: ', np.min(lon), np.max(lon), np.min(lat), np.max(lat))
 if abs(np.max(lon) - 360.) < 10.:
@@ -89,35 +82,6 @@ print('Extracting lat and lon')
 lat, lon =  grb.select(shortName='SHTFL')[0].latlons()
 #===================================================================================================
 print('Plotting Sensible Heat Flux')
-#fig_prefix = conf['stormName'].upper()+conf['stormID'].upper()+'.'+conf['ymdh']+'.'+conf['stormModel']
-
-# Set default figure parameters
-
-'''
-mpl.rcParams['figure.figsize'] = [8, 8]
-mpl.rcParams["figure.dpi"] = 150
-mpl.rcParams['axes.titlesize'] = 8
-mpl.rcParams['axes.labelsize'] = 8
-mpl.rcParams['xtick.labelsize'] = 8
-mpl.rcParams['ytick.labelsize'] = 8
-mpl.rcParams['legend.fontsize'] = 8
-
-mpl.rcParams['figure.figsize'] = [8, 5.4]
-#fig_name = fig_prefix+'.'+'shtflux_wind10m.'+conf['fhhh'].lower()+'.png'
-cbshrink = 1.0
-lonmin = np.min(lon)
-lonmax = np.max(lon)
-lonint = 10.0
-latmin = np.min(lat)
-latmax = np.max(lat)
-latint = 10.0
-'''
-
-'''
-plt.figure()
-plt.contourf(lon-180,lat,shf)
-plt.colorbar()
-'''
 
 lon_offset = 180
 myproj = ccrs.PlateCarree(lon_offset)
@@ -145,15 +109,6 @@ gl.right_labels = False
 title = 'Sensible Heat Flux ($W/m^3$) \n ' + conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+conf['validTime'].strftime(' Valid: %Y%m%d%HZ')
 
 ax.set_title(title, loc='center') #
-
-'''
-model_info = os.environ.get('TITLEgraph','').strip()
-var_info = 'Sensible Heat Flux ($W/m^3$, shaded)'
-title_left = """{0}\n{1}""".format(model_info,var_info)
-ax.set_title(title_left, loc='left', y=0.99,fontsize=8)
-title_right = conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+conf['validTime'].strftime(' Valid: %Y%m%d%HZ')
-ax.set_title(title_right, loc='right', y=0.99,fontsize=8)
-'''
 
 #plt.savefig(fig_name, bbox_inches='tight')
 #plt.close(fig)

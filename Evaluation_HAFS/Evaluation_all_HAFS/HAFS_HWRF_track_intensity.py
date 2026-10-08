@@ -2,19 +2,9 @@
 
 # forecasting cycle to be used
 
-# Danielle
-#cycle = '2022090212'
-#storm_num = '05'
-#basin = 'al'
-
-# Ian
-#cycle = '2022092718'
-#storm_num = '09'
-#basin = 'al'
-
-# Fiona
-#cycle = '2022091806'
-#storm_num = '07'
+# Idalia
+#cycle = '2023082718'
+#storm_num = '10'
 #basin = 'al'
 
 # Idalia
@@ -25,14 +15,6 @@ basin = 'al'
 exp_names = ['HFSA_oper']
 exp_labels = ['HFSA']
 exp_colors = ['darkviolet']
-
-#exp_names = ['HWRF','hafsv1_fnl_hfsa','hafsv1_fnl_hfsb']
-#exp_labels = ['HWRF','HFSA','HFSB']
-#exp_colors = ['darkviolet','c','deeppink']
-
-#exp_names = ['hafsv1_fnl_hfsa','hafsv1_baseline']
-#exp_labels = ['HFSA','HAFS_baselin']
-#exp_colors = ['c','orange']
 
 lon_lim = [-98.5,-70.0]
 lat_lim = [15.0,40.0]

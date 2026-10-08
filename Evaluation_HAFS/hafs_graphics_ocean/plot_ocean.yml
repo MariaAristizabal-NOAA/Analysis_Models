@@ -1,10 +1,10 @@
 # yaml configure file
 stormModel: HFSA
-stormName: EWINIAR
-stormID: 01W
-stormBasin: WP
-ymdh: '2024053000'
-fhhh: f066
+stormName: POLO
+stormID: 17E
+stormBasin: EP
+ymdh: '2026092100'
+fhhh: f042
 trackon: 'yes'
-COMhafs: /lfs/h1/ops/para/com/hafs/v2.0/hfsa.20240530/00
-cartopyDataDir: /lfs/h2/emc/hur/noscrub/local/share/cartopy
+COMhafs: /gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/HFSA_oper/2026092100/17e
+cartopyDataDir: /gpfs/f6/drsa-hurr1/world-shared/noscrub/local/share/cartopy

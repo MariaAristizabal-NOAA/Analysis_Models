@@ -169,6 +169,7 @@ plt.xticks(np.arange(0,120,12))
 
 ##############
 IVT_diff = np.diff(IVT_mean,axis=0)[0,:,:]
+IVT_mean_perc_diff = IVT_diff * 100/IVT_mean[0,:,:]
 
 fig,ax = plt.subplots(figsize = (13,7))
 for c,ymdh in enumerate(conf['ymdhs']):

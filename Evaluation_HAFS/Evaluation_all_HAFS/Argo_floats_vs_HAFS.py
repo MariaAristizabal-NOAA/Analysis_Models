@@ -12,6 +12,7 @@ import xarray as xr
 import datetime
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import matplotlib.ticker as mticker
 
 import cartopy
 import cartopy.crs as ccrs
@@ -179,7 +180,20 @@ ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
 ax.axis('scaled')
 plt.plot(lon_obs,lat_obs,'.',label='ARGO = '+ str(total_nobs))
 plt.legend()
-plt.title(str(time_obs[0]).split('T')[0])
+plt.title(str(time_obs[0]).split('T')[0]+' '+str(time_obs[-1]).split('T')[0]+' ')
+
+# Add gridlines and labels
+gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, linestyle=(0, (5, 10)))
+gl.top_labels = False
+gl.right_labels = False
+gl.xlocator = mticker.FixedLocator(np.arange(-180., 180.+1, 10))
+gl.ylocator = mticker.FixedLocator(np.arange(-90., 90.+1, 10))
+gl.xlabel_style = {'size': 8, 'color': 'black'}
+gl.ylabel_style = {'size': 8, 'color': 'black'}
+
+# Add borders and coastlines
+ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
 ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
 
 ####################################################################
@@ -217,15 +231,28 @@ okt = np.where(t_best_track == cycle)[0][0]
 fig = plt.figure(figsize=(8,4))
 ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
 ax.axis('scaled')
-plt.plot(lon_best_track[okt:],lat_best_track[okt:],'o-',color='k',label='Best Track')
 for i in np.arange(len(experiments)):
     plt.plot(lon_forec_track[i,::2], lat_forec_track[i,::2],'o-',color=exp_colors[i],markeredgecolor='k',label=experiments[i],markersize=7)
-plt.plot(lon_obs,lat_obs,'.',label='ARGOS')
+plt.plot(lon_best_track[okt:],lat_best_track[okt:],'o-',color='k',label='Best Track')
+plt.plot(lon_obs,lat_obs,'.',label='ARGO')
 plt.legend()
-plt.title(str(time_obs[0]).split('T')[0])
-ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+plt.title('Cycle '+cycle)
 plt.xlim(xlim)
 plt.ylim(ylim)
+
+# Add gridlines and labels
+gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, linestyle=(0, (5, 10)))
+gl.top_labels = False
+gl.right_labels = False
+gl.xlocator = mticker.FixedLocator(np.arange(-180., 180.+1, 2))
+gl.ylocator = mticker.FixedLocator(np.arange(-90., 90.+1, 2))
+gl.xlabel_style = {'size': 8, 'color': 'black'}
+gl.ylabel_style = {'size': 8, 'color': 'black'}
+
+# Add borders and coastlines
+ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
 
 '''
 okplat = np.asarray(OBS['platform_number']) == plat_ids[0]
@@ -332,16 +359,16 @@ for ex,exp in enumerate(experiments):
             tempp_int = np.interp(depth_model,depthp,tempp,left=np.nan,right=np.nan)
 
             fig = plt.figure(figsize=(6,8))
-            plt.plot(tempp,-depthp,'.-',label='ARGO '+plat_id)
-            plt.plot(temp_model,-depth_model,'.-',label=exp)
+            plt.plot(tempp,-depthp,'o-',label='ARGO '+plat_id,markeredgecolor='k')
+            plt.plot(temp_model,-depth_model,'o-',label=exp,markeredgecolor='k')
             #plt.plot(tempp_int,-depth_model,'o-',label='ARGO int')
             plt.legend()
-            plt.xlabel('Temperature $^oC$')
-            plt.ylabel('Depth (m)')
+            plt.xlabel('Temperature $^oC$',fontsize=16)
+            plt.ylabel('Depth (m)',fontsize=16)
             plt.title('Lon = '+str(np.round(lonp[0],2))+' Lat = '+str(np.round(latp[0],2))+' time =  '+str(timep[0])[0:16])
-            #plt.ylim([np.min(-depthp),0])
             plt.ylim([-250,0])
-            plt.xlim([15,30])
+            plt.xlim([5,35])
+            plt.grid(True)
 
             temp_Obs.append(tempp_int.tolist())
             temp_Model.append(temp_model.tolist())

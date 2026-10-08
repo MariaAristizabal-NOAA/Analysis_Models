@@ -2,11 +2,11 @@
 stormModel: ARAFS
 stormID: 00E
 #ymdh: '2026011000'
-ymdh: '2023011000'
-fhhh: f072
+#ymdh: '2023011000'
+ymdh: '2026010300'
+fhhh: f048
 fhhhs: [f000,f006,f012,f018,f024,f030,f036,f042,f048,f054,f060,f066,f072,f078,f084,f090,f096,f102,f108,f120]
 COMarafs: /gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/
-#COMarafs: /gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/
 #COMarafs: /gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_uncoupled_with_6h_acc_precip/
 #COMarafs: /gpfs/f6/ar-cpu/world-shared/Keqin.Wu/ursaData/ARAFS_E4/
 

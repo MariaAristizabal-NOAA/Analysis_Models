@@ -1,34 +1,31 @@
 #%% User input
 
 # forecasting cycle to be used
-# forecasting cycle to be used
+# Polo 17e
+cycle = '2026092100'
+storm_num = '17'
+basin = 'ep'
+storm_id = '17e'
+storm_name= 'polo'
+models = ['hfsa']
 
-# Erin
-cycle = '2025081500'
-storm_num = '05'
-basin = 'al'
-storm_id = '05l'
-storm_name= 'erin'
-models = ['hfsa','hfsb']
+exp_names = ['HFSA_oper']
+exp_labels = ['HFSA']
+exp_colors = ['darkviolet']
 
-exp_names = ['HFSA_oper','HFSB_oper']
-exp_labels = ['HFSA','HFSB']
-exp_colors = ['darkviolet','lawngreen']
+lon_lim = [-115,-95]
+lat_lim = [5,25]
 
-lon_lim = [-80,-50.0]
-lat_lim = [10.0,40.0]
+scratch_folder = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/'
+abdeck_folder = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/abdeck/'
+folder_myutils= '/ncrc/home1/Maria.Aristizabal/Maria_Utils/'
 
-scratch_folder = '/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/'
-abdeck_folder = '/scratch4/HFIP/hwrfv3/noscrub/input/abdeck/'
-folder_myutils= '/home/Maria.Aristizabal/Maria_Utils/'
-
-bath_file = scratch_folder +'bathymetry_files/GEBCO_2014_2D_-100.0_0.0_-10.0_70.0.nc'
+cartopyDataDir = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/local/share/cartopy/'
 
 best_track_file = abdeck_folder + 'btk/b' + basin + storm_num + cycle[0:4] + '.dat'
 
-#url_glider = scratch_folder + 'Data/Gliders/2025/sg668-20250625T0000.nc'
-#url_glider = scratch_folder + 'Data/Gliders/2025/ng783-20250611T0000.nc'
-url_glider = scratch_folder + 'Data/Gliders/2025/echo-20250810T0000.nc'
+#url_glider = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/Data/Gliders/2026/sg623-20260707T0000.nc'
+url_glider = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/Data/Gliders/2026/sg625-20260630T0000.nc'
 
 ################################################################################
 import sys
@@ -37,17 +34,21 @@ import os
 import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
-import cmocean
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
 from matplotlib.ticker import (MultipleLocator, FormatStrFormatter)
+import matplotlib.ticker as mticker
+from matplotlib.colors import ListedColormap,LinearSegmentedColormap
+
+import cartopy
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
 
 sys.path.append(folder_myutils)
 from my_models_utils import get_storm_track_and_int, get_best_track_and_int,\
                             get_glider_transect_from_HAFS_OCEAN,\
                             figure_transect_time_vs_depth, glider_data_vector_to_array,\
                             grid_glider_data
-
 
 #plt.switch_backend('agg')
 
@@ -59,7 +60,7 @@ plt.rc('legend',fontsize=14)
 ################################################################################
 folder_exps = []
 for i in np.arange(len(exp_names)):
-    folder_exps.append(scratch_folder + exp_names[i] + '/' + cycle + '/' + storm_num + basin[-1] + '/')
+    folder_exps.append(scratch_folder + exp_names[i] + '/' + cycle + '/' + storm_id + '/')
 
 ################################################################################
 #%% Time window
@@ -71,21 +72,6 @@ date_end = tend.strftime('%Y/%m/%d/%H/%M/%S')
 ################################################################################
 #%% Time fv3
 time_fv3 = [tini + timedelta(hours=int(dt)) for dt in np.arange(0,127,3)]
-
-#################################################################################
-#%% Reading bathymetry data
-ncbath = xr.open_dataset(bath_file)
-bath_lat = ncbath.variables['lat'][:]
-bath_lon = ncbath.variables['lon'][:]
-bath_elev = ncbath.variables['elevation'][:]
-
-oklatbath = np.logical_and(bath_lat >= lat_lim[0],bath_lat <= lat_lim[-1])
-oklonbath = np.logical_and(bath_lon >= lon_lim[0],bath_lon <= lon_lim[-1])
-
-bath_latsub = bath_lat[oklatbath]
-bath_lonsub = bath_lon[oklonbath]
-bath_elevs = bath_elev[oklatbath,:]
-bath_elevsub = bath_elevs[:,oklonbath]
 
 #################################################################################
 #%% Read best track
@@ -233,12 +219,12 @@ for i,folder in enumerate(folder_exps):
     timestamp = mdates.date2num(target_t)
     
     max_depth = 200
-    kw_temp = dict(levels = np.arange(11,32,1))
+    kw_temp = dict(levels = np.arange(11,33,1))
     figure_transect_time_vs_depth(np.asarray(target_t),-depth,target_temp_hafs_ocean,date_ini,date_end,max_depth,kw_temp,'Spectral_r','Degrees')
     plt.title(exp_labels[i],fontsize=16)
 
     max_depth = 200
-    kw_salt = dict(levels = np.arange(34,37.5,0.3))
+    kw_salt = dict(levels = np.arange(33,35.8,0.2))
     figure_transect_time_vs_depth(np.asarray(target_t),-depth,target_salt_hafs_ocean,date_ini,date_end,max_depth,kw_salt,'YlGnBu_r',' ')
     plt.title(exp_labels[i],fontsize=16)
 
@@ -253,9 +239,10 @@ for i,folder in enumerate(folder_exps):
 lev = np.arange(-9000,9100,100)
 okt = np.logical_and(time_best_track >= time_fv3[0],time_best_track <= time_fv3[-1])
 
-fig,ax = plt.subplots()
-plt.contourf(bath_lon,bath_lat,bath_elev,[0,10000],colors='silver')
-plt.contour(bath_lon,bath_lat,bath_elev,[0],colors='k')
+fig = plt.figure(figsize=(8,4))
+ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
+ax.axis('scaled')
+
 for i in np.arange(len(exp_names)): 
     plt.plot(lon_forec_track[i,::2], lat_forec_track[i,::2],'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
 plt.plot(lon_best_track[okt], lat_best_track[okt],'o-',color='k',label='Best Track')
@@ -268,13 +255,27 @@ plt.axis('scaled')
 plt.xlim(lon_lim)
 plt.ylim(lat_lim)
 
+# Add gridlines and labels
+gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, linestyle=(0, (5, 10)))
+gl.top_labels = False
+gl.right_labels = False
+gl.xlocator = mticker.FixedLocator(np.arange(-180., 180.+1, 2))
+gl.ylocator = mticker.FixedLocator(np.arange(-90., 90.+1, 2))
+gl.xlabel_style = {'size': 8, 'color': 'black'}
+gl.ylabel_style = {'size': 8, 'color': 'black'}
+
+# Add borders and coastlines
+ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+
 ###################################################################%% Figure track
 lev = np.arange(-9000,9100,100)
 okt = np.logical_and(time_best_track >= time_fv3[0],time_best_track <= time_fv3[-1])
 
-fig,ax = plt.subplots()
-plt.contourf(bath_lon,bath_lat,bath_elev,[0,10000],colors='silver')
-plt.contour(bath_lon,bath_lat,bath_elev,[0],colors='k')
+fig = plt.figure(figsize=(8,4))
+ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
+ax.axis('scaled')
 for i in np.arange(len(exp_names)):
     plt.plot(lon_forec_track[i,::2], lat_forec_track[i,::2],'o-',color=exp_colors[i],markeredgecolor='k',label=exp_labels[i],markersize=7)
 plt.plot(lon_best_track[okt], lat_best_track[okt],'o-',color='k',label='Best Track')
@@ -285,6 +286,20 @@ plt.title('Track Forecast ' + storm_num + ' cycle '+ cycle,fontsize=18)
 plt.axis('scaled')
 plt.xlim([np.nanmin(long)-1,np.nanmax(long)+1])
 plt.ylim([np.nanmin(latg)-1,np.nanmax(latg)+1])
+
+# Add gridlines and labels
+gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, linestyle=(0, (5, 10)))
+gl.top_labels = False
+gl.right_labels = False
+gl.xlocator = mticker.FixedLocator(np.arange(-180., 180.+1, 2))
+gl.ylocator = mticker.FixedLocator(np.arange(-90., 90.+1, 2))
+gl.xlabel_style = {'size': 8, 'color': 'black'}
+gl.ylabel_style = {'size': 8, 'color': 'black'}
+
+# Add borders and coastlines
+ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
 
 ##################################################################
 #%% Figure time series temp at 10 m depth
@@ -325,12 +340,67 @@ plt.grid(True)
 
 #%% Glider
 max_depth = 200
-kw_temp = dict(levels = np.arange(11,32,1))
+kw_temp = dict(levels = np.arange(11,34,1))
 figure_transect_time_vs_depth(timegg,-depthg_gridded,tempg_gridded,date_ini,date_end,max_depth,kw_temp,'Spectral_r','Degress')
 plt.title(dataset_id,fontsize=16)
 
 max_depth = 200
-kw_salt = dict(levels = np.arange(34,37.5,0.3))
+kw_salt = dict(levels = np.arange(33,35.8,0.2))
 figure_transect_time_vs_depth(timegg,-depthg_gridded,saltg_gridded,date_ini,date_end,max_depth,kw_salt,'YlGnBu_r',' ')
 plt.title(dataset_id,fontsize=16)
 
+####################################################
+# alternative way to produce contour figure
+#Time window
+'''
+year_ini = int(date_ini.split('/')[0])
+month_ini = int(date_ini.split('/')[1])
+day_ini = int(date_ini.split('/')[2])
+year_end = int(date_end.split('/')[0])
+month_end = int(date_end.split('/')[1])
+day_end = int(date_end.split('/')[2])
+tini = datetime(year_ini, month_ini, day_ini)
+tend = datetime(year_end, month_end, day_end)
+'''
+
+okt = np.isfinite(temperat)
+tempera_colors = temperat[okt]
+timee_colors = timee[okt]
+depthh_colors = depthh[okt]
+
+min_val = 11
+max_val = 33
+dt = 1
+levels = np.arange(min_val,max_val+dt,dt)
+lev_norm = (levels-levels[0])/(levels[-1]-levels[0])
+tempera_colors_norm = (tempera_colors - min_val)/(max_val-min_val)
+
+color_map = 'Spectral_r'
+cmap_mod = plt.get_cmap(color_map,len(levels))
+new_cmap = ListedColormap(cmap_mod(np.linspace(0, 1, len(levels))))
+colors = new_cmap(np.arange(len(levels)))
+
+colorss = np.empty((tempera_colors.shape[0],colors.shape[1]))
+colorss[:] = [1,1,1,1]
+for i,temp in enumerate(tempera_colors_norm):
+    if temp < 0:
+        colorss[i,:] = colors[0,:]
+    else:
+        okp = np.where(lev_norm <= temp)[0][-1]
+        colorss[i,:] = colors[okp,:]
+
+levels_cont = np.arange(min_val,max_val+1+dt,dt)
+kw = dict(levels = levels_cont)
+fig, ax = plt.subplots(figsize=(8, 4))
+plt.scatter(timee_colors,-depthh_colors,marker='o',s=20,color=colorss)
+cs = plt.contourf(timegg,-depthg_gridded,tempg_gridded,cmap=new_cmap,**kw)
+cbar = plt.colorbar(cs)
+ax.set_ylabel('Depth (m)',fontsize=14)
+cbar.ax.set_ylabel('$C^o$',fontsize=14)
+xvec = [tini + timedelta(int(dt)) for dt in np.arange((tend-tini).days+1)[::2]]
+plt.xticks(xvec,fontsize=12)
+xfmt = mdates.DateFormatter('%b-%d')
+ax.xaxis.set_major_formatter(xfmt)
+plt.ylim(-np.abs(max_depth),0)
+plt.xlim(tini,tend)
+plt.title(dataset_id,fontsize=16)

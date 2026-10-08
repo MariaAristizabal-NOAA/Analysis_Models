@@ -1,33 +1,34 @@
 #%% User input
 
-# Erin
-cycles = ['2025081500']
-storm_nums = ['05']
-basins = ['al']
-storm_ids = ['05l']
-storm_names = ['Erin']
+# Polo 17E
+cycles = ['2026092100']
+storm_nums = ['17']
+basins = ['ep']
+storm_ids = ['17E']
+storm_names = ['POLO']
 # time eye passage closest to glider
-teyes = ['2025081706']
+teyes = ['2026092218']
+#teyes = ['2026092500']
 
-exp_names = ['HFSA_oper','HFSB_oper']
-exp_labels = ['HFSA','HFSB']
-exp_colors = ['purple','limegreen']
-hafs_ab = ['hfsa','hfsb']
-ocean = ['mom6','mom6']
-scratch_folder = ['/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/','/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/']
+exp_names = ['HFSA_oper']
+exp_labels = ['HFSA']
+exp_colors = ['purple']
+hafs_ab = ['hfsa']
+ocean = ['mom6']
+scratch_folder = ['/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/']
 
-url_glider = '/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/Data/Gliders/2025/sg668-20250625T0000.nc'
-#url_glider = '/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/Data/Gliders/2025/ng783-20250611T0000.nc' 
+#url_glider = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/Data/Gliders/2026/sg625-20260630T0000.nc'
+url_glider = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/Data/Gliders/2026/sg623-20260707T0000.nc'
 
 lon_lim = [-98.5,-70.0]
 lat_lim = [15.0,40.0]
 
-abdeck_folder = '/scratch4/HFIP/hwrfv3/noscrub/input/abdeck/'
+abdeck_folder = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/abdeck/'
 
-bath_file = '/scratch3/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/bathymetry_files/GEBCO_2014_2D_-100.0_0.0_-10.0_70.0.nc'
 
 # folder utils for Hycom 
-folder_myutils= '/home/Maria.Aristizabal/Maria_Utils/'
+#folder_myutils= '/home/Maria.Aristizabal/Maria_Utils/'
+folder_myutils= '/ncrc/home1/Maria.Aristizabal/Maria_Utils/'
 
 ################################################################################
 import xarray as xr
@@ -38,9 +39,15 @@ from datetime import datetime, timedelta
 import matplotlib.dates as mdates
 from matplotlib.ticker import (MultipleLocator, FormatStrFormatter)
 from matplotlib.colors import ListedColormap,LinearSegmentedColormap
+import matplotlib.ticker as mticker
+
 import sys
 import os
 import glob
+
+import cartopy
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
 
 sys.path.append(folder_myutils)
 from my_models_utils import get_storm_track_and_int, get_best_track_and_int,\
@@ -74,6 +81,7 @@ date_end = tend.strftime('%Y/%m/%d/%H/%M/%S')
 time_fv3 = [tini + timedelta(hours=int(dt)) for dt in np.arange(0,127,3)]
 
 #################################################################################
+'''
 #%% Reading bathymetry data
 ncbath = xr.open_dataset(bath_file)
 bath_lat = ncbath.variables['lat'][:]
@@ -87,6 +95,7 @@ bath_latsub = bath_lat[oklatbath]
 bath_lonsub = bath_lon[oklonbath]
 bath_elevs = bath_elev[oklatbath,:]
 bath_elevsub = bath_elevs[:,oklonbath]
+'''
 
 #################################################################################
 #%% Read best track
@@ -96,15 +105,16 @@ lat_best_track = np.empty((len(cycles),60))
 lat_best_track[:] = np.nan
 #time_best_track = np.empty((len(cycles),50))
 #time_best_track[:] = np.nan
-time_best_track = []
+#time_best_track = []
 for c,cycle in enumerate(cycles):
     best_track_file = abdeck_folder + 'btk/b' + basins[c] + storm_nums[c] + cycles[c][0:4] + '.dat'
+    
     lon,_,_,_,_ = get_best_track_and_int(best_track_file)
 
     lon_best_track[c,0:len(lon)], lat_best_track[c,0:len(lon)], t_best_track, _, _ = get_best_track_and_int(best_track_file)
 
-    #time_best_track[c,0:len(lon)] = np.asarray([datetime.strptime(t,'%Y%m%d%H') for t in t_best_track])
-    time_best_track.append([datetime.strptime(t,'%Y%m%d%H') for t in t_best_track])
+    time_best_track = np.asarray([datetime.strptime(t,'%Y%m%d%H') for t in t_best_track])
+
 
 #################################################################################
 #%% Read glider data
@@ -181,7 +191,7 @@ target_depth_hafs_ocean[:] = np.nan
 for i,folder in enumerate(folder_exps):
     print(folder)    
     for c,cycle in enumerate(cycles):
-        folderc = folder + '/' + cycle + '/' + storm_nums[c] + basins[c][-1] + '/'
+        folderc = folder + '/' + cycle + '/' + storm_ids[c].lower() + '/'
         #%% Get list files
         if ocean[i] == 'hycom':
             files_hafs_ocean = sorted(glob.glob(os.path.join(folderc,'*3z*.nc')))
@@ -198,9 +208,9 @@ for i,folder in enumerate(folder_exps):
     
         #%% Get storm track from trak atcf files
         if hafs_ab[i] == 'hfsa':
-            file_track = folderc + storm_ids[c]+'.' + cycle + '.hfsa.trak.atcfunix'
+            file_track = folderc + storm_ids[c].lower()+'.' + cycle + '.hfsa.trak.atcfunix'
         if hafs_ab[i] == 'hfsb':
-            file_track = folderc + storm_ids[c] +'.' + cycle + '.hfsb.trak.atcfunix'
+            file_track = folderc + storm_ids[c].lower() +'.' + cycle + '.hfsb.trak.atcfunix'
         print(file_track)
     
         okn = get_storm_track_and_int(file_track,storm_nums[c])[0].shape[0]
@@ -254,12 +264,12 @@ for i,folder in enumerate(folder_exps):
   
 ##################################################################
 #%% Figure track
-lev = np.arange(-9000,9100,100)
-#okt = np.logical_and(time_best_track >= time_fv3[0],time_best_track <= time_fv3[-1])
+okt = np.logical_and(time_best_track >= time_fv3[0],time_best_track <= time_fv3[-1])
 
-fig,ax = plt.subplots()
-plt.contourf(bath_lon,bath_lat,bath_elev,[0,10000],colors='silver')
-plt.contour(bath_lon,bath_lat,bath_elev,[0],colors='k')
+fig = plt.figure(figsize=(8,4))
+ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
+ax.axis('scaled')
+
 for c,cyc in enumerate(cycles):
     for i in np.arange(len(exp_names)): 
         if c == 0:
@@ -267,22 +277,37 @@ for c,cyc in enumerate(cycles):
         else:
             plt.plot(lon_forec_track[i,c,::2], lat_forec_track[i,c,::2],'o-',color=exp_colors[i],markeredgecolor='k',markersize=7)
         if c==0 and i==0:
-            plt.plot(lon_best_track[c], lat_best_track[c],'o-',color='k',label='Best Track')
+            okl = np.isfinite(lon_best_track[c,:])
+            plt.plot(lon_best_track[c,okl][okt], lat_best_track[c,okl][okt],'o-',color='k',label='Best Track')
         else:
-            plt.plot(lon_best_track[c], lat_best_track[c],'o-',color='k')
+            plt.plot(lon_best_track[c,okl][okt], lat_best_track[c,okl][okt],'o-',color='k')
 plt.plot(long[0,:], latg[0,:],'.-',color='orange',label='Glider Track')
 #plt.legend(loc='upper right',bbox_to_anchor=[1.3,0.8])
 plt.legend()
 plt.title('Track Forecast ' + storm_nums[0] + ' cycle '+ cycles[0],fontsize=18)
 plt.axis('scaled')
 
-###################################################################%% Figure track
-lev = np.arange(-9000,9100,100)
-#okt = np.logical_and(time_best_track >= time_fv3[0],time_best_track <= time_fv3[-1])
+# Add gridlines and labels
+gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, linestyle=(0, (5, 10)))
+gl.top_labels = False
+gl.right_labels = False
+gl.xlocator = mticker.FixedLocator(np.arange(-180., 180.+1, 2))
+gl.ylocator = mticker.FixedLocator(np.arange(-90., 90.+1, 2))
+gl.xlabel_style = {'size': 8, 'color': 'black'}
+gl.ylabel_style = {'size': 8, 'color': 'black'}
 
-fig,ax = plt.subplots()
-plt.contourf(bath_lon,bath_lat,bath_elev,[0,10000],colors='silver')
-plt.contour(bath_lon,bath_lat,bath_elev,[0],colors='k')
+# Add borders and coastlines
+ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+
+###################################################################%% Figure track
+okt = np.logical_and(time_best_track >= time_fv3[0],time_best_track <= time_fv3[-1])
+
+fig = plt.figure(figsize=(8,4))
+ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=0))
+ax.axis('scaled')
+
 for c,cyc in enumerate(cycles):
     for i in np.arange(len(exp_names)):
         if c == 0:
@@ -290,16 +315,30 @@ for c,cyc in enumerate(cycles):
         else:
             plt.plot(lon_forec_track[i,c,::2], lat_forec_track[i,c,::2],'o-',color=exp_colors[i],markeredgecolor='k',markersize=7)
         if c==0 and i==0:
-            plt.plot(lon_best_track[c], lat_best_track[c],'o-',color='k',label='Best Track')
+            plt.plot(lon_best_track[c,okl][okt], lat_best_track[c,okl][okt],'o-',color='k',label='Best Track')
         else:
-            plt.plot(lon_best_track[c], lat_best_track[c],'o-',color='k')
+            plt.plot(lon_best_track[c,okl][okt], lat_best_track[c,okl][okt],'o-',color='k')
 plt.plot(long[0,:], latg[0,:],'.-',color='orange',label='Glider Track')
-plt.legend(loc='upper right',bbox_to_anchor=[0.4,1.0])
-#plt.legend()
+#plt.legend(loc='upper right',bbox_to_anchor=[0.4,1.0])
+plt.legend()
 plt.title('Track Forecast ' + storm_nums[0] + ' cycle '+ cycles[0],fontsize=18)
 plt.axis('scaled')
-plt.xlim([np.nanmin(long)-4,np.nanmax(long)+4])
-plt.ylim([np.nanmin(latg)-4,np.nanmax(latg)+4])
+plt.xlim([np.nanmin(long)-8,np.nanmax(long)+8])
+plt.ylim([np.nanmin(latg)-8,np.nanmax(latg)+8])
+
+# Add gridlines and labels
+gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, linestyle=(0, (5, 10)))
+gl.top_labels = False
+gl.right_labels = False
+gl.xlocator = mticker.FixedLocator(np.arange(-180., 180.+1, 2))
+gl.ylocator = mticker.FixedLocator(np.arange(-90., 90.+1, 2))
+gl.xlabel_style = {'size': 8, 'color': 'black'}
+gl.ylabel_style = {'size': 8, 'color': 'black'}
+
+# Add borders and coastlines
+ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
 
 ##################################################################
 # Figures vertical profiles
@@ -308,7 +347,7 @@ m = int(teyes[0][4:6])
 d = int(teyes[0][6:8])
 h = int(teyes[0][8:10])
 time_eye_passage1 = mdates.date2num(datetime(y,m,d,h,0,0)) 
-time_eye_passage1_plus48 = mdates.date2num(datetime(y,m,d,h,0,0)+ timedelta(hours=72)) 
+time_eye_passage1_plus48 = mdates.date2num(datetime(y,m,d,h,0,0)+ timedelta(hours=48)) 
 before_eye1 = timeg[0,:] < time_eye_passage1 
 after_eye1 = np.logical_and(timeg[0,:] >= time_eye_passage1,timeg[0,:] <= time_eye_passage1_plus48) 
 
@@ -321,14 +360,27 @@ plt.ylabel('Depth (m)',fontsize=16)
 plt.xlabel('Temperature ($^oC$)',fontsize=16)
 plt.legend()
 plt.title(label=dataset_id,fontsize=16)
-plt.ylim([-400,10])
+plt.ylim([-150,10])
 plt.xlim([15,32])
+plt.grid(True)
 
-# Profilesn before and after storm passage
+###############################################
+# Max cooling:
+okd1 = depthg[0,before_eye1] == 0
+okd2 = depthg[0,after_eye1] == 0
+min_sst_after_glider = np.min(tempg[0,after_eye1][okd2])
+max_sst_before_glider = np.max(tempg[0,before_eye1][okd1])
+max_cooling_sst_glider = max_sst_before_glider - min_sst_after_glider
+
+# Profiles before and after storm passage
 for i,ff in enumerate(folder_exps):
-    fig, ax = plt.subplots(figsize=(8,11))
     before_eye = target_time[i,0,:] < time_eye_passage1
-    after_eye = target_time[i,0,:] > time_eye_passage1
+    after_eye = np.logical_and(target_time[i,0,:] >= time_eye_passage1,target_time[i,0,:] <= time_eye_passage1_plus48)
+    max_sst_before_model = np.max(target_temp_hafs_ocean[i,0,:,before_eye][:,0])
+    min_sst_after_model = np.min(target_temp_hafs_ocean[i,0,:,after_eye][:,0])
+    max_cooling_sst_model = max_sst_before_model - min_sst_after_model
+
+    fig, ax = plt.subplots(figsize=(8,11))
     plt.plot(target_temp_hafs_ocean[i,0,:,before_eye][0,:].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,before_eye].shape[0],1))[0,:].T,'o-',color='red',label='Before Erin',markeredgecolor='k')
     plt.plot(target_temp_hafs_ocean[i,0,:,before_eye].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,before_eye].shape[0],1)).T,'o-',color='red',markeredgecolor='k',alpha=0.5)
     plt.plot(target_temp_hafs_ocean[i,0,:,after_eye][0,:].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,after_eye].shape[0],1))[0,:].T,'o-',color='blue',label='After Erin',markeredgecolor='k')
@@ -336,9 +388,33 @@ for i,ff in enumerate(folder_exps):
 
     plt.ylabel('Depth (m)',fontsize=16)
     plt.xlabel('Temperature ($^oC$)',fontsize=16)
-    plt.title(exp_labels[i] + ' ' + str(tini)+ '-' + str(tend),fontsize=16)
+    plt.title(exp_labels[i],fontsize=16)
     plt.legend()
-    plt.ylim([-400,10])
+    plt.ylim([-150,10])
     plt.xlim([15,32])
+    plt.grid(True)
+
+    fig, ax = plt.subplots(figsize=(8,11))
+    before_eye = target_time[i,0,:] < time_eye_passage1
+    after_eye = np.logical_and(target_time[i,0,:] >= time_eye_passage1,target_time[i,0,:] <= time_eye_passage1_plus48)
+    
+    plt.plot(target_temp_hafs_ocean[i,0,:,before_eye][0,:].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,before_eye].shape[0],1))[0,:].T,'o-',color='red',label='Before Erin '+exp_labels[i],markeredgecolor='k')
+    plt.plot(target_temp_hafs_ocean[i,0,:,before_eye].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,before_eye].shape[0],1)).T,'o-',color='red',markeredgecolor='k',alpha=0.5)
+    plt.plot(target_temp_hafs_ocean[i,0,:,after_eye][0,:].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,after_eye].shape[0],1))[0,:].T,'o-',color='blue',label='After Erin '+exp_labels[i],markeredgecolor='k')
+    plt.plot(target_temp_hafs_ocean[i,0,:,after_eye].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,after_eye].shape[0],1)).T,'o-',color='blue',markeredgecolor='k',alpha=0.5)
+
+    plt.plot(tempg[0,before_eye1],-depthg[0,before_eye1],'.',color='r',label='Before Erin Glider')
+    plt.plot(tempg[0,after_eye1],-depthg[0,after_eye1],'.',color='b',label='After Erin Glider')
+    plt.plot(tempg[:,before_eye1],-depthg[:,before_eye1],'.',color='r',alpha=0.5,markersize=1)
+    plt.plot(tempg[:,after_eye1],-depthg[:,after_eye1],'.',color='b',alpha=0.3,markersize=1)
+
+    plt.ylabel('Depth (m)',fontsize=16)
+    plt.xlabel('Temperature ($^oC$)',fontsize=16)
+    plt.title(exp_labels[i]+' and '+dataset_id,fontsize=16)
+    plt.legend()
+    plt.ylim([-150,10])
+    plt.xlim([15,32])
+    plt.grid(True)
+
 
 

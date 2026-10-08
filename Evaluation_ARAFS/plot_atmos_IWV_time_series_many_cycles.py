@@ -171,6 +171,7 @@ plt.xticks(np.arange(0,120,12))
 
 ##############
 IWV_diff = np.diff(IWV_mean,axis=0)[0,:,:]
+IWV_mean_perc_diff = IWV_diff * 100/IWV_mean[0,:,:]
 
 fig,ax = plt.subplots(figsize = (13,7))
 for c,ymdh in enumerate(conf['ymdhs']):

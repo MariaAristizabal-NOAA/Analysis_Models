@@ -189,4 +189,4 @@ ax.text(1.0,-0.04, footer, fontsize=8, va="top", ha="right", transform=ax.transA
 
 #plt.show()
 plt.savefig(fig_name, bbox_inches='tight')
-plt.close(fig)
+#plt.close(fig)

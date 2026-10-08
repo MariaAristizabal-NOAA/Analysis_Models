@@ -23,6 +23,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import grib2io
 
+from collections import defaultdict
+
 import cartopy
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
@@ -77,6 +79,29 @@ tmp_gfs = grb.select(shortName='TMP',level='1000 mb')[0].data
 
 lon_gfs_360 = np.mod(lon_gfs, 360)
 
+####
+var_levels_gfs = defaultdict(list)
+var_levels_mb_gfs = defaultdict(list)
+var_names_gfs = {}
+
+# Open file and scan messages
+with grib2io.open(gfs_file) as grib:
+    for msg in grib:
+        short_name = msg.shortName
+        level_str = str(msg.level)
+
+        # Store variable full description if not already captured
+        if short_name not in var_names_gfs:
+            var_names_gfs[short_name] = msg.fullName
+
+        # Append level if it hasn't been added yet for this variable
+        if level_str not in var_levels_gfs[short_name]:
+            var_levels_gfs[short_name].append(level_str)
+            if level_str.split(' ')[-1] == 'mb': 
+                var_levels_mb_gfs[short_name].append(level_str)
+
+###
+
 '''
 # The lon range in grib2 is typically between 0 and 360
 # Cartopy's PlateCarree projection typically uses the lon range of -180 to 180
@@ -96,6 +121,35 @@ rrfs_grid = nc.Dataset(rrfs_file)
 lon_rrfs = np.asarray(rrfs_grid['longitude'][:])
 lat_rrfs = np.asarray(rrfs_grid['latitude'][:])
 tmp_rrfs = rrfs_grid['TMP_1000mb'][0,:,:]
+
+###
+var_levels_rrfs = defaultdict(list)
+var_levels_rrfs_mb = defaultdict(list)
+var_names_rrfs = {}
+
+for key in rrfs_grid.variables.keys():
+    try:
+        rrfs_grid.variables[key].level
+        short_name = key.split('_')[0]
+        var_names_rrfs[short_name] = rrfs_grid.variables[key].long_name
+        var_levels_rrfs[short_name].append(rrfs_grid.variables[key].level)
+    except:
+        print('No level')
+
+##################################################################
+# Find common variables
+list1 = var_names_gfs
+set2 = set(var_names_rrfs)
+
+common_vars = [item for item in list1 if item in set2]
+
+# Find common levels
+list1 = var_levels_mb_gfs['TMP']
+set2 = set(var_levels_rrfs['TMP'])
+
+common_levels = [item for item in list1 if item in set2]
+
+###
 
 '''
 grb = grib2io.open(rrfs_file,mode='r')
@@ -253,7 +307,7 @@ plt.legend(ncol=4, loc='lower center', bbox_to_anchor=(0.5, -0.15),fontsize=14)
 #plt.savefig("/ncrc/home1/Maria.Aristizabal/Figures_coupled_AR_AFS_paper/MOM6_fv3_domains.png", format="png", dpi=600, bbox_inches="tight", pad_inches=0.02)
 
 ###############################################################################
-# RRFS domain onn original grid
+# RRFS domain on original grid
 cartopy.config['data_dir'] = cartopyDataDir
 
 lon_offset = 180

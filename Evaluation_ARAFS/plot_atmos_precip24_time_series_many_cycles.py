@@ -150,6 +150,7 @@ plt.xticks(np.arange(0,126,12))
 
 ##############
 apcp24_diff = np.diff(apcp24_mean,axis=0)[0,:,:]
+apcp24_mean_perc_diff = apcp24_diff * 100/apcp24_mean[0,:,:]
 
 fig,ax = plt.subplots(figsize = (13,7))
 plt.plot(ff,apcp24_diff[c,:],'o-',color=conf['ymdhs_colors'][c],markeredgecolor='k',markersize=10,label=conf['ymdhs'][c])
