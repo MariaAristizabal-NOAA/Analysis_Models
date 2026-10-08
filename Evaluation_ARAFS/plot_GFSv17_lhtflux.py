@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+
+"""This script is to plot out atmospheric latent heat flux and 10-m wind."""
+
+import os
+import sys
+import logging
+import math
+import datetime
+
+import yaml
+import numpy as np
+import pandas as pd
+from scipy.ndimage import gaussian_filter
+
+import grib2io
+from netCDF4 import Dataset
+
+import matplotlib
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import matplotlib.path as mpath
+import matplotlib.ticker as mticker
+from matplotlib.gridspec import GridSpec
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+import pyproj
+import cartopy
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
+from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
+from cartopy.mpl.ticker import (LongitudeLocator, LongitudeFormatter, LatitudeLocator, LatitudeFormatter)
+
+# Parse the yaml config file
+print('Parse the config file: plot_GFSv17.yml:')
+with open('plot_GFSv17.yml', 'rt') as f:
+    conf = yaml.safe_load(f)
+conf['initTime'] = pd.to_datetime(conf['ymdh'], format='%Y%m%d%H', errors='coerce')
+conf['fhour'] = int(conf['fhhh'][1:])
+conf['fcstTime'] = pd.to_timedelta(conf['fhour'], unit='h')
+conf['validTime'] = conf['initTime'] + conf['fcstTime']
+
+xlim = conf['xlim']
+ylim = conf['ylim']
+
+# Set Cartopy data_dir location
+cartopy.config['data_dir'] = conf['cartopyDataDir']
+print(conf)
+
+grib2file = conf['grib2file']
+
+print(f'grib2file: {grib2file}')
+grb = grib2io.open(grib2file,mode='r')
+
+for msg in grb:
+    if msg.shortName == 'LHTFL':
+        print(msg)
+        print('shortName= ',msg.shortName)
+        print('level= ',msg.level)
+        print('units= ',msg.units)
+        print('leadTime= ',msg.leadTime)
+        print('duration= ',msg.duration)
+        print(' ')
+
+'''
+print('raw lonlat limit: ', np.min(lon), np.max(lon), np.min(lat), np.max(lat))
+if abs(np.max(lon) - 360.) < 10.:
+    lon[lon>180] = lon[lon>180] - 360.
+    lon_offset = 0.
+else:
+    lon_offset = 180.
+lon = lon - lon_offset
+print('new lonlat limit: ', np.min(lon), np.max(lon), np.min(lat), np.max(lat))
+[nlat, nlon] = np.shape(lon)
+'''
+
+print('Extracting LHTFL at surface. The [1] field is the instantenous field. The [0] is the 6h average field')
+lhf = grb.select(shortName='LHTFL',level='surface')[1].data
+#shf = gaussian_filter(shf, 5)
+
+print('Extracting lat and lon')
+lat, lon =  grb.select(shortName='LHTFL')[0].latlons()
+#===================================================================================================
+print('Plotting Latent Heat Flux')
+
+lon_offset = 180
+myproj = ccrs.PlateCarree(lon_offset)
+transform = ccrs.PlateCarree(lon_offset)
+
+cflevels = np.arange(0,1001,100)
+fig = plt.figure()
+ax = plt.axes(projection=myproj)
+ax.axis('scaled')
+cf = ax.contourf(lon-180, lat, lhf, cflevels, cmap='afmhot_r', extend='both', transform=transform)
+cb = plt.colorbar(cf, orientation='vertical', pad=0.03, shrink=1, extendrect=True, ticks=cflevels[::2])
+#cb = plt.colorbar(cf, orientation='vertical', pad=0.02, aspect=40, shrink=1, extendrect=True, ticks=cflevels[::2])
+
+plt.xlim([-20,100])
+plt.ylim([-20,85])
+
+ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+
+gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, linestyle=(0, (5, 10)))
+gl.top_labels = False
+gl.right_labels = False
+
+title = 'Latent Heat Flux ($W/m^3$) \n ' + conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+conf['validTime'].strftime(' Valid: %Y%m%d%HZ')
+
+ax.set_title(title, loc='center') #
+
+#plt.savefig(fig_name, bbox_inches='tight')
+#plt.close(fig)

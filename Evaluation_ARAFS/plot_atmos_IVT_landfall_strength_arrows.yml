@@ -1,0 +1,26 @@
+# yaml configure file
+stormModel: ARAFS
+stormID: 00E
+ymdhs: ['2023010700','2023030700','2024021600','2025020100','2025022000','2025120900','2025121700','2026010300']
+#ymdhs: ['2023010700','2023030700','2024021600','2025020100']
+#ymdhs: ['2025022000','2025120900','2025121700','2026010300']
+#ymdhs: ['2023010700','2023030700']
+#ymdhs: ['2025020200']
+#ymdhs: ['2024021600']
+#fhhhs: [f024]
+fhhhs: [f120,f120,f024,f024,f072,f000,f000,f000]
+#fhhhs: [f072,f000,f000,f000]
+curvatures: ['down','down','up','down','down','down','down','up']
+#curvatures: ['down','down','down','up']
+COMarafs: /gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/ARAFS_Exp4_alaska_4_a_coupled/
+
+cartopyDataDir: /gpfs/f6/drsa-hurr1/world-shared/noscrub/local/share/cartopy
+
+# Limits for plotting
+xlim: [-150,-110]
+ylim: [25,50]
+
+# Limits for finding the maximum IVT before landfall
+xlim_landfall: [-135,-116]
+ylim_landfall: [30,49]
+
