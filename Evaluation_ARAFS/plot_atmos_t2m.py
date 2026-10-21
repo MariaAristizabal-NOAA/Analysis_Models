@@ -37,7 +37,8 @@ ylim = conf['ylim']
 cartopy.config['data_dir'] = conf['cartopyDataDir']
 print(conf)
 
-fname = conf['stormModel'].lower()+'.'+conf['ymdh']+'.'+conf['fhhh']+'.grb2'
+#fname = conf['stormModel'].lower()+'.'+conf['ymdh']+'.'+conf['fhhh']+'.grb2'
+fname = conf['ymdh'] + '.' + conf['stormModel'].lower()+'.parent.atm.'+conf['fhhh']+'.grb2'
 grib2file = os.path.join(conf['COMarafs']+conf['ymdh']+'/00E/', fname)
 
 print(f'grib2file: {grib2file}')
@@ -103,6 +104,8 @@ gl.ylabel_style = {'size': 8, 'color': 'black'}
 title = '2 m Temperature (${^o}$C) \n' + conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+conf['validTime'].strftime(' Valid: %Y%m%d%HZ')
 
 ax.set_title(title, loc='center')
+
+ax.text(0.1,0.1,'Mean = ' + str(np.round(np.nanmean(tmp),1)) + ' ($^oC$) ' + 'Max = ' + str(np.round(np.nanmax(tmp),1)) + ' ($^oC$)',transform=ax.transAxes)
 
 #plt.savefig(fig_name, bbox_inches='tight')
 #plt.close(fig)

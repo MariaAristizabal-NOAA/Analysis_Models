@@ -15,6 +15,7 @@ import datetime as datetime
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
+import matplotlib.colors as colors
   
 import cartopy
 import cartopy.crs as ccrs
@@ -81,7 +82,8 @@ ylim = conf['ylim']
 
 #================================================================
 # Read FV3 files
-fname = conf['stormModel'].lower()+'.'+conf['ymdh']+'.'+conf['fhhh']+'.grb2'
+#fname = conf['stormModel'].lower()+'.'+conf['ymdh']+'.'+conf['fhhh']+'.grb2'
+fname = conf['ymdh'] + '.' + conf['stormModel'].lower()+'.parent.atm.'+conf['fhhh']+'.grb2'
 
 grib2file = os.path.join(conf['COMmodels'][0]+conf['ymdh']+'/00E/', fname)
 print(f'grib2file: {grib2file}')
@@ -102,7 +104,8 @@ grb = grib2io.open(grib2file,mode='r')
 
 IVT_u2, IVT_v2, IVT2 = compute_ivt(grb,nlat, nlon)
 
-diff = gaussian_filter(IVT2 - IVT1,20)
+#diff = gaussian_filter(IVT2 - IVT1,20)
+diff = IVT2 - IVT1
 
 #================================================================
 lon = lon_atm
@@ -119,16 +122,28 @@ print('new lonlat limit: ', np.min(lon), np.max(lon), np.min(lat), np.max(lat))
 
 lon_atm = lon
 #================================================================
-bounds = np.arange(-100,100.1,10)
-ticks = np.arange(-100,100.1,10)
+x = 100
+dx = 10
+bounds = np.arange(-x,x+0.1,dx)
+ticks = np.arange(-x,x+0.1,dx)
 
 myproj = ccrs.PlateCarree(lon_offset)
 transform = ccrs.PlateCarree(lon_offset)
 
+cmap = plt.get_cmap('coolwarm')
+norm = colors.BoundaryNorm(boundaries=bounds, ncolors=cmap.N)
+
+###########################
+fig = plt.figure()
+plt.pcolormesh(diff, cmap=cmap, norm=norm)
+plt.colorbar()
+#############################
+
 fig = plt.figure()
 ax = plt.axes(projection=myproj)
 ax.axis('scaled')
-cf = ax.contourf(lon_atm, lat_atm, diff, levels=bounds, cmap='coolwarm', extend='both', transform=transform)
+#cf = ax.contourf(lon_atm, lat_atm, diff, levels=bounds, cmap='coolwarm', extend='both', transform=transform)
+cf = ax.pcolormesh(lon_atm, lat_atm, diff, cmap=cmap, norm=norm,transform=transform)
 
 cb = plt.colorbar(cf, orientation='vertical', pad=0.02, extendrect=True,ticks=ticks,shrink=0.8)
 
