@@ -1,13 +1,13 @@
 #%% User input
 
 # Polo 17E
-cycles = ['2026092100']
+cycles = ['2026092312']
 storm_nums = ['17']
 basins = ['ep']
 storm_ids = ['17E']
 storm_names = ['POLO']
 # time eye passage closest to glider
-teyes = ['2026092218']
+teyes = ['2026092500']
 #teyes = ['2026092500']
 
 exp_names = ['HFSA_oper']
@@ -17,8 +17,8 @@ hafs_ab = ['hfsa']
 ocean = ['mom6']
 scratch_folder = ['/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/']
 
-#url_glider = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/Data/Gliders/2026/sg625-20260630T0000.nc'
-url_glider = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/Data/Gliders/2026/sg623-20260707T0000.nc'
+url_glider = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/Data/Gliders/2026/sg625-20260630T0000.nc'
+#url_glider = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/Data/Gliders/2026/sg623-20260707T0000.nc'
 
 lon_lim = [-98.5,-70.0]
 lat_lim = [15.0,40.0]
@@ -352,8 +352,8 @@ before_eye1 = timeg[0,:] < time_eye_passage1
 after_eye1 = np.logical_and(timeg[0,:] >= time_eye_passage1,timeg[0,:] <= time_eye_passage1_plus48) 
 
 fig, ax = plt.subplots(figsize=(8,11))
-plt.plot(tempg[0,before_eye1],-depthg[0,before_eye1],'.',color='r',label='Before Erin')
-plt.plot(tempg[0,after_eye1],-depthg[0,after_eye1],'.',color='b',label='After Erin')
+plt.plot(tempg[0,before_eye1],-depthg[0,before_eye1],'.',color='r',label='Before '+storm_names[i])
+plt.plot(tempg[0,after_eye1],-depthg[0,after_eye1],'.',color='b',label='After '+storm_names[i])
 plt.plot(tempg[:,before_eye1],-depthg[:,before_eye1],'.',color='r',alpha=0.5,markersize=1)
 plt.plot(tempg[:,after_eye1],-depthg[:,after_eye1],'.',color='b',alpha=0.3,markersize=1)
 plt.ylabel('Depth (m)',fontsize=16)
@@ -381,9 +381,9 @@ for i,ff in enumerate(folder_exps):
     max_cooling_sst_model = max_sst_before_model - min_sst_after_model
 
     fig, ax = plt.subplots(figsize=(8,11))
-    plt.plot(target_temp_hafs_ocean[i,0,:,before_eye][0,:].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,before_eye].shape[0],1))[0,:].T,'o-',color='red',label='Before Erin',markeredgecolor='k')
+    plt.plot(target_temp_hafs_ocean[i,0,:,before_eye][0,:].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,before_eye].shape[0],1))[0,:].T,'o-',color='red',label='Before '+storm_names[i],markeredgecolor='k')
     plt.plot(target_temp_hafs_ocean[i,0,:,before_eye].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,before_eye].shape[0],1)).T,'o-',color='red',markeredgecolor='k',alpha=0.5)
-    plt.plot(target_temp_hafs_ocean[i,0,:,after_eye][0,:].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,after_eye].shape[0],1))[0,:].T,'o-',color='blue',label='After Erin',markeredgecolor='k')
+    plt.plot(target_temp_hafs_ocean[i,0,:,after_eye][0,:].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,after_eye].shape[0],1))[0,:].T,'o-',color='blue',label='After '+storm_names[i],markeredgecolor='k')
     plt.plot(target_temp_hafs_ocean[i,0,:,after_eye].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,after_eye].shape[0],1)).T,'o-',color='blue',markeredgecolor='k',alpha=0.5)
 
     plt.ylabel('Depth (m)',fontsize=16)
@@ -398,15 +398,15 @@ for i,ff in enumerate(folder_exps):
     before_eye = target_time[i,0,:] < time_eye_passage1
     after_eye = np.logical_and(target_time[i,0,:] >= time_eye_passage1,target_time[i,0,:] <= time_eye_passage1_plus48)
     
-    plt.plot(target_temp_hafs_ocean[i,0,:,before_eye][0,:].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,before_eye].shape[0],1))[0,:].T,'o-',color='red',label='Before Erin '+exp_labels[i],markeredgecolor='k')
+    plt.plot(target_temp_hafs_ocean[i,0,:,before_eye][0,:].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,before_eye].shape[0],1))[0,:].T,'o-',color='red',label='Before '+storm_names[i] + ' ' +exp_labels[i],markeredgecolor='k')
     plt.plot(target_temp_hafs_ocean[i,0,:,before_eye].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,before_eye].shape[0],1)).T,'o-',color='red',markeredgecolor='k',alpha=0.5)
-    plt.plot(target_temp_hafs_ocean[i,0,:,after_eye][0,:].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,after_eye].shape[0],1))[0,:].T,'o-',color='blue',label='After Erin '+exp_labels[i],markeredgecolor='k')
+    plt.plot(target_temp_hafs_ocean[i,0,:,after_eye][0,:].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,after_eye].shape[0],1))[0,:].T,'o-',color='blue',label='After '+storm_names[i] + ' ' +exp_labels[i],markeredgecolor='k')
     plt.plot(target_temp_hafs_ocean[i,0,:,after_eye].T,-np.tile(target_depth_hafs_ocean[i,0,:],(target_temp_hafs_ocean[i,0,:,after_eye].shape[0],1)).T,'o-',color='blue',markeredgecolor='k',alpha=0.5)
 
-    plt.plot(tempg[0,before_eye1],-depthg[0,before_eye1],'.',color='r',label='Before Erin Glider')
-    plt.plot(tempg[0,after_eye1],-depthg[0,after_eye1],'.',color='b',label='After Erin Glider')
-    plt.plot(tempg[:,before_eye1],-depthg[:,before_eye1],'.',color='r',alpha=0.5,markersize=1)
-    plt.plot(tempg[:,after_eye1],-depthg[:,after_eye1],'.',color='b',alpha=0.3,markersize=1)
+    plt.plot(tempg[0,before_eye1],-depthg[0,before_eye1],'.',color='salmon',label='Before '+ storm_names[i] + ' ' + 'Glider')
+    plt.plot(tempg[0,after_eye1],-depthg[0,after_eye1],'.',color='cyan',label='After ' + storm_names[i] + ' ' + 'Glider')
+    plt.plot(tempg[:,before_eye1],-depthg[:,before_eye1],'.',color='salmon',alpha=0.5,markersize=1)
+    plt.plot(tempg[:,after_eye1],-depthg[:,after_eye1],'.',color='cyan',alpha=0.3,markersize=1)
 
     plt.ylabel('Depth (m)',fontsize=16)
     plt.xlabel('Temperature ($^oC$)',fontsize=16)
