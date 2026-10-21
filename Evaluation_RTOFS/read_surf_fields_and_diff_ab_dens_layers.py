@@ -1,28 +1,30 @@
 #%% User input
-cycle = '20240402'
+cycle = '20260923'
 
 # folder ab files HYCOM
-scratch_folder = '/scratch1/NCEPDEV/hwrf/noscrub/Maria.Aristizabal/'
-rtofs_folder = scratch_folder + 'RTOFS/rtofs.20240402/'
+scratch_folder = '/gpfs/f6/drsa-hurr1/world-shared/noscrub/Maria.Aristizabal/'
+rtofs_folder = scratch_folder + 'arafs-input/COMrtofsv2.5/rtofs.'+cycle
 
 # RTOFS grid file name
-rtofs_grid_depth_folder = scratch_folder + 'RTOFS_fix/GRID_DEPTH_global/'
-rtofs_grid_file = rtofs_grid_depth_folder + 'regional.grid'
-rtofs_depth_file = rtofs_grid_depth_folder + 'regional.depth'
+rtofs_grid_depth_folder = scratch_folder + 'RTOFS_fix/Global/'
+rtofs_grid_file = rtofs_grid_depth_folder + 'rtofs_glo.navy_0.08.regional.grid'
+rtofs_depth_file = rtofs_grid_depth_folder + 'depth_GLBb0.08_09m11'
+
+folder_utils4hycom= '/ncrc/home1/Maria.Aristizabal/Hyun-Sook_Utils/'
+folder_myutils= '/ncrc/home1/Maria.Aristizabal/Maria_Utils/'
 
 var_name = 'temp'
 klayer = '1'
 #colormap='Spectral_r'
 colormap='jet'
-min_val = 18
+#min_val = 18
+min_val = 10
 max_val = 31
-delta_val = 0.2  # delta in colorbar
+delta_val = 0.5  # delta in colorbar
 delta_contour = 1 # delta in contour plot
 units = '$^oC$'
-#lon_lim = [-54,-42]
-#lat_lim = [10,22]
-lon_lim = [-71,-45]
-lat_lim = [12,28]
+lon_lim = [-106,-96]
+lat_lim = [10,20]
 
 '''
 var_name = 'srfhgt'
@@ -100,9 +102,6 @@ import sys
 import numpy.ma as ma
 import struct
 
-folder_utils4hycom= '/home/Maria.Aristizabal/Repos/NCEP_scripts/'
-folder_myutils= '/home/Maria.Aristizabal/Utils/'
-
 sys.path.append(folder_utils4hycom)
 from utils4HYCOM import readBinz, readgrids, readdepth, readVar
 
@@ -177,11 +176,12 @@ for artofs_file in artofs_files:
     latt = lat_hycom[:,oklon][oklat,:]
     field = fld2[:,oklon][oklat,:]
 
-    #kw = dict(levels=np.arange(min_val,max_val+0.1,delta_val))
-    kw = dict(levels=np.arange(19,32+0.1,0.5))
-    #fig,ax = plt.subplots(figsize = (8,6.5))
-    fig,ax = plt.subplots(figsize=(10, 5))
+    kw = dict(levels=np.arange(min_val,max_val+0.1,delta_val))
+    #kw = dict(levels=np.arange(19,32+0.1,0.5))
+    fig,ax = plt.subplots(figsize = (8,6.5))
+    #fig,ax = plt.subplots(figsize=(6, 5))
     ax.set_facecolor("bisque")
+    ax.axis('scaled')
     #cs = ax.contour(lonn-360,latt,field,np.arange(min_val,max_val,delta_contour),colors='grey')
     cs = ax.contour(lonn-360,latt,field,np.linspace(19, 32, 27),colors='k',alpha=0.3)
     ax.clabel(cs,cs.levels,inline=True,fmt='%1.1f',fontsize=10)
@@ -200,9 +200,10 @@ for artofs_file in artofs_files:
     #plt.close()
 
     kw = dict(levels=np.arange(-4,4+0.1,0.5))
-    #fig,ax = plt.subplots(figsize = (8,6.5))
-    fig,ax = plt.subplots(figsize=(10, 5))
+    fig,ax = plt.subplots(figsize = (8,6.5))
+    #fig,ax = plt.subplots(figsize=(10, 5))
     ax.set_facecolor("bisque")
+    ax.axis('scaled')
     #cs = ax.contour(lonn-360,latt,field,np.arange(min_val,max_val,delta_contour),colors='grey')
     cs = ax.contour(lonn-360,latt,field-field0,np.arange(-4,4+0.1,0.5),colors='k',alpha=0.3)
     ax.clabel(cs,cs.levels,inline=True,fmt='%1.1f',fontsize=10)

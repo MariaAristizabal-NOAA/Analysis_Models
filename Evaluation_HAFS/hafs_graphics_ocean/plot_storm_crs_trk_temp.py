@@ -159,7 +159,8 @@ if len(lat_adeck[okfhour])!=0:
 else:
     lat_eye = np.nan
 
-kw = dict(levels=np.arange(15,31.1,0.5))
+#kw = dict(levels=np.arange(15,31.1,0.5))
+kw = dict(levels=np.arange(10,31.1,0.5))
 fig,ax = plt.subplots(figsize=(8,4))
 ctr = ax.contourf(lat[oklat],-zl,var,cmap='Spectral_r',**kw,extend='both')
 cbar = fig.colorbar(ctr,extendrect=True)

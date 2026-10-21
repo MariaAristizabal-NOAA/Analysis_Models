@@ -2,7 +2,7 @@
 
 # forecasting cycle to be used
 # Polo 17e
-cycle = '2026092100'
+cycle = '2026092312'
 storm_num = '17'
 basin = 'ep'
 storm_id = '17e'

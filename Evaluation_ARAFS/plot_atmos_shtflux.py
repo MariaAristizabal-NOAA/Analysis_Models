@@ -76,8 +76,11 @@ fig = plt.figure()
 ax = plt.axes(projection=myproj)
 ax.axis('scaled')
 
-cflevels = np.arange(0,301,30)
-cf = plt.contourf(lon_atm,lat_atm,shf,levels=cflevels,cmap='afmhot_r',extend='both',alpha=1,transform=transform)
+#cflevels = np.arange(0,301,30)
+cflevels = np.arange(-200,201,20)
+#cf = plt.contourf(lon_atm,lat_atm,shf,levels=cflevels,cmap='afmhot_r',extend='both',alpha=1,transform=transform)
+cf = plt.contourf(lon_atm,lat_atm,shf,levels=cflevels,cmap='bwr',extend='both',alpha=1,transform=transform)
+#cf = plt.contourf(shf,levels=cflevels,cmap='bwr',extend='both',alpha=1,transform=transform)
 #cb = plt.colorbar(cf, orientation='vertical', pad=0.02, aspect=50, shrink=cbshrink, extendrect=True, ticks=cflevels[::2])
 cb = plt.colorbar(cf, orientation='vertical', pad=0.03, shrink=0.85, extendrect=True)
 
