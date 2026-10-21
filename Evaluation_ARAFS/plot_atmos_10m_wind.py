@@ -35,8 +35,9 @@ ylim = conf['ylim']
 
 #================================================================
 # Read FV3 files
-fname = conf['stormModel'].lower()+'.'+conf['ymdh']+'.'+conf['fhhh']+'.grb2'
-grib2file = os.path.join(conf['COMarafs'], fname)
+#fname = conf['stormModel'].lower()+'.'+conf['ymdh']+'.'+conf['fhhh']+'.grb2'
+fname = conf['ymdh'] + '.' + conf['stormModel'].lower()+'.parent.atm.'+conf['fhhh']+'.grb2'
+grib2file = os.path.join(conf['COMarafs']+conf['ymdh']+'/00E/', fname)
 print(f'grib2file: {grib2file}')
 grb = grib2io.open(grib2file,mode='r')
 
@@ -101,6 +102,8 @@ gl.ylabel_style = {'size': 8, 'color': 'black'}
 title = '10 m Winds ($m/s$) \n' + conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+conf['validTime'].strftime(' Valid: %Y%m%d%HZ')
 
 ax.set_title(title, loc='center')
+
+ax.text(0.1,0.1,'Mean = ' + str(np.round(np.nanmean(wspd),1)) + ' ($m/s$) ' + 'Max = ' + str(np.round(np.nanmax(wspd),1)) + ' ($m/s$)',transform=ax.transAxes)
 
 #pngFile = conf['stormID'].upper()+'.'+conf['ymdh']+'.'+conf['stormModel']+'.ocean.'+var_name+'.'+conf['fhhh'].lower()+'.png'
 #plt.savefig(pngFile,bbox_inches='tight',dpi=150)

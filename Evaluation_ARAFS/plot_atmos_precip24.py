@@ -37,7 +37,8 @@ ylim = conf['ylim']
 cartopy.config['data_dir'] = conf['cartopyDataDir']
 print(conf)
 
-fname = conf['stormModel'].lower()+'.'+ conf['ymdh']+'.'+conf['fhhh']+'.grb2'
+#fname = conf['stormModel'].lower()+'.'+ conf['ymdh']+'.'+conf['fhhh']+'.grb2'
+fname = conf['ymdh'] + '.' + conf['stormModel'].lower()+'.parent.atm.'+conf['fhhh']+'.grb2'
 grib2file = os.path.join(conf['COMarafs']+conf['ymdh']+'/00E/', fname)
 
 grb = grib2io.open(grib2file,mode='r')
@@ -72,7 +73,8 @@ if int(conf['fhhh'][1:]) - 24 >= 0:
     apcp = np.empty((len(fhhhs),lat.shape[0],lat.shape[1]))
     apcp[:] = np.nan
     for f,fhhh in enumerate(fhhhs):
-        fname = conf['stormModel'].lower()+'.'+ conf['ymdh']+'.'+fhhh+'.grb2'
+        #fname = conf['stormModel'].lower()+'.'+ conf['ymdh']+'.'+fhhh+'.grb2'
+        fname = conf['ymdh'] + '.' + conf['stormModel'].lower()+'.parent.atm.'+conf['fhhh']+'.grb2'
         grib2file = os.path.join(conf['COMarafs']+conf['ymdh']+'/00E/', fname)
         print(grib2file)
         grb = grib2io.open(grib2file,mode='r')
@@ -124,6 +126,40 @@ norm = matplotlib.colors.BoundaryNorm(cflevels, cm.N)
 #norm = matplotlib.colors.BoundaryNorm(bounds_precip, cm.N)
 cbshrink = 1.0
 
+################################
+fig = plt.figure()
+ax = plt.axes(projection=myproj)
+ax.axis('scaled')
+cf = ax.contourf(lon, lat, apcp_24,transform=transform,extend='both')
+cb = plt.colorbar(cf, orientation='vertical',shrink=0.8,pad=0.03,extend='both',extendfrac=(0.0, 0.0))
+
+ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=0.3, facecolor='none', edgecolor='0.1')
+
+gl = ax.gridlines(draw_labels=True, linewidth=0.3, color='0.1', alpha=0.6, linestyle=(0, (5, 10)))
+gl.top_labels = False
+gl.right_labels = False
+gl.xlabel_style = {'size': 8, 'color': 'black'}
+gl.ylabel_style = {'size': 8, 'color': 'black'}
+
+plt.xlim([xlim[0]+lon_offset, xlim[1]+lon_offset])
+plt.ylim([ylim[0], ylim[1]])
+
+dt1 = pd.to_timedelta(fhhs[0], unit='h')
+time1 = conf['initTime'] + dt1
+dt2 = pd.to_timedelta(fhhs[-1], unit='h')
+time2 = conf['initTime'] + dt2
+
+title = '24hr Accumulated Precipitation (mm) \n ' + conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+' Valid: '+time1.strftime('%Y%m%d%HZ ')+'to '+time2.strftime('%Y%m%d%HZ ')
+
+ax.set_title(title, loc='center') #, x=1.2,y=1.01)
+
+ax.text(0.1,0.1,'Mean = ' + str(np.round(np.nanmean(apcp_24),1)) + ' (mm) ' + 'Max = ' + str(np.round(np.nanmax(apcp_24),1)) + ' (mm)',transform=ax.transAxes)
+
+########################################
+
+
 # create figure and axes instances
 fig = plt.figure()
 ax = plt.axes(projection=myproj)
@@ -161,6 +197,10 @@ ax.set_title(title, loc='center') #, x=1.2,y=1.01)
 
 ax.text(0.1,0.1,'Mean = ' + str(np.round(np.nanmean(apcp_24),1)) + ' (mm) ' + 'Max = ' + str(np.round(np.nanmax(apcp_24),1)) + ' (mm)',transform=ax.transAxes)
 
+######################################
+apcp_24_vec = np.ravel(apcp_24)
+plt.figure()
+plt.hist(apcp_24_vec, bins=30, color='skyblue', edgecolor='black', alpha=0.7)
 
 #plt.show()
 #plt.savefig(fig_name, bbox_inches='tight')

@@ -15,6 +15,7 @@ import matplotlib
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
+import matplotlib.colors as colors
 
 import cartopy
 import cartopy.crs as ccrs
@@ -41,7 +42,8 @@ cartopy.config['data_dir'] = conf['cartopyDataDir']
 print(conf)
 
 #================================================================
-fname = conf['stormModel'].lower()+'.'+conf['ymdh']+'.'+conf['fhhh']+'.grb2'
+#fname = conf['stormModel'].lower()+'.'+conf['ymdh']+'.'+conf['fhhh']+'.grb2'
+fname = conf['ymdh'] + '.' + conf['stormModel'].lower()+'.parent.atm.'+conf['fhhh']+'.grb2'
 grib2file = os.path.join(conf['COMmodels'][0]+conf['ymdh']+'/00E/', fname)
 
 print(f'grib2file: {grib2file}')
@@ -79,7 +81,8 @@ if int(conf['fhhh'][1:]) - 24 >= 0:
     apcp2 = np.empty((len(fhhhs),lat.shape[0],lat.shape[1]))
     apcp2[:] = np.nan
     for f,fhhh in enumerate(fhhhs):
-        fname = conf['stormModel'].lower()+'.'+ conf['ymdh']+'.'+fhhh+'.grb2'
+        #fname = conf['stormModel'].lower()+'.'+ conf['ymdh']+'.'+fhhh+'.grb2'
+        fname = conf['ymdh'] + '.' + conf['stormModel'].lower()+'.parent.atm.'+fhhh+'.grb2'
 
         grib2file = os.path.join(conf['COMmodels'][0]+conf['ymdh']+'/00E/', fname)
         print(grib2file)
@@ -95,8 +98,8 @@ if int(conf['fhhh'][1:]) - 24 >= 0:
 
 apcp1_24 = np.sum(apcp1,axis=0)
 apcp2_24 = np.sum(apcp2,axis=0)
-diff = gaussian_filter(apcp2_24 - apcp1_24,10)
-#diff = apcp2_24 - apcp1_24
+#diff = gaussian_filter(apcp2_24 - apcp1_24,10)
+diff = apcp2_24 - apcp1_24
 
 #===================================================================================================
 print('APCP')
@@ -104,16 +107,23 @@ print('APCP')
 myproj = ccrs.PlateCarree(lon_offset)
 transform = ccrs.PlateCarree(lon_offset)
 
-cflevels = np.arange(-10,10.1,1)
+x = 10
+dx = 1
+bounds = np.arange(-x,x+0.1,dx)
+ticks = np.arange(-x,x+0.1,dx)
+cflevels = bounds
 cbshrink = 1.0
+
+cmap = plt.get_cmap('coolwarm')
+norm = colors.BoundaryNorm(boundaries=bounds, ncolors=cmap.N)
 
 # create figure and axes instances
 fig = plt.figure()
 ax = plt.axes(projection=myproj)
 ax.axis('scaled')
 
+#cf = ax.pcolormesh(lon_atm, lat_atm, diff, cmap=cmap, norm=norm,transform=transform)
 cf = ax.contourf(lon, lat, diff, cflevels, cmap='coolwarm', transform=transform,extend='both')
-#cf = ax.contourf(lon, lat, diff, cmap='coolwarm', transform=transform,extend='both')
 cb = plt.colorbar(cf, orientation='vertical', aspect=20,shrink=0.8,pad=0.03,extendrect=True,ticks=cflevels[::2])
 
 # Add borders and coastlines
@@ -147,8 +157,9 @@ fig = plt.figure()
 ax = plt.axes(projection=myproj)
 ax.axis('scaled')
 
-cf = ax.contourf(lon, lat, diff, cflevels, cmap='coolwarm', transform=transform,extend='both')
-#cf = ax.contourf(lon, lat, diff, cmap='coolwarm', transform=transform,extend='both')
+#cf = ax.contourf(lon, lat, diff, cflevels, cmap='coolwarm', transform=transform,extend='both')
+cf = ax.pcolormesh(lon_atm, lat_atm, diff, cmap=cmap, norm=norm,transform=transform)
+
 cb = plt.colorbar(cf, orientation='vertical', aspect=20,shrink=0.8,pad=0.03,extendrect=True,ticks=cflevels[::2])
 
 # Add borders and coastlines
@@ -176,6 +187,7 @@ title = '24hr Accumulated Precipitation Difference (mm) \n ' + conf['initTime'].
 ax.set_title(title, loc='center') 
 
 # Zoom in US West Coast
+'''
 diff = apcp2_24 - apcp1_24
 fig = plt.figure()
 ax = plt.axes(projection=myproj)
@@ -208,3 +220,4 @@ time2 = conf['initTime'] + dt2
 title = '24hr Accumulated Precipitation Difference (mm) \n ' + conf['initTime'].strftime('Init: %Y%m%d%HZ ')+conf['fhhh'].upper()+' Valid: '+time1.strftime('%Y%m%d%HZ ')+'to '+time2.strftime('%Y%m%d%HZ ')
 
 ax.set_title(title, loc='center')
+'''
