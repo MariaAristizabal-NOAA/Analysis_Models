@@ -42,8 +42,8 @@ cartopy.config['data_dir'] = conf['cartopyDataDir']
 print(conf)
 
 #================================================================
-#fname = conf['stormModel'].lower()+'.'+conf['ymdh']+'.'+conf['fhhh']+'.grb2'
-fname = conf['ymdh'] + '.' + conf['stormModel'].lower()+'.parent.atm.'+conf['fhhh']+'.grb2'
+fname = conf['stormModel'].lower()+'.'+conf['ymdh']+'.'+conf['fhhh']+'.grb2'
+#fname = conf['ymdh'] + '.' + conf['stormModel'].lower()+'.parent.atm.'+conf['fhhh']+'.grb2'
 grib2file = os.path.join(conf['COMmodels'][0]+conf['ymdh']+'/00E/', fname)
 
 print(f'grib2file: {grib2file}')
@@ -81,8 +81,8 @@ if int(conf['fhhh'][1:]) - 24 >= 0:
     apcp2 = np.empty((len(fhhhs),lat.shape[0],lat.shape[1]))
     apcp2[:] = np.nan
     for f,fhhh in enumerate(fhhhs):
-        #fname = conf['stormModel'].lower()+'.'+ conf['ymdh']+'.'+fhhh+'.grb2'
-        fname = conf['ymdh'] + '.' + conf['stormModel'].lower()+'.parent.atm.'+fhhh+'.grb2'
+        fname = conf['stormModel'].lower()+'.'+ conf['ymdh']+'.'+fhhh+'.grb2'
+        #fname = conf['ymdh'] + '.' + conf['stormModel'].lower()+'.parent.atm.'+fhhh+'.grb2'
 
         grib2file = os.path.join(conf['COMmodels'][0]+conf['ymdh']+'/00E/', fname)
         print(grib2file)
@@ -122,8 +122,8 @@ fig = plt.figure()
 ax = plt.axes(projection=myproj)
 ax.axis('scaled')
 
-#cf = ax.pcolormesh(lon_atm, lat_atm, diff, cmap=cmap, norm=norm,transform=transform)
-cf = ax.contourf(lon, lat, diff, cflevels, cmap='coolwarm', transform=transform,extend='both')
+cf = ax.pcolormesh(lon, lat, diff, cmap=cmap, norm=norm,transform=transform)
+#cf = ax.contourf(lon, lat, diff, cflevels, cmap='coolwarm', transform=transform,extend='both')
 cb = plt.colorbar(cf, orientation='vertical', aspect=20,shrink=0.8,pad=0.03,extendrect=True,ticks=cflevels[::2])
 
 # Add borders and coastlines
@@ -158,7 +158,7 @@ ax = plt.axes(projection=myproj)
 ax.axis('scaled')
 
 #cf = ax.contourf(lon, lat, diff, cflevels, cmap='coolwarm', transform=transform,extend='both')
-cf = ax.pcolormesh(lon_atm, lat_atm, diff, cmap=cmap, norm=norm,transform=transform)
+cf = ax.pcolormesh(lon, lat, diff, cmap=cmap, norm=norm,transform=transform)
 
 cb = plt.colorbar(cf, orientation='vertical', aspect=20,shrink=0.8,pad=0.03,extendrect=True,ticks=cflevels[::2])
 

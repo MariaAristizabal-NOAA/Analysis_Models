@@ -38,8 +38,8 @@ ylim = conf['ylim']
 
 #================================================================
 # Read FV3 files
-#fname = conf['stormModel'].lower()+'.'+conf['ymdh']+'.'+conf['fhhh']+'.grb2'
-fname = conf['ymdh'] + '.' + conf['stormModel'].lower()+'.parent.atm.'+conf['fhhh']+'.grb2'
+fname = conf['stormModel'].lower()+'.'+conf['ymdh']+'.'+conf['fhhh']+'.grb2'
+#fname = conf['ymdh'] + '.' + conf['stormModel'].lower()+'.parent.atm.'+conf['fhhh']+'.grb2'
 grib2file = os.path.join(conf['COMarafs']+conf['ymdh']+'/00E/', fname)
 
 print(f'grib2file: {grib2file}')

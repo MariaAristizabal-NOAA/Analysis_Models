@@ -219,7 +219,7 @@ for artofs_file in artofs_files:
     ax.set_xlim(lon_lim)
     ax.set_ylim(lat_lim)
     fname = cycle + '.rtofs.sst_diff.f' + fhour + '.png'
-    fig.savefig(fname,bbox_inches='tight')
+    #fig.savefig(fname,bbox_inches='tight')
     #plt.close()
 
 

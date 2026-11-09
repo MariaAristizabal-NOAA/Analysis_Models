@@ -88,6 +88,7 @@ print(conf)
 
 #================================================================
 # Read ocean files
+#fname = conf['stormModel'].lower()+'.'+conf['ymdh']+'.'+conf['fhhh']+'.grb2'
 fname =  conf['ymdh']+'.'+conf['stormModel'].lower()+'.mom6.'+conf['fhhh']+'.nc'
 
 ncfile = os.path.join(conf['COMarafs']+conf['ymdh']+'/00E/', fname)
@@ -101,8 +102,8 @@ else:
 
 #================================================================
 # Read FV3 files
-#fname = conf['stormModel'].lower()+'.'+conf['ymdh']+'.'+conf['fhhh']+'.grb2'
-fname = conf['ymdh'] + '.' + conf['stormModel'].lower()+'.parent.atm.'+conf['fhhh']+'.grb2'
+fname = conf['stormModel'].lower()+'.'+conf['ymdh']+'.'+conf['fhhh']+'.grb2'
+#fname = conf['ymdh'] + '.' + conf['stormModel'].lower()+'.parent.atm.'+conf['fhhh']+'.grb2'
 grib2file = os.path.join(conf['COMarafs']+conf['ymdh']+'/00E/', fname)
 print(f'grib2file: {grib2file}')
 grb = grib2io.open(grib2file,mode='r')
